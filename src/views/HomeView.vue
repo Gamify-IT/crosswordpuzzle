@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import TheWelcome from "@/components/TheWelcome.vue";
 </script>
 
 <template>
   <main>
-    <TheWelcome />
+    <router-link class="btn btn-primary position-absolute top-50 start-50 translate-middle"
+      :to="{ name: 'crosswordpuzzle' }" role="button">Start</router-link>
+
+
   </main>
 </template>
+
+<style scoped>
+</style>
