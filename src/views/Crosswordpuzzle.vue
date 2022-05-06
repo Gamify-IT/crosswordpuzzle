@@ -1,22 +1,19 @@
+<script setup lang="ts">
+import type { tileCrossWord } from "@/types/index";
+
+defineProps<{
+  crosswordpuzzle: tileCrossWord[][];
+}>();
+</script>
+
 <script lang="ts">
 import { defineComponent } from 'vue';
 import Field from "@/components/Field.vue";
 
-interface tileCrossWord {
-    answer: string;
-    currentLetter: string;
-    startPoint: boolean;
-    startDirection: string;
-}
-
 export default defineComponent({
-    name: "Crosswordpuzzle",
-    components: {
-        Field
-    },
-    props: {
-        crosswordpuzzle: Array
-    
+  name: "Crosswordpuzzle",
+  components: {
+    Field
   }
 });
 
@@ -27,13 +24,13 @@ export default defineComponent({
 
 <template>
 
-<div class="container">
-  <div class="row row-cols-auto" v-for="crosswordRow in crosswordpuzzle">
-    <div class="col" v-for="crosswordTile in crosswordRow">
-        <Field crosswordTile="crosswordTile" />
+  <div class="container my-4">
+    <div class="row row-cols-auto m-0 p-0" v-for="crosswordRow in crosswordpuzzle">
+      <div class="col m-0 p-0" v-for="crosswordTile in crosswordRow">
+        <Field :crosswordTile="crosswordTile" />
+      </div>
     </div>
   </div>
-</div>
 
 </template>
 
