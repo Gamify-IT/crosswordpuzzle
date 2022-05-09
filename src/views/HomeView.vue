@@ -22,8 +22,28 @@ const crosswordpuzzle = generateCrossword(questions);
 
 <template>
   <main>
-    <router-link class="btn btn-primary position-absolute top-50 start-50 translate-middle"
-      :to="{ name: 'crosswordpuzzle', params: { crosswordpuzzle: crosswordpuzzle, questions: questions } }" role="button">Start</router-link>
+
+    <div class="crosswordpuzzle container">
+      <div class="row">
+
+        <div class="col-8">
+          <ol class="list-group list-group-flush list-group-numbered">
+            <h1>Fragen</h1>
+            <li v-for="question in questions" class="list-group-item">
+              {{ question.question }}
+              <small>{{ question.answer }}</small>
+            </li>
+          </ol>
+        </div>
+
+        <div class="col-4 position-relative">
+          <router-link class="btn btn-primary position-absolute top-50 start-50 translate-middle"
+            :to="{ name: 'crosswordpuzzle', params: { crosswordpuzzle: crosswordpuzzle, questions: questions } }"
+            role="button">Start</router-link>
+        </div>
+
+      </div>
+    </div>
 
 
   </main>
