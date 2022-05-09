@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { generateCrossword } from "@/crosswordgenerator";
 import type { question } from "@/types/index";
+import type { tileCrossWord} from "@/types/index";
 
 let quest1: question = {
   answer: "Syntax",
@@ -16,13 +17,13 @@ let quest3: question = {
 };
 let questions = [quest1, quest2, quest3];
 
-const crosswordpuzzle = generateCrossword(questions);
+const crosswordpuzzle = await generateCrossword(questions);
 
+console.log(crosswordpuzzle);
 </script>
 
 <template>
   <main>
-
     <div class="crosswordpuzzle container">
       <div class="row">
 
@@ -37,6 +38,7 @@ const crosswordpuzzle = generateCrossword(questions);
         </div>
 
         <div class="col-4 position-relative">
+          
           <router-link class="btn btn-primary position-absolute top-50 start-50 translate-middle"
             :to="{ name: 'crosswordpuzzle', params: { crosswordpuzzle: crosswordpuzzle, questions: questions } }"
             role="button">Start</router-link>

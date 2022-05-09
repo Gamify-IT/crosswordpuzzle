@@ -1,8 +1,8 @@
 import type { question } from "./types/index";
 import type { tileCrossWord} from "./types/index";
 import type { position} from "./types/index";
-let rows: number = 20;
-let columns: number = 20;
+let rows: number = 15;
+let columns: number = 15;
 const emptyTile: tileCrossWord = {
     answer: "empty",
     currentLetter: "empty",
@@ -13,15 +13,15 @@ const emptyRow: tileCrossWord[] = new Array(rows)
                                             .fill(emptyTile);
 
 export async function generateCrossword(questions: question[]): Promise<tileCrossWord[][]>{
-        let wordCount = questions.length;
-        let answers: string[] = [];
-        for(let i = 0; i < wordCount; i++){
-            answers.push(questions[i].answer.toUpperCase());
-        }
+    let wordCount = questions.length;
+    let answers: string[] = [];
+    for(let i = 0; i < wordCount; i++){
+        answers.push(questions[i].answer.toUpperCase());
+    }
 
-        let crossword: tileCrossWord[][] = await simpleCrossWord(answers);
+    let crossword: tileCrossWord[][] = await simpleCrossWord(answers);
 
-        return crossword;
+    return crossword;
 }
 
 async function simpleCrossWord(answers: string[]): Promise<tileCrossWord[][]>{
