@@ -21,10 +21,6 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
 
         let crossword: tileCrossWord[][] = await simpleCrossWord(answers);
 
-        //cutCrossword(crossword);
-
-        console.log(crossword)
-
         return crossword;
 }
 
@@ -38,8 +34,6 @@ async function simpleCrossWord(answers: string[]): Promise<tileCrossWord[][]>{
     //sortAnswers from large to big
     answers.sort((a,b) => b.length - a.length);
 
-    console.log(answers);
-
     //place first answer in the upper right position
     placeWordHorizontal(answers[0],0,0,crossword);
     answers.splice(0,1);
@@ -50,10 +44,8 @@ async function simpleCrossWord(answers: string[]): Promise<tileCrossWord[][]>{
         //choose random word
         let indexOfCurrentWord = Math.floor(Math.random() * answers.length)
         let currentWord = answers[indexOfCurrentWord];
-        console.log(crossword);
         if(await tryPlaceWord(currentWord,crossword)){
             answers.splice(indexOfCurrentWord,1)
-            console.log("Testsplice")
         }
     }
 
@@ -97,7 +89,6 @@ async function tryPlaceWord(word: String, crossword:tileCrossWord[][]):Promise<b
             }
         }
         if(fit){
-            console.log("Horizontal;x:"  + (curInter.x-curInter.positionInWord) + "; y:" + curInter.y + "; word:" + word)
             await placeWordHorizontal(word, curInter.x-curInter.positionInWord, curInter.y, crossword);
             return true;
         }
@@ -113,7 +104,6 @@ async function tryPlaceWord(word: String, crossword:tileCrossWord[][]):Promise<b
             }
         }
         if(fit){
-            console.log("Vertical;x:"  + curInter.x + "; y:" + (curInter.y-curInter.positionInWord) + "; word:" + word)
             await placeWordVertical(word, curInter.x, curInter.y-curInter.positionInWord, crossword);
             return true;
         }
@@ -159,7 +149,6 @@ function getIntersections(word: String, crossword: tileCrossWord[][], currentCha
 
 function moveGrid(x:number,y:number,crossword: tileCrossWord[][]) {
     return new Promise<void>((resolve) => {
-        console.log("x:"+ x + "; y:" + y) 
         for(let i = 0; i<x; i++){      
             crossword.unshift(emptyRow);
             rows++;
