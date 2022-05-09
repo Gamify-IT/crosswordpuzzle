@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Field from "@/components/Field.vue";
 import type { tileCrossWord } from "@/types/index";
 import type { question } from "@/types/index"
 
@@ -8,25 +9,11 @@ defineProps<{
 }>();
 </script>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import Field from "@/components/Field.vue";
-
-export default defineComponent({
-  name: "Crosswordpuzzle",
-  components: {
-    Field
-  }
-});
-
-
-
-
-</script>
 
 <template>
-  <div class="container">
+  <div class="crosswordpuzzle container">
     <div class="row">
+
       <div class="col-9">
         <div class="container my-4">
           <div class="row row-cols-auto m-0 p-0" v-for="crosswordRow in crosswordpuzzle">
@@ -36,14 +23,16 @@ export default defineComponent({
           </div>
         </div>
       </div>
+
       <div class="col-3">
-        <ol class="list-group">
+        <ol class="list-group list-group-flush list-group-numbered">
           <h1>Fragen</h1>
-        </ol>
-        <ol v-for="question in questions" class="list-group list-group-numbered">
-          {{ question.question }}
+          <li v-for="question in questions" class="list-group-item">
+            {{ question.question }}
+          </li>
         </ol>
       </div>
+
     </div>
   </div>
 
@@ -51,5 +40,8 @@ export default defineComponent({
 
 
 
-<style>
+<style scoped>
+.crosswordpuzzle {
+  white-space: nowrap;
+}
 </style>
