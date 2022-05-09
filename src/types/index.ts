@@ -9,3 +9,9 @@ export interface tileCrossWord {
     startPoint: boolean;
     startDirection: string;
 }
+
+export interface position {
+    x: number;
+    y: number;
+    positionInWord: number;
+}
