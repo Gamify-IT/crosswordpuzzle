@@ -14,7 +14,7 @@ const emptyRow: tileCrossWord[] = new Array(rows)
 
 export async function generateCrossword(questions: question[]): Promise<tileCrossWord[][]>{
         let wordCount = questions.length;
-        let answers: string[] = new Array();
+        let answers: string[] = [];
         for(let i = 0; i < wordCount; i++){
             answers.push(questions[i].answer.toUpperCase());
         }
@@ -215,10 +215,19 @@ function placeWordHorizontal(word:String, startX: number, startY: number, crossw
                 startPoint: false,
                 startDirection: ""
             }
-            if(j == 0){
+            if(crossword[j][startY].startPoint){
                 tile.startPoint = true;
-                tile.startDirection = "right";
+                tile.startDirection = crossword[j][startY].startDirection;
             }
+            if(j == 0){
+                if(crossword[j][startY].startPoint){
+                    tile.startPoint = true;
+                    tile.startDirection = "both";
+                }else{
+                    tile.startPoint = true;
+                    tile.startDirection = "right";
+                } 
+            }           
             crossword[j][startY] = tile;
         }
         resolve();
