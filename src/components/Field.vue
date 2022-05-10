@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import type { tileCrossWord } from "@/types/index";
 
+const emptyTileString = "empty";
+
 defineProps<{
   crosswordTile: tileCrossWord;
 }>();
+
 </script>
 
 <template>
@@ -11,26 +14,22 @@ defineProps<{
     <div v-if="crosswordTile.startPoint">
       <span class="badge rounded-pill bg-dark position-absolute top-50 start-50 translate-middle">1</span>
 
-      <div v-if="crosswordTile.startDirection == 'right'"
-        class="position-absolute top-50 start-100 translate-middle">
+      <div v-if="crosswordTile.startDirection == 'right'" class="position-absolute top-50 start-100 translate-middle">
         <div class="arrow arrowRight"></div>
       </div>
-      
-      <div v-if="crosswordTile.startDirection == 'left'"
-        class="position-absolute top-50 start-0 translate-middle">
+
+      <div v-if="crosswordTile.startDirection == 'left'" class="position-absolute top-50 start-0 translate-middle">
         <div class="arrow arrowLeft"></div>
       </div>
 
-      <div v-if="crosswordTile.startDirection == 'down'"
-        class="position-absolute top-100 start-50 translate-middle">
+      <div v-if="crosswordTile.startDirection == 'down'" class="position-absolute top-100 start-50 translate-middle">
         <div class="arrow arrowDown"></div>
       </div>
 
     </div>
 
-    <!-- v-if disabled because crosswordgenerator isn't working correctly -->
-    <input v-if="crosswordTile.currentLetter != undefined || true" :placeholder="crosswordTile.currentLetter"
-      class="form-control text-center" type="text" maxlength="1">
+    <input v-if="crosswordTile.currentLetter != emptyTileString" class="form-control text-center" type="text"
+      maxlength="1" :placeholder="crosswordTile.currentLetter">
   </div>
 </template>
 
@@ -64,9 +63,8 @@ defineProps<{
   -webkit-transform: rotate(45deg);
 }
 
-input{
-    width: 100%;
-    height: 100%;
-  }
-
+input {
+  width: 100%;
+  height: 100%;
+}
 </style>
