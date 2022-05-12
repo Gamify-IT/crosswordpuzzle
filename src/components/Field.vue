@@ -18,10 +18,6 @@ defineProps<{
         <div class="arrow arrowRight"></div>
       </div>
 
-      <div v-if="crosswordTile.startDirection == 'left'" class="position-absolute top-50 start-0 translate-middle">
-        <div class="arrow arrowLeft"></div>
-      </div>
-
       <div v-if="crosswordTile.startDirection == 'down'" class="position-absolute top-100 start-50 translate-middle">
         <div class="arrow arrowDown"></div>
       </div>
@@ -51,11 +47,6 @@ defineProps<{
 .arrowRight {
   transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
-}
-
-.arrowLeft {
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
 }
 
 .arrowDown {
