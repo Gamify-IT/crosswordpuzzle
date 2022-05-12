@@ -5,21 +5,19 @@ import type { tileCrossWord} from "@/types/index";
 
 let quest1: question = {
   answer: "Syntax",
-  question: "Testquestion1"
+  question: "System von Regeln, nach denen wohlgeformte Ausdrücke gebildet werden"
 };
 let quest2: question = {
   answer: "for-schleife",
-  question: "Testquestion2"
+  question: "Bei welcher Schleife kann man die Anzahl der durchläufe im Schleifeenkopf festlegen?"
 };
 let quest3: question = {
   answer: "typescript",
-  question: "Testquestion3"
+  question: "What is js with type safety?"
 };
-let questions = [quest1, quest2, quest3];
+const questions = [quest1, quest2, quest3];
 
-const crosswordpuzzle = await generateCrossword(questions);
 
-console.log(crosswordpuzzle);
 </script>
 
 <template>
@@ -40,7 +38,7 @@ console.log(crosswordpuzzle);
         <div class="col-4 position-relative">
           
           <router-link class="btn btn-primary position-absolute top-50 start-50 translate-middle"
-            :to="{ name: 'crosswordpuzzle', params: { crosswordpuzzle: crosswordpuzzle, questions: questions } }"
+            :to="{ name: 'crosswordpuzzle', params: { questions: questions } }"
             role="button">Start</router-link>
         </div>
 

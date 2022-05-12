@@ -14,8 +14,8 @@ const router = createRouter({
       path: "/crosswordpuzzle",
       name: "crosswordpuzzle",
       component: Crosswordpuzzle,
-      props: (route) => ({ crosswordpuzzle: route.params.crosswordpuzzle, questions: route.params.questions})
-    },
+      props: true
+    }
   ],
 });
 
