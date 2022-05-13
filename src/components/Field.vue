@@ -6,22 +6,29 @@ const emptyTileString = "empty";
 defineProps<{
   crosswordTile: tileCrossWord;
 }>();
-
 </script>
 
 <template>
   <div class="field">
     <div v-if="crosswordTile.startPoint">
-      <span class="badge rounded-pill bg-dark position-absolute top-50 start-50 translate-middle">1</span>
+      <span
+        class="badge rounded-pill bg-dark position-absolute top-50 start-50 translate-middle"
+        >1</span
+      >
 
-      <div v-if="crosswordTile.startDirection == 'right'" class="position-absolute top-50 start-100 translate-middle">
+      <div
+        v-if="crosswordTile.startDirection == 'right'"
+        class="position-absolute top-50 start-100 translate-middle"
+      >
         <div class="arrow arrowRight"></div>
       </div>
 
-      <div v-if="crosswordTile.startDirection == 'down'" class="position-absolute top-100 start-50 translate-middle">
+      <div
+        v-if="crosswordTile.startDirection == 'down'"
+        class="position-absolute top-100 start-50 translate-middle"
+      >
         <div class="arrow arrowDown"></div>
       </div>
-
     </div>
 
     <input v-if="crosswordTile.currentLetter != emptyTileString" class="form-control text-center" type="text"
