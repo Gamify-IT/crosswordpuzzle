@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { generateCrossword } from "@/crosswordgenerator";
+import { ref } from 'vue';
+import { Modal } from 'bootstrap';
 import Field from "@/components/Field.vue";
-import type { tileCrossWord } from "@/types/index";
 import type { question } from "@/types/index"
 
 const props = defineProps<{
   questions: question[];
 }>();
 
+const evaluationModal = ref(null);
 
 let quest1: question = {
   answer: "Syntax",
@@ -26,6 +28,8 @@ const questions = [quest1, quest2, quest3];
 const crosswordpuzzle = await generateCrossword(questions);
 console.log(crosswordpuzzle);
 
+var evaluationModalContext = ref({ title: '', text: '' });
+
 function evaluateSolution() {
   let isCorrect = true;
   checkLoop: crosswordpuzzle.forEach(crosswordRow => {
@@ -34,8 +38,16 @@ function evaluateSolution() {
         isCorrect = false;
       }
     })
-  })
-  console.log(isCorrect);
+  });
+  if (isCorrect) {
+    evaluationModalContext.value.title = 'Congratulations! 🥳';
+    evaluationModalContext.value.text = 'Everything right!';
+  } else {
+    evaluationModalContext.value.title = 'Not the correct answers';
+    evaluationModalContext.value.text = 'Maybe the next time';
+  }
+  const modal = new Modal(evaluationModal.value);
+  modal.show();
 }
 
 </script>
@@ -71,19 +83,21 @@ function evaluateSolution() {
 
 
 
-  <div class="modal" tabindex="-1">
+  <div ref="evaluationModal" class="modal" tabindex="-1">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Modal title</h5>
+          <h5 class="modal-title">{{ evaluationModalContext.title }} </h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <p>Modal body text goes here.</p>
+          <p>{{ evaluationModalContext.text }}</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <router-link type="button" class="btn btn-primary" data-bs-dismiss="modal" :to="{ name: 'home' }">
+            Back to welcome page
+          </router-link>
         </div>
       </div>
     </div>
