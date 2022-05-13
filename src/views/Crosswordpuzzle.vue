@@ -22,7 +22,11 @@ let quest3: question = {
   answer: "typescript",
   question: "What is js with type safety?",
 };
-const questions = [quest1, quest2, quest3];
+let quest4: question = {
+  answer: "javascript",
+  question: "What is js with type safety?",
+};
+const questions = [quest1, quest2, quest3, quest4];
 
 const crosswordpuzzle = await generateCrossword(questions);
 console.log(crosswordpuzzle);
