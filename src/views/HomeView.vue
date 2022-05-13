@@ -1,23 +1,9 @@
 <script setup lang="ts">
-import { generateCrossword } from "@/crosswordgenerator";
 import type { question } from "@/types/index";
-import type { tileCrossWord } from "@/types/index";
+import questionsJson from "@/assets/questions.json";
 
-let quest1: question = {
-  answer: "Syntax",
-  question:
-    "System von Regeln, nach denen wohlgeformte Ausdrücke gebildet werden",
-};
-let quest2: question = {
-  answer: "for-schleife",
-  question:
-    "Bei welcher Schleife kann man die Anzahl der durchläufe im Schleifeenkopf festlegen?",
-};
-let quest3: question = {
-  answer: "typescript",
-  question: "What is js with type safety?",
-};
-const questions = [quest1, quest2, quest3];
+const questions: question[] = questionsJson;
+
 </script>
 
 <template>

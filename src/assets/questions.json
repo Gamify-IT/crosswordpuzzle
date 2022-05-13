@@ -1,0 +1,18 @@
+[
+    {
+        "question": "Which language extends Javascript with type safety?",
+        "answer": "Typescript"
+    },
+    {
+        "question": "How is the system of rules called which defines well-formed expressions?",
+        "answer": "Syntax"
+    },
+    {
+        "question": "Which loop allows to set the count of iterations in the head?",
+        "answer": "for-loop"
+    },
+    {
+        "question": "What is the abbreviation op the computing unit in a computer?",
+        "answer": "CPU"
+    }
+]
