@@ -6,7 +6,6 @@ import Field from "@/components/Field.vue";
 import type { question } from "@/types/index"
 
 const props = defineProps<{
-  questions: question[];
 }>();
 
 const evaluationModal = ref(null);
@@ -40,7 +39,8 @@ function evaluateSolution() {
   let isCorrect = true;
   checkLoop: crosswordpuzzle.forEach(crosswordRow => {
     crosswordRow.forEach(element => {
-      if (element.currentLetter != element.answer) {
+      const charsAreEqual = element.currentLetter.toUpperCase() != element.answer.toUpperCase()
+      if (charsAreEqual && !element.startPoint) {
         isCorrect = false;
       }
     })
@@ -52,6 +52,7 @@ function evaluateSolution() {
     evaluationModalContext.value.title = 'Not the correct answers';
     evaluationModalContext.value.text = 'Maybe the next time';
   }
+  //@ts-ignore
   const modal = new Modal(evaluationModal.value);
   modal.show();
 }
@@ -63,14 +64,8 @@ function evaluateSolution() {
     <div class="row">
       <div class="col-9">
         <div class="container my-4">
-          <div
-            class="row row-cols-auto m-0 p-0"
-            v-for="(crosswordRow, indexColumn) in crosswordpuzzle"
-          >
-            <div
-              class="col m-0 p-0"
-              v-for="(crosswordTile, indexRow) in crosswordRow"
-            >
+          <div class="row row-cols-auto m-0 p-0" v-for="(crosswordRow, indexColumn) in crosswordpuzzle">
+            <div class="col m-0 p-0" v-for="(crosswordTile, indexRow) in crosswordRow">
               <Field :crosswordTile="crosswordTile" />
             </div>
           </div>
@@ -97,15 +92,16 @@ function evaluateSolution() {
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{ evaluationModalContext.title }} </h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
           <p>{{ evaluationModalContext.text }}</p>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <router-link type="button" class="btn btn-primary" data-bs-dismiss="modal" :to="{ name: 'home' }">
-            Back to welcome page
+          <router-link :to="{ name: 'home' }">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+              Back to welcome page
+            </button>
           </router-link>
         </div>
       </div>
