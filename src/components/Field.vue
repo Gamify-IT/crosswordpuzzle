@@ -25,7 +25,7 @@ defineProps<{
     </div>
 
     <input v-if="crosswordTile.currentLetter != emptyTileString" class="form-control text-center" type="text"
-      maxlength="1" :placeholder="crosswordTile.currentLetter">
+      maxlength="1" :placeholder="crosswordTile.answer" v-model="crosswordTile.currentLetter">
   </div>
 </template>
 
