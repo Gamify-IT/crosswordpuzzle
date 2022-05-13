@@ -10,7 +10,11 @@ const props = defineProps<{
 
 const evaluationModal = ref(null);
 
-const questions: question[] = questionsJson;
+const questions: question[] = questionsJson
+  questions.forEach(question => {
+    //workaround cause script is case-sensitive
+    question.answer = question.answer.toUpperCase();
+});
 const crosswordpuzzle = await generateCrossword(questions);
 console.log(crosswordpuzzle);
 
