@@ -37,7 +37,7 @@ const questions = [quest1, quest2, quest3];
         <div class="col-4 position-relative">
           <router-link
             class="btn btn-primary position-absolute top-50 start-50 translate-middle"
-            :to="{ name: 'crosswordpuzzle', params: { questions: questions } }"
+            :to="{ name: 'crosswordpuzzle'}"
             role="button"
             >Start</router-link
           >
