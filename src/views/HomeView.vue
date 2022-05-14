@@ -12,7 +12,7 @@ const questions: question[] = questionsJson;
       <div class="row">
         <div class="col-8">
           <ol class="list-group list-group-flush list-group-numbered">
-            <h1>Fragen</h1>
+            <h1>Questions</h1>
             <li v-for="question in questions" class="list-group-item">
               {{ question.question }}
               <small>{{ question.answer }}</small>
