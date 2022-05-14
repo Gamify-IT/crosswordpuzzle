@@ -3,33 +3,18 @@ import { generateCrossword } from "@/crosswordgenerator";
 import { ref } from 'vue';
 import { Modal } from 'bootstrap';
 import Field from "@/components/Field.vue";
-import type { question } from "@/types/index"
-
+import questionsJson from "@/assets/questions.json";
+import type { question } from "@/types";
 const props = defineProps<{
 }>();
 
 const evaluationModal = ref(null);
 
-let quest1: question = {
-  answer: "Syntax",
-  question:
-    "System von Regeln, nach denen wohlgeformte Ausdrücke gebildet werden",
-};
-let quest2: question = {
-  answer: "for-schleife",
-  question:
-    "Bei welcher Schleife kann man die Anzahl der durchläufe im Schleifeenkopf festlegen?",
-};
-let quest3: question = {
-  answer: "typescript",
-  question: "What is js with type safety?",
-};
-let quest4: question = {
-  answer: "javascript",
-  question: "What is js with type safety?",
-};
-const questions = [quest1, quest2, quest3, quest4];
-
+const questions: question[] = questionsJson
+  questions.forEach(question => {
+    //workaround cause script is case-sensitive
+    question.answer = question.answer.toUpperCase();
+});
 const crosswordpuzzle = await generateCrossword(questions);
 console.log(crosswordpuzzle);
 
