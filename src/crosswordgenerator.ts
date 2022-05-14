@@ -24,8 +24,6 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
 
     let crossword: tileCrossWord[][] = await simpleCrossWord(answers);
 
-    console.log(crossword)
-
     let output = crossword[0].map((_, colIndex) => crossword.map(row => row[colIndex]));
 
     return output;
@@ -211,7 +209,6 @@ async function placeWordVertical(word:answer, startX: number, startY: number, cr
                 startDirection: ""
             }
             crossword[startX][startY+i] = tile;
-            console.log(crossword[startX][startY+i].answer+";"+characters[i]+";"+i)
         }
         resolve();
     })
@@ -241,7 +238,6 @@ async function placeWordHorizontal(word:answer, startX: number, startY: number, 
                 startDirection: ""
             }         
             crossword[startX+i][startY] = tile;
-            console.log(crossword[startX+i][startY].answer+";"+characters[i]+";"+i)
         }
         resolve();
     })
