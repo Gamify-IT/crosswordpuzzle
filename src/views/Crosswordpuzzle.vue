@@ -11,9 +11,9 @@ const props = defineProps<{
 const evaluationModal = ref(null);
 
 const questions: question[] = questionsJson
-  questions.forEach(question => {
-    //workaround cause script is case-sensitive
-    question.answer = question.answer.toUpperCase();
+questions.forEach(question => {
+  //workaround cause script is case-sensitive
+  question.answer = question.answer.toUpperCase();
 });
 const crosswordpuzzle = await generateCrossword(questions);
 console.log(crosswordpuzzle);
@@ -45,14 +45,12 @@ function evaluateSolution() {
 </script>
 
 <template>
-  <div class="crosswordpuzzle container">
+  <div class="container">
     <div class="row">
       <div class="col-9">
-        <div class="container my-4">
-          <div class="row row-cols-auto m-0 p-0" v-for="(crosswordRow, indexColumn) in crosswordpuzzle">
-            <div class="col m-0 p-0" v-for="(crosswordTile, indexRow) in crosswordRow">
-              <Field :crosswordTile="crosswordTile" />
-            </div>
+        <div class="m-0 p-0 crosswordRow" v-for="(crosswordRow, indexColumn) in crosswordpuzzle">
+          <div class="crosswordTile m-0 p-0" v-for="(crosswordTile, indexRow) in crosswordRow">
+            <Field :crosswordTile="crosswordTile" />
           </div>
         </div>
       </div>
@@ -97,7 +95,12 @@ function evaluateSolution() {
 </template>
 
 <style scoped>
-.crosswordpuzzle {
+.crosswordTile {
   white-space: nowrap;
+  display: inline-block;
+}
+
+.crosswordRow{
+  height: 45px;
 }
 </style>
