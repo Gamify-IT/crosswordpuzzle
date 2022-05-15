@@ -3,8 +3,8 @@ import type { question } from "./types/index";
 import type { tileCrossWord} from "./types/index";
 import type { position} from "./types/index";
 import type  { answer} from "./types/index";
-let rows: number = 20;
-let columns: number = 20;
+let rows: number = 10;
+let columns: number = 10;
 const emptyTile: tileCrossWord = {
     answer: "empty",
     currentLetter: "empty",
