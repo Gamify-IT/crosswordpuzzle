@@ -34,7 +34,7 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
     let crossword: tileCrossWord[][] = await simpleCrossWord(answers, questions);
     let score: number = await getScore(crossword);
 
-    for(let i = 0; i<4; i++){
+    for(let i = 0; i<0; i++){
         answers = [];
             for(let i = 0; i < wordCount; i++){
                 answers.push({
@@ -321,7 +321,6 @@ async function getScore(crossword:tileCrossWord[][]):Promise<number> {
                 }
             }
         }
-        console.log(intersections)
         let result = intersections*10-rows-columns   
         resolve(result)     
     })
@@ -334,36 +333,32 @@ async function checkIfIntersection(crossword:tileCrossWord[][],x:number,y:number
         let horizontal = false;
         let vertical = false;
         while(true){
+            currentX--;
             if(currentX<0){
                 break;
             }
             if(crossword[currentX][currentY].answer=="empty"){
                 break;
             }
-            if(crossword[currentX][currentY].startPoint){
+            if(crossword[currentX][currentY].startPoint && crossword[currentX][currentY].startDirection=="right"){
                 horizontal = true;
                 break;
             }
-            currentX--;
         }
+        currentX = x;
+        currentY = y;
         while(true){
+            currentY--;
             if(currentY<0){
-                break;
-            }
-            if(crossword[currentX] === undefined){
-                break;
-            }
-            if(crossword[currentX][currentY] === undefined){
                 break;
             }
             if(crossword[currentX][currentY].answer=="empty"){
                 break;
             }
-            if(crossword[currentX][currentY].startPoint){
-                horizontal = true;
+            if(crossword[currentX][currentY].startPoint && crossword[currentX][currentY].startDirection=="down"){
+                vertical = true;
                 break;
             }
-            currentY--;
         }
         if(horizontal&&vertical){
             resolve(true)
