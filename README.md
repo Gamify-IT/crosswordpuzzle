@@ -1,9 +1,17 @@
 # crosswordpuzzle
 
-This is a simple crosswordpuzzle. With given questions and answers it automatically generates a crosswordpuzzle.
+This is a simple crosswordpuzzle. With given questions and answers it automatically generates a crosswordpuzzle.  
 
-## Project Setup
+## Development
 
+### Getting started
+
+Clone the repository  
+```sh
+git clone https://github.com/Gamify-IT/crosswordpuzzle.git
+```
+
+Install the dependencies  
 ```sh
 npm install
 ```
@@ -14,13 +22,20 @@ npm install
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Build
 
+Build the Docker-Container
 ```sh
-npm run build
+docker build -t crosswordpuzzle-dev
+```
+And run it at port 8000 with
+```sh
+docker run -d -p 8000:80 --name crosswordpuzzle-dev crosswordpuzzle-dev
 ```
 
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
+To monitor, stop and remove the container you can use the following commands:
+```sh
+docker ps -a -f name=crosswordpuzzle-dev
+docker stop crosswordpuzzle-dev
+docker rm crosswordpuzzle-dev
+```
