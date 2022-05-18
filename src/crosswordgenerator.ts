@@ -31,7 +31,7 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
     let crossword: tileCrossWord[][] = await simpleCrossWord(answers, questions);
     let score: number = await getScore(crossword);
 
-    for(let i = 0; i<0  ; i++){
+    for(let i = 0; i<10  ; i++){
         answers = [];
             for(let i = 0; i < wordCount; i++){
                 answers.push({
@@ -73,13 +73,13 @@ async function simpleCrossWord(answers: answer[], questions: question[]): Promis
                                             );
         
         //place first answer in the upper right position
-        placeWordHorizontal(answers[0],0,0,crossword);
-        answers.splice(0,1);
+        let indexOfCurrentAnswer = Math.floor(Math.random() * answers.length)
+        placeWordHorizontal(answers[indexOfCurrentAnswer],0,0,crossword);
+        answers.splice(indexOfCurrentAnswer,1);
         let tries = 0;
         //place remaining words randomly
         while(answers.length>0 && tries < 50) {
             //choose random word
-            
             let indexOfCurrentAnswer = Math.floor(Math.random() * answers.length)
             let currentAnswer = answers[indexOfCurrentAnswer];
             tries++;
