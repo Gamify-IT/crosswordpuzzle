@@ -18,14 +18,8 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
     let wordCount = questions.length;
     let answers: answer[] = [];
     let currentAnswers: answer[] = [];
-    questions.forEach((question,index) => {
-        answers.push({
-            answer: question.answer,
-            questNumber: index+1,
-        })
-    })
     let score: number = Number.MIN_SAFE_INTEGER;
-
+    let crossword: tileCrossWord[][] = [];
     for(let i = 0; i<10  ; i++){
         answers = [];
             for(let i = 0; i < wordCount; i++){
@@ -34,7 +28,6 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
                     questNumber: i+1,
                 })
             }
-            
         let currentCrossword: tileCrossWord[][] = await simpleCrossWord(answers, questions);
         let currentScore: number = await getScore(currentCrossword);
         if(currentScore>score){
