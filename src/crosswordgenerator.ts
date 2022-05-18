@@ -18,7 +18,6 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
     let wordCount = questions.length;
     let answers: answer[] = [];
     let currentAnswers: answer[] = [];
-    console.log(questions)
     questions.forEach((question,index) => {
         answers.push({
             answer: question.answer,
@@ -32,7 +31,7 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
     let crossword: tileCrossWord[][] = await simpleCrossWord(answers, questions);
     let score: number = await getScore(crossword);
 
-    for(let i = 0; i<10  ; i++){
+    for(let i = 0; i<0  ; i++){
         answers = [];
             for(let i = 0; i < wordCount; i++){
                 answers.push({
@@ -88,7 +87,6 @@ async function simpleCrossWord(answers: answer[], questions: question[]): Promis
             if(placedWord){
                 answers.splice(indexOfCurrentAnswer,1);
                 tries = 0;
-                console.log("removed");
             }
         }
         resolve(crossword);
@@ -129,8 +127,7 @@ async function tryPlaceWord(word: answer, crossword:tileCrossWord[][]):Promise<b
             let fit = true;
             const characters = word.answer.split("");
             characters.forEach(async (c,i)=>{
-                if(curInter.x-curInter.positionInWord+i>=0 && curInter.x-curInter.positionInWord+i<=rows){
-                    console.log(crossword) 
+                if(curInter.x-curInter.positionInWord+i>=0 && curInter.x-curInter.positionInWord+i<rows){
                     if(word.answer[i]!=crossword[curInter.x-curInter.positionInWord+i][curInter.y].answer){
                         if(crossword[curInter.x-curInter.positionInWord+i][curInter.y].answer!="empty"){
                             fit = false;
@@ -144,15 +141,14 @@ async function tryPlaceWord(word: answer, crossword:tileCrossWord[][]):Promise<b
                 }
             }
             if(fit){
-                console.log("Test")
                 await placeWordHorizontal(word, curInter.x-curInter.positionInWord, curInter.y, crossword);
                 placed = true;
                 break;
             }
             if(!placed){
+                fit = true;
                 characters.forEach(async (c,i)=>{
-                    fit = true;
-                    if(curInter.y-curInter.positionInWord+i>=0 && curInter.y-curInter.positionInWord+i<=columns){
+                    if(curInter.y-curInter.positionInWord+i>=0 && curInter.y-curInter.positionInWord+i<columns){
                         if(word.answer[i]!=crossword[curInter.x][curInter.y-curInter.positionInWord+i].answer){
                             if(crossword[curInter.x][curInter.y-curInter.positionInWord+i].answer!="empty"){
                                 fit = false;
@@ -221,14 +217,15 @@ async function getIntersections(word: answer, crossword: tileCrossWord[][], curr
 
 async function moveGrid(x:number,y:number,crossword: tileCrossWord[][]):Promise<void> {
     return new Promise<void>(async (resolve) => {
-        console.log("moved;x:"+x+";y:"+y)
-        let emptyRow: tileCrossWord[] = new Array(columns)
-                                            .fill(emptyTile);
-        for(let i = 0; i<x; i++){      
+        for(let i = 0; i<x; i++){
+            let emptyRow: tileCrossWord[] = new Array(columns)
+                                            .fill(emptyTile);      
             crossword.unshift(emptyRow);
             rows++;
         }
         for(let i = x; i<0; i++){
+            let emptyRow: tileCrossWord[] = new Array(columns)
+                                            .fill(emptyTile);
             crossword.push(emptyRow);
             rows++;
         }
@@ -284,10 +281,10 @@ async function placeWordHorizontal(word:answer, startX: number, startY: number, 
         const characters = word.answer.split("");
         if(startX<=0){
             await moveGrid(Math.abs(startX)+1,0,crossword);
-            startX= startX+Math.abs(startX)+1;
+            startX = startX+Math.abs(startX)+1;
         }
         if(startX+word.answer.length>rows){
-            await moveGrid(columns-startX-word.answer.length,0,crossword);
+            await moveGrid(rows-startX-word.answer.length,0,crossword);
         }
         let firstTile: tileCrossWord = {
             answer: String(word.questNumber),
@@ -297,15 +294,14 @@ async function placeWordHorizontal(word:answer, startX: number, startY: number, 
         }
         crossword[startX-1][startY] = firstTile;
         startpoints.push(firstTile);
+        crossword[startX-1][startY] = firstTile;
         for(let i = 0; i<characters.length; i++){
-            let tile: tileCrossWord ;
-            tile = {
+            const tile: tileCrossWord = {
                 answer: characters[i],
                 currentLetter: "",
                 startPoint: false,
                 startDirection: ""
             }
-                     
             crossword[startX+i][startY] = tile;
         }
         resolve();
