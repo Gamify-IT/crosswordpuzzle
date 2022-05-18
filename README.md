@@ -51,7 +51,7 @@ Run the docker container with the following commang at port 8000:
 docker run -d -p 8000:80 --name crosswordpuzzle ghcr.io/gamify-it/crosswordpuzzle:latest
 ```
 Now you can access it at [http://localhost:8000](http://localhost:8000).  
-To acces it external replace localhost with your IP.  
+To access it externally replace localhost with your IP.  
 
 To monitor the container you can use the following commands:
 ```sh
