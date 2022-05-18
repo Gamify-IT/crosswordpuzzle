@@ -68,4 +68,4 @@ docker rm crosswordpuzzle
 
 ### Screenshot
 
-![example auto genderated crosswordpuzzle](screenshots/screenshot-1.png "auto genderated crosswordpuzzle")
+![example auto genderated crosswordpuzzle](https://cdn.discordapp.com/attachments/946034796243595284/975526829773426758/unknown.png "crosswordpuzzle")
