@@ -23,13 +23,8 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
             answer: question.answer,
             questNumber: index+1,
         })
-        currentAnswers.push({
-            answer: question.answer,
-            questNumber: index+1,
-        })
     })
-    let crossword: tileCrossWord[][] = await simpleCrossWord(answers, questions);
-    let score: number = await getScore(crossword);
+    let score: number = Number.MIN_SAFE_INTEGER;
 
     for(let i = 0; i<10  ; i++){
         answers = [];
