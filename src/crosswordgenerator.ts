@@ -12,7 +12,9 @@ const emptyTile: tileCrossWord = {
     startPoint: false,
     startDirection: "empty",
 }
-
+const valueOfIntersect = 10;
+const maxTries = 50;
+const interations = 10;
 
 export async function generateCrossword(questions: question[]): Promise<tileCrossWord[][]>{
     let wordCount = questions.length;
@@ -20,7 +22,7 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
     let currentAnswers: answer[] = [];
     let score: number = Number.MIN_SAFE_INTEGER;
     let crossword: tileCrossWord[][] = [];
-    for(let i = 0; i<10  ; i++){
+    for(let i = 0; i<interations  ; i++){
         answers = [];
             for(let i = 0; i < wordCount; i++){
                 answers.push({
@@ -34,10 +36,7 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
             score = currentScore;
             crossword = currentCrossword;
             answers.forEach((answer) => {
-                currentAnswers.push({
-                    answer: answer.answer,
-                    questNumber: answer.questNumber
-                })
+                currentAnswers.push(answer)
             })
         }
     }
@@ -66,7 +65,7 @@ async function simpleCrossWord(answers: answer[], questions: question[]): Promis
         answers.splice(indexOfCurrentAnswer,1);
         let tries = 0;
         //place remaining words randomly
-        while(answers.length>0 && tries < 50) {
+        while(answers.length>0 && tries < maxTries) {
             //choose random word
             let indexOfCurrentAnswer = Math.floor(Math.random() * answers.length)
             let currentAnswer = answers[indexOfCurrentAnswer];
@@ -99,97 +98,98 @@ async function removeWord(word: answer, crossword:tileCrossWord[][], questions: 
 async function tryPlaceWord(word: answer, crossword:tileCrossWord[][]):Promise<boolean>{
     return new Promise(async (resolve) => {
         let intersections:position[] = new Array();
-        let currentChar:String = '';
-        await getIntersections(word, crossword, currentChar, intersections);
-        intersections.forEach(async (inter,index) => {
-            let intersect = await checkIntersection(word, inter, crossword);
-            if(intersect){
-                intersections.splice(index,1)
-            }
-        })
+        await getIntersections(word, crossword, intersections);
         let placed = false;
         while(intersections.length>0 && !placed){
             let indexOfCurrentIntersection = Math.floor(Math.random() * intersections.length);
             let curInter = intersections[indexOfCurrentIntersection];
             intersections.splice(indexOfCurrentIntersection,1);
             let fit = true;
-            const characters = word.answer.split("");
-            characters.forEach(async (c,i)=>{
-                if(curInter.x-curInter.positionInWord+i>=0 && curInter.x-curInter.positionInWord+i<rows){
-                    if(word.answer[i]!=crossword[curInter.x-curInter.positionInWord+i][curInter.y].answer){
-                        if(crossword[curInter.x-curInter.positionInWord+i][curInter.y].answer!="empty"){
-                            fit = false;
-                        }
-                    }
-                }
-            })
-            if(curInter.x-curInter.positionInWord-1>=0){
-                if(crossword[curInter.x-curInter.positionInWord-1][curInter.y].answer!="empty"){
-                    fit = false;
-                }
-            }
-            if(fit){
-                await placeWordHorizontal(word, curInter.x-curInter.positionInWord, curInter.y, crossword);
-                placed = true;
-                break;
-            }
+            
+            placed = await tryPlaceHorizontal(curInter, word, crossword);
             if(!placed){
-                fit = true;
-                characters.forEach(async (c,i)=>{
-                    if(curInter.y-curInter.positionInWord+i>=0 && curInter.y-curInter.positionInWord+i<columns){
-                        if(word.answer[i]!=crossword[curInter.x][curInter.y-curInter.positionInWord+i].answer){
-                            if(crossword[curInter.x][curInter.y-curInter.positionInWord+i].answer!="empty"){
-                                fit = false;
-                            }
-                        }
-                    }
-                })
-                if(curInter.y-curInter.positionInWord-1>=0){
-                    if(crossword[curInter.x][curInter.y-curInter.positionInWord-1].answer!="empty"){
-                        fit = false;
-                    }
-                }
-                if(fit){
-                    await placeWordVertical(word, curInter.x, curInter.y-curInter.positionInWord, crossword);
-                    placed = true;
-                    break;
-                }  
+                placed = await tryPlaceVertical(curInter, word, crossword);  
             }
         }
         resolve(placed)
     })
 }
 
+async function tryPlaceVertical(curInter: position, word: answer, crossword: tileCrossWord[][]) {
+    let fit = true;
+    let placed = false;
+    const characters = word.answer.split("");
+    characters.forEach(async (c, i) => {
+        if (curInter.y - curInter.positionInWord + i >= 0 && curInter.y - curInter.positionInWord + i < columns) {
+            if (c != crossword[curInter.x][curInter.y - curInter.positionInWord + i].answer) {
+                if (crossword[curInter.x][curInter.y - curInter.positionInWord + i].answer != "empty") {
+                    fit = false;
+                }
+            }
+        }
+    });
+    if (curInter.y - curInter.positionInWord - 1 >= 0) {
+        if (crossword[curInter.x][curInter.y - curInter.positionInWord - 1].answer != "empty") {
+            fit = false;
+        }
+    }
+    if (fit) {
+        await placeWordVertical(word, curInter.x, curInter.y - curInter.positionInWord, crossword);
+        placed = true;
+    }
+    return placed;
+}
+
+async function tryPlaceHorizontal(curInter: position, word: answer, crossword: tileCrossWord[][]) {
+    let fit = true;
+    let placed = false;
+    const characters = word.answer.split("");
+    characters.forEach(async (c, i) => {
+        if (curInter.x - curInter.positionInWord + i >= 0 && curInter.x - curInter.positionInWord + i < rows) {
+            if (c != crossword[curInter.x - curInter.positionInWord + i][curInter.y].answer) {
+                if (crossword[curInter.x - curInter.positionInWord + i][curInter.y].answer != "empty") {
+                    fit = false;
+                }
+            }
+        }
+    });
+    if (curInter.x - curInter.positionInWord - 1 >= 0) {
+        if (crossword[curInter.x - curInter.positionInWord - 1][curInter.y].answer != "empty") {
+            fit = false;
+        }
+    }
+    if(fit){
+        await placeWordHorizontal(word, curInter.x-curInter.positionInWord, curInter.y, crossword);
+        placed = true;
+    }
+    return placed;
+}
+
 async function checkIntersection(word: answer,pos:position, crossword:tileCrossWord[][]):Promise<boolean> {
     return new Promise<boolean>(async (resolve) => {
-        for(let i = pos.x-pos.positionInWord; i<pos.x+word.answer.length-pos.positionInWord;i++) {
-            if(i>=0){
-                if(word.answer[i-pos.x+pos.positionInWord] == crossword[i][pos.y].answer){
-                    resolve(false);
-                    break;
-                }
+        for(let i = Math.max(pos.x-pos.positionInWord, 0); i<pos.x+word.answer.length-pos.positionInWord;i++) {
+            if(word.answer[i-pos.x+pos.positionInWord] == crossword[i][pos.y].answer){
+                resolve(false);
+                break;
             }  
         }
-        for(let i = pos.y-pos.positionInWord; i<pos.y+word.answer.length-pos.positionInWord; i++){
-            if(i>=0){
-                if(word.answer[i-pos.y+pos.positionInWord] == crossword[pos.x][i].answer){
-                    resolve(false);
-                    break;
-                }
+        for(let i = Math.max(pos.y-pos.positionInWord, 0); i<pos.y+word.answer.length-pos.positionInWord; i++){
+            if(word.answer[i-pos.y+pos.positionInWord] == crossword[pos.x][i].answer){
+                resolve(false);
+                break;
             } 
         }
         resolve(true);
     })
 }
 
-async function getIntersections(word: answer, crossword: tileCrossWord[][], currentChar: String, intersections: position[]):Promise<void> {
+async function getIntersections(word: answer, crossword: tileCrossWord[][], intersections: position[]):Promise<void> {
     return new Promise<void>(async (resolve) => {
         for (let i = 0; i < word.answer.length; i++) {
             for (let x = 0; x < crossword.length; x++) {
                 for (let y = 0; y < crossword[x].length; y++) {
-                    currentChar = word.answer[i];
                     //check if letter matches cell
-                    if (crossword[x][y].answer == currentChar) {
+                    if (crossword[x][y].answer == word.answer[i]) {
                         intersections.push({
                             x: x,
                             y: y,
@@ -199,6 +199,12 @@ async function getIntersections(word: answer, crossword: tileCrossWord[][], curr
                 }
             }
         }
+        intersections.forEach(async (inter,index) => {
+            let intersect = await checkIntersection(word, inter, crossword);
+            if(intersect){
+                intersections.splice(index,1)
+            }
+        })
         resolve();
     })
 }
@@ -237,7 +243,7 @@ async function placeWordVertical(word:answer, startX: number, startY: number, cr
         const characters = word.answer.split("");
         if(startY<=0){
             await moveGrid(0,Math.abs(startY)+1,crossword);
-            startY= startY+Math.abs(startY)+1;
+            startY += Math.abs(startY)+1;
         }
         if(startY+word.answer.length>columns){
             await moveGrid(0,columns-startY-word.answer.length,crossword);
@@ -269,7 +275,7 @@ async function placeWordHorizontal(word:answer, startX: number, startY: number, 
         const characters = word.answer.split("");
         if(startX<=0){
             await moveGrid(Math.abs(startX)+1,0,crossword);
-            startX = startX+Math.abs(startX)+1;
+            startX += Math.abs(startX)+1;
         }
         if(startX+word.answer.length>rows){
             await moveGrid(rows-startX-word.answer.length,0,crossword);
@@ -309,7 +315,7 @@ async function getScore(crossword:tileCrossWord[][]):Promise<number> {
                 }
             })
         })
-        let result = intersections*10-rows-columns   
+        let result = intersections*valueOfIntersect-rows-columns   
         resolve(result)     
     })
 }
