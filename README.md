@@ -1,9 +1,17 @@
 # crosswordpuzzle
 
-This is a simple crosswordpuzzle. With given questions and answers it automatically generates a crosswordpuzzle.
+This is a simple crosswordpuzzle. With given questions and answers it automatically generates a crosswordpuzzle.  
 
-## Project Setup
+## Development
 
+### Getting started
+
+Clone the repository  
+```sh
+git clone https://github.com/Gamify-IT/crosswordpuzzle.git
+```
+
+Install the dependencies  
 ```sh
 npm install
 ```
@@ -14,13 +22,50 @@ npm install
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+### Build
 
+Build the Docker-Container
 ```sh
-npm run build
+docker build -t crosswordpuzzle-dev
+```
+And run it at port 8000 with
+```sh
+docker run -d -p 8000:80 --name crosswordpuzzle-dev crosswordpuzzle-dev
 ```
 
-## Customize configuration
+To monitor, stop and remove the container you can use the following commands:
+```sh
+docker ps -a -f name=crosswordpuzzle-dev
+```
+```sh
+docker stop crosswordpuzzle-dev
+```
+```sh
+docker rm crosswordpuzzle-dev
+```
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## User manual
 
+Run the docker container with the following command at port 8000:
+```sh
+docker run -d -p 8000:80 --name crosswordpuzzle ghcr.io/gamify-it/crosswordpuzzle:latest
+```
+Now you can access it at [http://localhost:8000](http://localhost:8000).  
+To access it externally replace localhost with your IP.  
+
+To monitor the container you can use the following command:
+```sh
+docker ps -a -f name=crosswordpuzzle
+```
+To stop the container you can use the following command:
+```sh
+docker stop crosswordpuzzle
+```
+To remove the container you can use the following command:
+```sh
+docker rm crosswordpuzzle
+```
+
+### Screenshot
+
+![example auto genderated crosswordpuzzle](https://user-images.githubusercontent.com/44726248/169154288-f37c3e86-d8ad-4e78-b2a3-c2cb6645a2d7.png "crosswordpuzzle")
