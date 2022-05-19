@@ -23,26 +23,11 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
     let score: number = Number.MIN_SAFE_INTEGER;
     let crossword: tileCrossWord[][] = [];
     for(let i = 0; i<interations  ; i++){
-        answers = [];
-            for(let i = 0; i < wordCount; i++){
-                answers.push({
-                    answer: questions[i].answer,
-                    questNumber: i+1,
-                })
-            }
-        let currentCrossword: tileCrossWord[][] = await simpleCrossWord(answers, questions);
-        let currentScore: number = await getScore(currentCrossword);
-        if(currentScore>score){
-            score = currentScore;
-            crossword = currentCrossword;
-            answers.forEach((answer) => {
-                currentAnswers.push(answer)
-            })
-        }
+        ({ answers, score, crossword } = await createCrossword(answers, wordCount, questions, score, crossword, currentAnswers));
     }
 
-    while(answers.length>0){
-        removeWord(answers[0],crossword,questions)
+    while(currentAnswers.length>0){
+        removeWord(currentAnswers[0], questions)
         answers.splice(0,1);
     }
     
@@ -51,7 +36,27 @@ export async function generateCrossword(questions: question[]): Promise<tileCros
     return output;
 }
 
-async function simpleCrossWord(answers: answer[], questions: question[]): Promise<tileCrossWord[][]>{
+async function createCrossword(answers: answer[], wordCount: number, questions: question[], score: number, crossword: tileCrossWord[][], currentAnswers: answer[]) {
+    answers = [];
+    for (let i = 0; i < wordCount; i++) {
+        answers.push({
+            answer: questions[i].answer,
+            questNumber: i + 1,
+        });
+    }
+    let currentCrossword: tileCrossWord[][] = await simpleCrossWord(answers);
+    let currentScore: number = await getScore(currentCrossword);
+    if (currentScore > score) {
+        score = currentScore;
+        crossword = currentCrossword;
+        answers.forEach((answer) => {
+            currentAnswers.push(answer);
+        });
+    }
+    return { answers, score, crossword };
+}
+
+async function simpleCrossWord(answers: answer[]): Promise<tileCrossWord[][]>{
     return new Promise<tileCrossWord[][]>(async (resolve) => {
         let crossword: tileCrossWord[][] = new Array(rows)
                                            .fill(emptyTile)
@@ -67,7 +72,7 @@ async function simpleCrossWord(answers: answer[], questions: question[]): Promis
         //place remaining words randomly
         while(answers.length>0 && tries < maxTries) {
             //choose random word
-            let indexOfCurrentAnswer = Math.floor(Math.random() * answers.length)
+            indexOfCurrentAnswer = Math.floor(Math.random() * answers.length)
             let currentAnswer = answers[indexOfCurrentAnswer];
             tries++;
             let placedWord = await tryPlaceWord(currentAnswer,crossword);
@@ -80,7 +85,7 @@ async function simpleCrossWord(answers: answer[], questions: question[]): Promis
     })
 }
 
-async function removeWord(word: answer, crossword:tileCrossWord[][], questions: question[]){
+async function removeWord(word: answer, questions: question[]){
     let questIndex = -1;
     questions.forEach((quest, i) => {
         if(quest.answer == word.answer){
@@ -322,41 +327,47 @@ async function getScore(crossword:tileCrossWord[][]):Promise<number> {
 
 async function checkIfIntersection(crossword:tileCrossWord[][],x:number,y:number):Promise<boolean>{
     return new Promise<boolean>(async (resolve)=>{
-        let currentX = x;
-        let currentY = y;
-        let horizontal = false;
-        let vertical = false;
-        while(true){
-            currentX--;
-            if(currentX<0){
-                break;
-            }
-            if(crossword[currentX][currentY].answer=="empty"){
-                break;
-            }
-            if(crossword[currentX][currentY].startPoint && crossword[currentX][currentY].startDirection=="right"){
-                horizontal = true;
-                break;
-            }
-        }
-        currentX = x;
-        currentY = y;
-        while(true){
-            currentY--;
-            if(currentY<0){
-                break;
-            }
-            if(crossword[currentX][currentY].answer=="empty"){
-                break;
-            }
-            if(crossword[currentX][currentY].startPoint && crossword[currentX][currentY].startDirection=="down"){
-                vertical = true;
-                break;
-            }
-        }
+        let horizontal = checkInterHorizontal(crossword,x,y);
+        let vertical = checkInterVertical(crossword,x,y);
         if(horizontal&&vertical){
             resolve(true)
         }
         resolve(false)
     })
+}
+
+function checkInterHorizontal(crossword:tileCrossWord[][],x:number,y:number):boolean{
+    let horizontal = false;
+    while(true){
+        x--;
+        if(x<0){
+            break;
+        }
+        if(crossword[x][y].answer=="empty"){
+            break;
+        }
+        if(crossword[x][y].startPoint && crossword[x][y].startDirection=="right"){
+            horizontal = true;
+            break;
+        }
+    }
+    return horizontal;
+}
+
+function checkInterVertical(crossword:tileCrossWord[][],x:number,y:number):boolean{
+    let vertical = false;
+    while(true){
+        y--;
+        if(y<0){
+            break;
+        }
+        if(crossword[x][y].answer=="empty"){
+            break;
+        }
+        if(crossword[x][y].startPoint && crossword[x][y].startDirection=="down"){
+            vertical = true;
+            break;
+        }
+    }
+    return vertical;
 }
