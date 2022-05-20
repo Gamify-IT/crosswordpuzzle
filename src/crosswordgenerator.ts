@@ -337,7 +337,7 @@ async function checkIfIntersection(crossword:tileCrossWord[][],x:number,y:number
 
 function checkInterHorizontal(crossword:tileCrossWord[][],x:number,y:number):boolean{
     let horizontal = false;
-    while(x<0){
+    while(x>0){
         x--;
         if(crossword[x][y].answer=="empty"){
             break;
@@ -352,7 +352,7 @@ function checkInterHorizontal(crossword:tileCrossWord[][],x:number,y:number):boo
 
 function checkInterVertical(crossword:tileCrossWord[][],x:number,y:number):boolean{
     let vertical = false;
-    while(y<0){
+    while(y>0){
         y--;
         if(crossword[x][y].answer=="empty"){
             break;
