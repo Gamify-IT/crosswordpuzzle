@@ -1,4 +1,3 @@
-import { getTransitionRawChildren } from "vue";
 import type { question } from "./types/index";
 import type { tileCrossWord} from "./types/index";
 import type { position} from "./types/index";
@@ -338,11 +337,8 @@ async function checkIfIntersection(crossword:tileCrossWord[][],x:number,y:number
 
 function checkInterHorizontal(crossword:tileCrossWord[][],x:number,y:number):boolean{
     let horizontal = false;
-    while(true){
+    while(x<0){
         x--;
-        if(x<0){
-            break;
-        }
         if(crossword[x][y].answer=="empty"){
             break;
         }
@@ -356,11 +352,8 @@ function checkInterHorizontal(crossword:tileCrossWord[][],x:number,y:number):boo
 
 function checkInterVertical(crossword:tileCrossWord[][],x:number,y:number):boolean{
     let vertical = false;
-    while(true){
+    while(y<0){
         y--;
-        if(y<0){
-            break;
-        }
         if(crossword[x][y].answer=="empty"){
             break;
         }
