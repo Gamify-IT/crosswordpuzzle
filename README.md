@@ -26,7 +26,7 @@ npm run dev
 
 Build the Docker-Container
 ```sh
-docker build -t crosswordpuzzle-dev
+docker build -t crosswordpuzzle-dev .
 ```
 And run it at port 8000 with
 ```sh
