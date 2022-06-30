@@ -1,11 +1,3 @@
-<script setup lang="ts">
-import type { question } from "@/types/index";
-import questionsJson from "@/assets/questions.json";
-
-const questions: question[] = questionsJson;
-
-</script>
-
 <template>
   <main>
     <div class="crosswordpuzzle container">
@@ -33,4 +25,52 @@ const questions: question[] = questionsJson;
   </main>
 </template>
 
+<script lang="ts">
+
+import type { question } from "@/types/index";
+import questionsJson from "@/assets/questions.json";
+import config from "@/config";
+import axios from "axios";
+import { createDOMCompilerError } from "@vue/compiler-dom";
+import { data } from "jquery";
+import { defineComponent } from "vue";
+
+export default defineComponent({
+  data() {
+    return {
+      questions: []
+    }
+  },
+  methods: {
+    getQuestions() {
+      axios.get(`${config.apiBaseUrl}/get-questions/test`)
+            .then((response) => {
+              response.data.forEach((element: { question: any; answer: any; }) => {
+              this.questions.push({
+                question: element.question,
+                answer: element.answer
+              })
+            });
+          console.log(this.questions)
+          
+        })
+    }
+  },
+  created(){
+    this.getQuestions()
+  }
+})
+
+
+
+
+  
+
+
+</script>
+
 <style scoped></style>
+
+
+
+

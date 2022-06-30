@@ -3,18 +3,33 @@ import { generateCrossword } from "@/crosswordgenerator";
 import { ref } from 'vue';
 import { Modal } from 'bootstrap';
 import Field from "@/components/Field.vue";
-import questionsJson from "@/assets/questions.json";
 import type { question } from "@/types";
+import axios from "axios";
+import config from "@/config";
 const props = defineProps<{
 }>();
 
 const evaluationModal = ref(null);
 
-const questions: question[] = questionsJson
-questions.forEach(question => {
-  //workaround cause script is case-sensitive
-  question.answer = question.answer.toUpperCase();
-});
+let questions: question[] = [];
+
+await axios.get(`${config.apiBaseUrl}/get-questions/test`)
+            .then((response) => {
+              response.data.forEach((element: { question: any; answer: any; }) => {
+              questions.push({
+                question: element.question,
+                answer: element.answer
+              })
+            });
+          console.log(questions)
+          
+        }).then(()=>{
+          questions.forEach(question => {
+          //workaround cause script is case-sensitive
+          question.answer = question.answer.toUpperCase();
+          });
+          }
+        )
 const crosswordpuzzle = await generateCrossword(questions);
 console.log(crosswordpuzzle);
 
