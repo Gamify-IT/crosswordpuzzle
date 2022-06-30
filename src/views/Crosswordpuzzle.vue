@@ -6,6 +6,10 @@ import Field from "@/components/Field.vue";
 import type { question } from "@/types";
 import axios from "axios";
 import config from "@/config";
+
+
+const configuration = "test";
+
 const props = defineProps<{
 }>();
 
@@ -13,7 +17,7 @@ const evaluationModal = ref(null);
 
 let questions: question[] = [];
 
-await axios.get(`${config.apiBaseUrl}/get-questions/test`)
+await axios.get(`${config.apiBaseUrl}/get-questions/`+configuration)
             .then((response) => {
               response.data.forEach((element: { question: any; answer: any; }) => {
               questions.push({

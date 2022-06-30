@@ -34,6 +34,7 @@ import axios from "axios";
 import { createDOMCompilerError } from "@vue/compiler-dom";
 import { data } from "jquery";
 import { defineComponent } from "vue";
+const configuration = "test";
 
 export default defineComponent({
   data() {
@@ -43,7 +44,7 @@ export default defineComponent({
   },
   methods: {
     getQuestions() {
-      axios.get(`${config.apiBaseUrl}/get-questions/test`)
+      axios.get(`${config.apiBaseUrl}/get-questions/`+configuration)
             .then((response) => {
               response.data.forEach((element: { question: any; answer: any; }) => {
               this.questions.push({
