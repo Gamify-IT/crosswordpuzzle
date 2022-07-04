@@ -44,7 +44,7 @@ export default defineComponent({
   },
   methods: {
     getQuestions() {
-      axios.get(`${config.apiBaseUrl}/get-questions/`+configuration)
+      axios.get(`${config.apiBaseUrl}/questions/`+configuration)
             .then((response) => {
               response.data.forEach((element: { question: any; answer: any; }) => {
               this.questions.push({

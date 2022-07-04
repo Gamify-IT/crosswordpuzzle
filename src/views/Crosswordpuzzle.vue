@@ -17,7 +17,7 @@ const evaluationModal = ref(null);
 
 let questions: question[] = [];
 
-await axios.get(`${config.apiBaseUrl}/get-questions/`+configuration)
+await axios.get(`${config.apiBaseUrl}/questions/`+configuration)
             .then((response) => {
               response.data.forEach((element: { question: any; answer: any; }) => {
               questions.push({
