@@ -10,7 +10,7 @@ RUN npm install
 COPY . .
 
 # Build the project
-RUN npm run build --base=/minigames/crosswordpuzzle
+RUN npm run build-production-service
 
 FROM nginx:alpine as production-build
 COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
