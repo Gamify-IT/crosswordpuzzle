@@ -5,16 +5,16 @@ import { Modal } from 'bootstrap';
 import Field from "@/components/Field.vue";
 import questionsJson from "@/assets/questions.json";
 import type { question } from "@/types";
-const props = defineProps<{
-}>();
 
 const evaluationModal = ref(null);
 
-const questions: question[] = questionsJson
-questions.forEach(question => {
+let questions: question[];
+questions = JSON.parse(localStorage.getItem("questions") || "[]");
+
+  questions.forEach(question => {
   //workaround cause script is case-sensitive
   question.answer = question.answer.toUpperCase();
-});
+  });
 const crosswordpuzzle = await generateCrossword(questions);
 console.log(crosswordpuzzle);
 
