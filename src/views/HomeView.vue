@@ -14,11 +14,12 @@ console.log(configuration)
 if(configuration == "default"){
   questions = questionsJson;
 }else{
-  axios.get(`${config.apiBaseUrl}/questions/`+configuration)
+  await axios.get(`${config.apiBaseUrl}/questions/`+configuration)
   .then((response) => {
       let currentQuestions: question[];
       currentQuestions = response.data
       currentQuestions.forEach(quest => {
+      
         questions.push({
           question: quest.question,
           answer: quest.answer
