@@ -3,13 +3,11 @@ import { generateCrossword } from "@/crosswordgenerator";
 import { ref } from 'vue';
 import { Modal } from 'bootstrap';
 import Field from "@/components/Field.vue";
-import questionsJson from "@/assets/questions.json";
 import type { question } from "@/types";
 
 const evaluationModal = ref(null);
 
-let questions: question[];
-questions = JSON.parse(localStorage.getItem("questions") || "[]");
+let questions: question[] = JSON.parse(localStorage.getItem("questions") || "[]");
 
   questions.forEach(question => {
   //workaround cause script is case-sensitive

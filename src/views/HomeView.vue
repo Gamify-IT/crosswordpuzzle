@@ -5,8 +5,7 @@ import axios from "axios";
 import { useRoute } from 'vue-router';
 import config from "@/config";
 
-let questions: question[];
-questions = [];
+let questions: question[] = [];
 
 const route = useRoute();
 const configuration = route.params.id;
@@ -16,16 +15,7 @@ if(configuration == "default"){
 }else{
   await axios.get(`${config.apiBaseUrl}/questions/`+configuration)
   .then((response) => {
-      let currentQuestions: question[];
-      currentQuestions = response.data
-      currentQuestions.forEach(quest => {
-      
-        questions.push({
-          question: quest.question,
-          answer: quest.answer
-        })
-      });
-      questions = response.data;
+    questions = response.data;
   }).then(()=>{
     localStorage.setItem('questions',JSON.stringify(questions))
     console.log(questions)
