@@ -1,4 +1,4 @@
 export default {
     //URL of RESTful API
-    "apiBaseUrl": "http://localhost:8080"
+    "apiBaseUrl": import.meta.env.VITE_BACKEND_URL
 }
