@@ -1,9 +1,26 @@
 <script setup lang="ts">
 import type { question } from "@/types/index";
 import questionsJson from "@/assets/questions.json";
+import axios from "axios";
+import { useRoute } from 'vue-router';
+import config from "@/config";
 
-const questions: question[] = questionsJson;
+let questions: question[] = [];
 
+const route = useRoute();
+const configuration = route.params.id;
+console.log(configuration)
+if(configuration == "default"){
+  questions = questionsJson;
+}else{
+  await axios.get(`${config.apiBaseUrl}/questions/`+configuration)
+  .then((response) => {
+    questions = response.data;
+  }).then(()=>{
+    localStorage.setItem('questions',JSON.stringify(questions))
+    console.log(questions)
+  })
+}
 </script>
 
 <template>
