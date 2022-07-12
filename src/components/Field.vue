@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { tileCrossWord } from "@/types/index";
+import type { TileCrossWord } from "@/types/index";
 
 const emptyTileString = "empty";
 
 defineProps<{
-  crosswordTile: tileCrossWord;
+  crosswordTile: TileCrossWord;
 }>();
 </script>
 
@@ -21,12 +21,14 @@ defineProps<{
         v-if="crosswordTile.startDirection == 'right'"
         src="@/assets/caret-right.svg"
         class="arrowRight"
+        alt="right arrow"
       />
 
       <img
         v-else-if="crosswordTile.startDirection == 'down'"
         src="@/assets/caret-right.svg"
         class="arrowDown"
+        alt="down arrow"
       />
     </div>
 
