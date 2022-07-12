@@ -1,22 +1,22 @@
-export interface question {
+export interface Question {
   question: string;
   answer: string;
 }
 
-export interface tileCrossWord {
+export interface TileCrossWord {
   answer: string;
   currentLetter: string;
   startPoint: boolean;
   startDirection: string;
 }
 
-export interface position {
+export interface Position {
   x: number;
   y: number;
   positionInWord: number;
 }
 
-export interface answer {
+export interface Answer {
   answer: string;
   questNumber: number;
 }

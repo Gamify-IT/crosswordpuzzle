@@ -1,25 +1,27 @@
 <script setup lang="ts">
-import type { question } from "@/types/index";
+import type { Question } from "@/types/index";
 import questionsJson from "@/assets/questions.json";
 import axios from "axios";
-import { useRoute } from 'vue-router';
+import { useRoute } from "vue-router";
 import config from "@/config";
 
-let questions: question[] = [];
+let questions: Question[] = [];
 
 const route = useRoute();
 const configuration = route.params.id;
-console.log(configuration)
-if(configuration == "default"){
+console.log(configuration);
+if (configuration == "default") {
   questions = questionsJson;
-}else{
-  await axios.get(`${config.apiBaseUrl}/questions/`+configuration)
-  .then((response) => {
-    questions = response.data;
-  }).then(()=>{
-    localStorage.setItem('questions',JSON.stringify(questions))
-    console.log(questions)
-  })
+} else {
+  await axios
+    .get(`${config.apiBaseUrl}/questions/` + configuration)
+    .then((response) => {
+      questions = response.data;
+    })
+    .then(() => {
+      localStorage.setItem("questions", JSON.stringify(questions));
+      console.log(questions);
+    });
 }
 </script>
 
@@ -40,7 +42,7 @@ if(configuration == "default"){
         <div class="col-4 position-relative">
           <router-link
             class="btn btn-primary position-absolute top-50 start-50 translate-middle"
-            :to="{ name: 'crosswordpuzzle'}"
+            :to="{ name: 'crosswordpuzzle' }"
             role="button"
             >Start</router-link
           >
@@ -49,5 +51,3 @@ if(configuration == "default"){
     </div>
   </main>
 </template>
-
-<style scoped></style>

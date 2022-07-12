@@ -14,8 +14,8 @@ const router = createRouter({
       path: "/:id/crosswordpuzzle",
       name: "crosswordpuzzle",
       component: Crosswordpuzzle,
-      props: true
-    }
+      props: true,
+    },
   ],
 });
 
