@@ -12,16 +12,14 @@ const valueOfIntersect = 10;
 const maxTries = 50;
 const interations = 10;
 
-export async function generateCrossword(
-  questions: Question[]
-): Promise<TileCrossWord[][]> {
+export function generateCrossword(questions: Question[]): TileCrossWord[][] {
   const wordCount = questions.length;
   let answers: Answer[] = [];
   const currentAnswers: Answer[] = [];
   let score: number = Number.MIN_SAFE_INTEGER;
   let crossword: TileCrossWord[][] = [];
   for (let i = 0; i < interations; i++) {
-    ({ answers, score, crossword } = await createCrossword(
+    ({ answers, score, crossword } = createCrossword(
       answers,
       wordCount,
       questions,
@@ -41,7 +39,7 @@ export async function generateCrossword(
   );
 }
 
-async function createCrossword(
+function createCrossword(
   answers: Answer[],
   wordCount: number,
   questions: Question[],
@@ -55,8 +53,8 @@ async function createCrossword(
       questNumber: i + 1,
     });
   }
-  const currentCrossword: TileCrossWord[][] = await simpleCrossWord(answers);
-  const currentScore: number = await getScore(currentCrossword);
+  const currentCrossword: TileCrossWord[][] = simpleCrossWord(answers);
+  const currentScore: number = getScore(currentCrossword);
   if (currentScore > score) {
     score = currentScore;
     crossword = currentCrossword;
@@ -67,34 +65,32 @@ async function createCrossword(
   return { answers, score, crossword };
 }
 
-async function simpleCrossWord(answers: Answer[]): Promise<TileCrossWord[][]> {
-  return new Promise<TileCrossWord[][]>(async (resolve) => {
-    const crossword: TileCrossWord[][] = new Array(rows)
-      .fill(emptyTile)
-      .map(() => new Array(columns).fill(emptyTile));
+function simpleCrossWord(answers: Answer[]): TileCrossWord[][] {
+  const crossword: TileCrossWord[][] = new Array(rows)
+    .fill(emptyTile)
+    .map(() => new Array(columns).fill(emptyTile));
 
-    //place first answer in the upper right position
-    let indexOfCurrentAnswer = Math.floor(Math.random() * answers.length);
-    placeWordHorizontal(answers[indexOfCurrentAnswer], 0, 0, crossword);
-    answers.splice(indexOfCurrentAnswer, 1);
-    let tries = 0;
-    //place remaining words randomly
-    while (answers.length > 0 && tries < maxTries) {
-      //choose random word
-      indexOfCurrentAnswer = Math.floor(Math.random() * answers.length);
-      const currentAnswer = answers[indexOfCurrentAnswer];
-      tries++;
-      const placedWord = await tryPlaceWord(currentAnswer, crossword);
-      if (placedWord) {
-        answers.splice(indexOfCurrentAnswer, 1);
-        tries = 0;
-      }
+  //place first answer in the upper right position
+  let indexOfCurrentAnswer = Math.floor(Math.random() * answers.length);
+  placeWordHorizontal(answers[indexOfCurrentAnswer], 0, 0, crossword);
+  answers.splice(indexOfCurrentAnswer, 1);
+  let tries = 0;
+  //place remaining words randomly
+  while (answers.length > 0 && tries < maxTries) {
+    //choose random word
+    indexOfCurrentAnswer = Math.floor(Math.random() * answers.length);
+    const currentAnswer = answers[indexOfCurrentAnswer];
+    tries++;
+    const placedWord = tryPlaceWord(currentAnswer, crossword);
+    if (placedWord) {
+      answers.splice(indexOfCurrentAnswer, 1);
+      tries = 0;
     }
-    resolve(crossword);
-  });
+  }
+  return crossword;
 }
 
-async function removeWord(word: Answer, questions: Question[]) {
+function removeWord(word: Answer, questions: Question[]): void {
   let questIndex = -1;
   questions.forEach((quest, i) => {
     if (quest.answer == word.answer) {
@@ -109,31 +105,26 @@ async function removeWord(word: Answer, questions: Question[]) {
   questions.splice(questIndex, 1);
 }
 
-async function tryPlaceWord(
-  word: Answer,
-  crossword: TileCrossWord[][]
-): Promise<boolean> {
-  return new Promise(async (resolve) => {
-    const intersections: Position[] = [];
-    await getIntersections(word, crossword, intersections);
-    let placed = false;
-    while (intersections.length > 0 && !placed) {
-      const indexOfCurrentIntersection = Math.floor(
-        Math.random() * intersections.length
-      );
-      const curInter = intersections[indexOfCurrentIntersection];
-      intersections.splice(indexOfCurrentIntersection, 1);
+function tryPlaceWord(word: Answer, crossword: TileCrossWord[][]): boolean {
+  const intersections: Position[] = [];
+  getIntersections(word, crossword, intersections);
+  let placed = false;
+  while (intersections.length > 0 && !placed) {
+    const indexOfCurrentIntersection = Math.floor(
+      Math.random() * intersections.length
+    );
+    const curInter = intersections[indexOfCurrentIntersection];
+    intersections.splice(indexOfCurrentIntersection, 1);
 
-      placed = await tryPlaceHorizontal(curInter, word, crossword);
-      if (!placed) {
-        placed = await tryPlaceVertical(curInter, word, crossword);
-      }
+    placed = tryPlaceHorizontal(curInter, word, crossword);
+    if (!placed) {
+      placed = tryPlaceVertical(curInter, word, crossword);
     }
-    resolve(placed);
-  });
+  }
+  return placed;
 }
 
-async function tryPlaceVertical(
+function tryPlaceVertical(
   curInter: Position,
   word: Answer,
   crossword: TileCrossWord[][]
@@ -141,7 +132,7 @@ async function tryPlaceVertical(
   let fit = true;
   let placed = false;
   const characters = word.answer.split("");
-  characters.forEach(async (c, i) => {
+  characters.forEach((c, i) => {
     if (
       curInter.y - curInter.positionInWord + i >= 0 &&
       curInter.y - curInter.positionInWord + i < columns
@@ -168,7 +159,7 @@ async function tryPlaceVertical(
     }
   }
   if (fit) {
-    await placeWordVertical(
+    placeWordVertical(
       word,
       curInter.x,
       curInter.y - curInter.positionInWord,
@@ -179,11 +170,11 @@ async function tryPlaceVertical(
   return placed;
 }
 
-async function tryPlaceHorizontal(
+function tryPlaceHorizontal(
   curInter: Position,
   word: Answer,
   crossword: TileCrossWord[][]
-) {
+): boolean {
   let fit = true;
   let placed = false;
   const characters = word.answer.split("");
@@ -214,7 +205,7 @@ async function tryPlaceHorizontal(
     }
   }
   if (fit) {
-    await placeWordHorizontal(
+    placeWordHorizontal(
       word,
       curInter.x - curInter.positionInWord,
       curInter.y,
@@ -225,207 +216,183 @@ async function tryPlaceHorizontal(
   return placed;
 }
 
-async function checkIntersection(
+function checkIntersection(
   word: Answer,
   pos: Position,
   crossword: TileCrossWord[][]
-): Promise<boolean> {
-  return new Promise<boolean>(async (resolve) => {
-    for (
-      let i = Math.max(pos.x - pos.positionInWord, 0);
-      i < pos.x + word.answer.length - pos.positionInWord;
-      i++
+): boolean {
+  for (
+    let i = Math.max(pos.x - pos.positionInWord, 0);
+    i < pos.x + word.answer.length - pos.positionInWord;
+    i++
+  ) {
+    if (
+      word.answer[i - pos.x + pos.positionInWord] == crossword[i][pos.y].answer
     ) {
-      if (
-        word.answer[i - pos.x + pos.positionInWord] ==
-        crossword[i][pos.y].answer
-      ) {
-        resolve(false);
-        break;
-      }
+      return false;
+      break;
     }
-    for (
-      let i = Math.max(pos.y - pos.positionInWord, 0);
-      i < pos.y + word.answer.length - pos.positionInWord;
-      i++
+  }
+  for (
+    let i = Math.max(pos.y - pos.positionInWord, 0);
+    i < pos.y + word.answer.length - pos.positionInWord;
+    i++
+  ) {
+    if (
+      word.answer[i - pos.y + pos.positionInWord] == crossword[pos.x][i].answer
     ) {
-      if (
-        word.answer[i - pos.y + pos.positionInWord] ==
-        crossword[pos.x][i].answer
-      ) {
-        resolve(false);
-        break;
-      }
+      return false;
+      break;
     }
-    resolve(true);
-  });
+  }
+  return true;
 }
 
-async function getIntersections(
+function getIntersections(
   word: Answer,
   crossword: TileCrossWord[][],
   intersections: Position[]
-): Promise<void> {
-  return new Promise<void>(async (resolve) => {
-    for (let i = 0; i < word.answer.length; i++) {
-      for (let x = 0; x < crossword.length; x++) {
-        for (let y = 0; y < crossword[x].length; y++) {
-          //check if letter matches cell
-          if (crossword[x][y].answer == word.answer[i]) {
-            intersections.push({
-              x: x,
-              y: y,
-              positionInWord: i,
-            });
-          }
+): void {
+  for (let i = 0; i < word.answer.length; i++) {
+    for (let x = 0; x < crossword.length; x++) {
+      for (let y = 0; y < crossword[x].length; y++) {
+        //check if letter matches cell
+        if (crossword[x][y].answer == word.answer[i]) {
+          intersections.push({
+            x: x,
+            y: y,
+            positionInWord: i,
+          });
         }
       }
     }
-    intersections.forEach(async (inter, index) => {
-      const intersect = await checkIntersection(word, inter, crossword);
-      if (intersect) {
-        intersections.splice(index, 1);
-      }
-    });
-    resolve();
+  }
+  intersections.forEach(async (inter, index) => {
+    const intersect = checkIntersection(word, inter, crossword);
+    if (intersect) {
+      intersections.splice(index, 1);
+    }
   });
 }
 
-async function moveGrid(
-  x: number,
-  y: number,
-  crossword: TileCrossWord[][]
-): Promise<void> {
-  return new Promise<void>(async (resolve) => {
-    for (let i = 0; i < x; i++) {
-      const emptyRow: TileCrossWord[] = new Array(columns).fill(emptyTile);
-      crossword.unshift(emptyRow);
-      rows++;
+function moveGrid(x: number, y: number, crossword: TileCrossWord[][]): void {
+  for (let i = 0; i < x; i++) {
+    const emptyRow: TileCrossWord[] = new Array(columns).fill(emptyTile);
+    crossword.unshift(emptyRow);
+    rows++;
+  }
+  for (let i = x; i < 0; i++) {
+    const emptyRow: TileCrossWord[] = new Array(columns).fill(emptyTile);
+    crossword.push(emptyRow);
+    rows++;
+  }
+  for (let i = 0; i < y; i++) {
+    for (const column of crossword) {
+      column.unshift(emptyTile);
     }
-    for (let i = x; i < 0; i++) {
-      const emptyRow: TileCrossWord[] = new Array(columns).fill(emptyTile);
-      crossword.push(emptyRow);
-      rows++;
+    columns++;
+  }
+  for (let i = y; i < 0; i++) {
+    for (const column of crossword) {
+      column.push(emptyTile);
     }
-    for (let i = 0; i < y; i++) {
-      for (const column of crossword) {
-        column.unshift(emptyTile);
-      }
-      columns++;
-    }
-    for (let i = y; i < 0; i++) {
-      for (const column of crossword) {
-        column.push(emptyTile);
-      }
-    }
-    resolve();
-  });
+  }
 }
 
-async function placeWordVertical(
+function placeWordVertical(
   word: Answer,
   startX: number,
   startY: number,
   crossword: TileCrossWord[][]
-): Promise<void> {
-  return new Promise<void>(async (resolve) => {
-    const characters = word.answer.split("");
-    if (startY <= 0) {
-      await moveGrid(0, Math.abs(startY) + 1, crossword);
-      startY += Math.abs(startY) + 1;
-    }
-    if (startY + word.answer.length > columns) {
-      await moveGrid(0, columns - startY - word.answer.length, crossword);
-    }
-    const firstTile: TileCrossWord = {
-      answer: String(word.questNumber),
+): void {
+  const characters = word.answer.split("");
+  if (startY <= 0) {
+    moveGrid(0, Math.abs(startY) + 1, crossword);
+    startY += Math.abs(startY) + 1;
+  }
+  if (startY + word.answer.length > columns) {
+    moveGrid(0, columns - startY - word.answer.length, crossword);
+  }
+  const firstTile: TileCrossWord = {
+    answer: String(word.questNumber),
+    currentLetter: "",
+    startPoint: true,
+    startDirection: "down",
+  };
+  crossword[startX][startY - 1] = firstTile;
+  startpoints.push(firstTile);
+  for (let i = 0; i < characters.length; i++) {
+    const tile: TileCrossWord = {
+      answer: characters[i],
       currentLetter: "",
-      startPoint: true,
-      startDirection: "down",
+      startPoint: false,
+      startDirection: "",
     };
-    crossword[startX][startY - 1] = firstTile;
-    startpoints.push(firstTile);
-    for (let i = 0; i < characters.length; i++) {
-      const tile: TileCrossWord = {
-        answer: characters[i],
-        currentLetter: "",
-        startPoint: false,
-        startDirection: "",
-      };
-      crossword[startX][startY + i] = tile;
-    }
-    resolve();
-  });
+    crossword[startX][startY + i] = tile;
+  }
 }
 
-async function placeWordHorizontal(
+function placeWordHorizontal(
   word: Answer,
   startX: number,
   startY: number,
   crossword: TileCrossWord[][]
-): Promise<void> {
-  return new Promise<void>(async (resolve) => {
-    const characters = word.answer.split("");
-    if (startX <= 0) {
-      await moveGrid(Math.abs(startX) + 1, 0, crossword);
-      startX += Math.abs(startX) + 1;
-    }
-    if (startX + word.answer.length > rows) {
-      await moveGrid(rows - startX - word.answer.length, 0, crossword);
-    }
-    const firstTile: TileCrossWord = {
-      answer: String(word.questNumber),
+): void {
+  const characters = word.answer.split("");
+  if (startX <= 0) {
+    moveGrid(Math.abs(startX) + 1, 0, crossword);
+    startX += Math.abs(startX) + 1;
+  }
+  if (startX + word.answer.length > rows) {
+    moveGrid(rows - startX - word.answer.length, 0, crossword);
+  }
+  const firstTile: TileCrossWord = {
+    answer: String(word.questNumber),
+    currentLetter: "",
+    startPoint: true,
+    startDirection: "right",
+  };
+  crossword[startX - 1][startY] = firstTile;
+  startpoints.push(firstTile);
+  crossword[startX - 1][startY] = firstTile;
+  for (let i = 0; i < characters.length; i++) {
+    const tile: TileCrossWord = {
+      answer: characters[i],
       currentLetter: "",
-      startPoint: true,
-      startDirection: "right",
+      startPoint: false,
+      startDirection: "",
     };
-    crossword[startX - 1][startY] = firstTile;
-    startpoints.push(firstTile);
-    crossword[startX - 1][startY] = firstTile;
-    for (let i = 0; i < characters.length; i++) {
-      const tile: TileCrossWord = {
-        answer: characters[i],
-        currentLetter: "",
-        startPoint: false,
-        startDirection: "",
-      };
-      crossword[startX + i][startY] = tile;
-    }
-    resolve();
-  });
+    crossword[startX + i][startY] = tile;
+  }
 }
 
-async function getScore(crossword: TileCrossWord[][]): Promise<number> {
-  return new Promise<number>(async (resolve) => {
-    let intersections = 0;
-    crossword.forEach(async (column, x) => {
-      column.forEach(async (tile, y) => {
-        if (tile.answer != "empty") {
-          const intersect = await checkIfIntersection(crossword, x, y);
-          if (intersect) {
-            intersections++;
-          }
+function getScore(crossword: TileCrossWord[][]): number {
+  let intersections = 0;
+  crossword.forEach(async (column, x) => {
+    column.forEach(async (tile, y) => {
+      if (tile.answer != "empty") {
+        const intersect = checkIfIntersection(crossword, x, y);
+        if (intersect) {
+          intersections++;
         }
-      });
+      }
     });
-    const result = intersections * valueOfIntersect - rows - columns;
-    resolve(result);
   });
+  const result = intersections * valueOfIntersect - rows - columns;
+  return result;
 }
 
-async function checkIfIntersection(
+function checkIfIntersection(
   crossword: TileCrossWord[][],
   x: number,
   y: number
-): Promise<boolean> {
-  return new Promise<boolean>(async (resolve) => {
-    const horizontal = checkInterHorizontal(crossword, x, y);
-    const vertical = checkInterVertical(crossword, x, y);
-    if (horizontal && vertical) {
-      resolve(true);
-    }
-    resolve(false);
-  });
+): boolean {
+  const horizontal = checkInterHorizontal(crossword, x, y);
+  const vertical = checkInterVertical(crossword, x, y);
+  if (horizontal && vertical) {
+    return true;
+  }
+  return false;
 }
 
 function checkInterHorizontal(

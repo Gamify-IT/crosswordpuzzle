@@ -2,7 +2,7 @@
 import { generateCrossword } from "@/crosswordgenerator";
 import { ref } from "vue";
 import { Modal } from "bootstrap";
-import Field from "@/components/Field.vue";
+import InputField from "@/components/InputField.vue";
 import type { Question } from "@/types";
 
 const evaluationModal = ref(null);
@@ -15,7 +15,7 @@ questions.forEach((question) => {
   //workaround cause script is case-sensitive
   question.answer = question.answer.toUpperCase();
 });
-const crosswordpuzzle = await generateCrossword(questions);
+const crosswordpuzzle = generateCrossword(questions);
 console.log(crosswordpuzzle);
 
 const evaluationModalContext = ref({ title: "", text: "" });
@@ -38,7 +38,6 @@ function evaluateSolution() {
     evaluationModalContext.value.title = "Not the correct answers";
     evaluationModalContext.value.text = "Maybe the next time";
   }
-  //@ts-ignore
   const modal = new Modal(evaluationModal.value);
   modal.show();
 }
@@ -51,12 +50,14 @@ function evaluateSolution() {
         <div
           class="m-0 p-0 crosswordRow"
           v-for="crosswordRow in crosswordpuzzle"
+          :key="crosswordRow"
         >
           <div
             class="crosswordTile m-0 p-0"
             v-for="crosswordTile in crosswordRow"
+            :key="crosswordTile"
           >
-            <Field :crosswordTile="crosswordTile" />
+            <InputField :crosswordTile="crosswordTile" />
           </div>
         </div>
       </div>
@@ -64,7 +65,11 @@ function evaluateSolution() {
       <div class="col-3">
         <ol class="list-group list-group-flush list-group-numbered">
           <h1>Questions</h1>
-          <li v-for="question in questions" class="list-group-item">
+          <li
+            v-for="question in questions"
+            class="list-group-item"
+            :key="question"
+          >
             {{ question.question }}
           </li>
         </ol>

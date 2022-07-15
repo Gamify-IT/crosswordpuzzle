@@ -12,8 +12,9 @@ const configuration = route.params.id;
 console.log(configuration);
 if (configuration == "default") {
   questions = questionsJson;
+  localStorage.setItem("questions", JSON.stringify(questions));
 } else {
-  await axios
+    axios
     .get(`${config.apiBaseUrl}/questions/` + configuration)
     .then((response) => {
       questions = response.data;
@@ -32,7 +33,11 @@ if (configuration == "default") {
         <div class="col-8">
           <ol class="list-group list-group-flush list-group-numbered">
             <h1>Questions</h1>
-            <li v-for="question in questions" class="list-group-item">
+            <li
+              v-for="question in questions"
+              class="list-group-item"
+              :key="question"
+            >
               {{ question.question }}
               <small>{{ question.answer }}</small>
             </li>
@@ -41,6 +46,7 @@ if (configuration == "default") {
 
         <div class="col-4 position-relative">
           <router-link
+            id="start-button"
             class="btn btn-primary position-absolute top-50 start-50 translate-middle"
             :to="{ name: 'crosswordpuzzle' }"
             role="button"
