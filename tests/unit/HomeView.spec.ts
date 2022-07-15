@@ -1,4 +1,4 @@
-import { mount, shallowMount, VueWrapper } from "@vue/test-utils";
+import { mount, VueWrapper } from "@vue/test-utils";
 import HomeView from "@/views/HomeView.vue";
 import router from "@/router/index";
 
@@ -15,8 +15,8 @@ describe("HomeView.vue", () => {
     });
   });
   it("renders correctly with default questions", () => {
-    const startButton = wrapper.find('#start-button');
+    const startButton = wrapper.find("#start-button");
     expect(startButton.exists()).toBe(true);
-    expect(startButton.text()).toBe('Start');
+    expect(startButton.text()).toBe("Start");
   });
 });

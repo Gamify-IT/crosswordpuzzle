@@ -14,7 +14,7 @@ if (configuration == "default") {
   questions = questionsJson;
   localStorage.setItem("questions", JSON.stringify(questions));
 } else {
-    axios
+  axios
     .get(`${config.apiBaseUrl}/questions/` + configuration)
     .then((response) => {
       questions = response.data;
