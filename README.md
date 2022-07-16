@@ -22,6 +22,12 @@ npm install
 npm run serve
 ```
 
+To also run the backend and a database use:
+```
+docker-compose -f docker-compose-dev.yaml up
+```
+now you can access it at `[http://localhost:8000](http://localhost:8000)`
+
 ### Build
 
 Build the Docker-Container
