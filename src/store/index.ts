@@ -4,7 +4,6 @@ import { Question } from "@/types";
 import questionsJson from "@/assets/questions.json";
 
 export interface State {
-  count: string;
   questions: Array<Question>;
 }
 
@@ -12,7 +11,6 @@ export const key: InjectionKey<Store<State>> = Symbol();
 
 export const store = createStore<State>({
   state: {
-    count: "Hello",
     questions: questionsJson,
   },
   mutations: {
