@@ -19,8 +19,3 @@ export const store = createStore<State>({
     },
   },
 });
-
-// define your own `useStore` composition function
-export function useStore() {
-  return baseUseStore(key);
-}

@@ -1,16 +1,17 @@
 import { mount, VueWrapper } from "@vue/test-utils";
 import HomeView from "@/views/HomeView.vue";
 import router from "@/router/index";
+import { store } from "@/store/index";
 
 describe("HomeView.vue", () => {
   let wrapper: VueWrapper;
   beforeEach(async () => {
     const configurationName = "default";
-    router.push("/#");
+    router.push("/" + configurationName);
     await router.isReady();
     wrapper = mount(HomeView, {
       global: {
-        plugins: [router],
+        plugins: [router, store],
       },
     });
   });

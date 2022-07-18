@@ -4,24 +4,21 @@ import axios from "axios";
 import { useRoute } from "vue-router";
 import config from "@/config";
 import { ref } from "vue";
-import { useStore } from "@/store";
+import { store } from "@/store/index";
 
 let questions = ref(Array<Question>());
 
-const store = useStore();
-
 const route = useRoute();
-const configuration = route.hash;
+
+const configuration = route.params.id;
 console.log(configuration);
-if (configuration == "") {
+if (configuration == "default") {
   questions.value = store.state.questions;
   console.log(questions);
   console.log("default");
 } else {
-  let configWithoutHash = configuration.slice(1);
-  console.log(configWithoutHash);
   axios
-    .get(`${config.apiBaseUrl}/questions/` + configWithoutHash)
+    .get(`${config.apiBaseUrl}/questions/` + configuration)
     .then((response) => {
       questions.value = response.data;
     })
