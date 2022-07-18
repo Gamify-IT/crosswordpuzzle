@@ -5,23 +5,29 @@ import axios from "axios";
 import { useRoute } from "vue-router";
 import config from "@/config";
 import { ref } from "vue";
+import { useStore } from "@/store";
 
 let questions = ref(Array<Question>());
 
+const store = useStore();
+
 const route = useRoute();
-const configuration = route.params.id;
+const configuration = route.hash;
 console.log(configuration);
-if (configuration == "default") {
-  questions.value = questionsJson;
-  localStorage.setItem("questions", JSON.stringify(questions.value));
+if (configuration == "") {
+  questions.value = store.state.questions;
+  console.log(questions);
+  console.log("default");
 } else {
+  let configWithoutHash = configuration.slice(1);
+  console.log(configWithoutHash);
   axios
-    .get(`${config.apiBaseUrl}/questions/` + configuration)
+    .get(`${config.apiBaseUrl}/questions/` + configWithoutHash)
     .then((response) => {
       questions.value = response.data;
     })
     .then(() => {
-      localStorage.setItem("questions", JSON.stringify(questions.value));
+      store.commit("setQuestions", questions);
       console.log(questions.value);
     });
 }

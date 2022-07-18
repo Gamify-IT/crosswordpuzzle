@@ -6,12 +6,12 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes: [
     {
-      path: "/:id",
+      path: "/",
       name: "home",
       component: HomeView,
     },
     {
-      path: "/:id/crosswordpuzzle",
+      path: "/crosswordpuzzle",
       name: "crosswordpuzzle",
       component: CrosswordpuzzleView,
       props: true,
