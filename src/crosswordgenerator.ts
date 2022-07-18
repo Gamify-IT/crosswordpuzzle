@@ -376,8 +376,7 @@ function getScore(crossword: TileCrossWord[][]): number {
       }
     });
   });
-  const result = intersections * valueOfIntersect - rows - columns;
-  return result;
+  return intersections * valueOfIntersect - rows - columns;
 }
 
 function checkIfIntersection(
