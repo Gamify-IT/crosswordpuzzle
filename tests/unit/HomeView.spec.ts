@@ -6,7 +6,7 @@ describe("HomeView.vue", () => {
   let wrapper: VueWrapper;
   beforeEach(async () => {
     const configurationName = "default";
-    router.push("/" + configurationName);
+    router.push("/#");
     await router.isReady();
     wrapper = mount(HomeView, {
       global: {
