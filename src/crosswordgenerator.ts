@@ -1,4 +1,4 @@
-import type { Question, TileCrossWord, Position, Answer } from "./types/index";
+import type { Question, TileCrossWord, Position, Answer } from "@/types";
 let rows = 10;
 let columns = 10;
 const startpoints: TileCrossWord[] = [];

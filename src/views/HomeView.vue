@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { Question } from "@/types/index";
-import questionsJson from "@/assets/questions.json";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import config from "@/config";
