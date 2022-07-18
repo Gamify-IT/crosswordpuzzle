@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
-import Crosswordpuzzle from "../views/Crosswordpuzzle.vue";
+import CrosswordpuzzleView from "../views/CrosswordpuzzleView.vue";
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
   routes: [
     {
       path: "/:id",
@@ -13,7 +13,7 @@ const router = createRouter({
     {
       path: "/:id/crosswordpuzzle",
       name: "crosswordpuzzle",
-      component: Crosswordpuzzle,
+      component: CrosswordpuzzleView,
       props: true,
     },
   ],

@@ -4,23 +4,25 @@ import questionsJson from "@/assets/questions.json";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import config from "@/config";
+import { ref } from "vue";
 
-let questions: Question[] = [];
+let questions = ref(Array<Question>());
 
 const route = useRoute();
 const configuration = route.params.id;
 console.log(configuration);
 if (configuration == "default") {
-  questions = questionsJson;
+  questions.value = questionsJson;
+  localStorage.setItem("questions", JSON.stringify(questions.value));
 } else {
-  await axios
+  axios
     .get(`${config.apiBaseUrl}/questions/` + configuration)
     .then((response) => {
-      questions = response.data;
+      questions.value = response.data;
     })
     .then(() => {
-      localStorage.setItem("questions", JSON.stringify(questions));
-      console.log(questions);
+      localStorage.setItem("questions", JSON.stringify(questions.value));
+      console.log(questions.value);
     });
 }
 </script>
@@ -32,7 +34,11 @@ if (configuration == "default") {
         <div class="col-8">
           <ol class="list-group list-group-flush list-group-numbered">
             <h1>Questions</h1>
-            <li v-for="question in questions" class="list-group-item">
+            <li
+              v-for="question in questions"
+              class="list-group-item"
+              :key="question"
+            >
               {{ question.question }}
               <small>{{ question.answer }}</small>
             </li>
@@ -41,6 +47,7 @@ if (configuration == "default") {
 
         <div class="col-4 position-relative">
           <router-link
+            id="start-button"
             class="btn btn-primary position-absolute top-50 start-50 translate-middle"
             :to="{ name: 'crosswordpuzzle' }"
             role="button"

@@ -1,11 +1,22 @@
 <script setup lang="ts">
+import { defineProps, ref, watch } from "vue";
 import type { TileCrossWord } from "@/types/index";
 
 const emptyTileString = "empty";
 
-defineProps<{
+const props = defineProps<{
   crosswordTile: TileCrossWord;
 }>();
+
+const crosswordTile = ref(props.crosswordTile);
+
+watch(
+  () => props.crosswordTile,
+  (newCrosswordTile) => {
+    crosswordTile.value = newCrosswordTile;
+  },
+  { deep: true }
+);
 </script>
 
 <template>
