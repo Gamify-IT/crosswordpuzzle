@@ -4,9 +4,7 @@ import { ref } from "vue";
 import { Modal } from "bootstrap";
 import InputField from "@/components/InputField.vue";
 import type { Question } from "@/types";
-import { useStore } from "@/store";
-
-const store = useStore();
+import { store } from "@/store/index";
 
 const evaluationModal = ref(null);
 
