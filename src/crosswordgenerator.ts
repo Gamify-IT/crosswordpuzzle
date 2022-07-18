@@ -230,7 +230,6 @@ function checkIntersection(
       word.answer[i - pos.x + pos.positionInWord] == crossword[i][pos.y].answer
     ) {
       return false;
-      break;
     }
   }
   for (
@@ -242,7 +241,6 @@ function checkIntersection(
       word.answer[i - pos.y + pos.positionInWord] == crossword[pos.x][i].answer
     ) {
       return false;
-      break;
     }
   }
   return true;
