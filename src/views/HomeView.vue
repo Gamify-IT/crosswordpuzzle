@@ -35,7 +35,7 @@ if (configuration == "default") {
         console.log(error.response.status);
         console.log(error.response.headers);
         if (error.response.status == 404) {
-          errorText.value = "configuration not found, please contact an admin";
+          errorText.value = "the selected was configuration not found";
         } else {
           errorText.value = error;
         }
@@ -47,7 +47,9 @@ if (configuration == "default") {
 <template>
   <main>
     <div class="alert alert-danger" v-if="errorText">
-      {{ errorText }}
+      A fatal error occured: <br />
+      {{ errorText }} <br />
+      please report the error to an admin.
     </div>
     <div class="crosswordpuzzle container" v-if="isActive">
       <div class="row">
