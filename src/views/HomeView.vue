@@ -35,7 +35,7 @@ if (configuration == "default") {
         console.log(error.response.status);
         console.log(error.response.headers);
         if (error.response.status == 404) {
-          errorText.value = "the selected was configuration not found";
+          errorText.value = "the selected configuration was not found";
         } else {
           errorText.value = error;
         }
