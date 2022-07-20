@@ -11,7 +11,7 @@ let questions = ref(Array<Question>());
 
 let errorText = ref("");
 
-let isActive = false;
+let isActive = ref(false);
 
 const route = useRoute();
 
@@ -20,14 +20,14 @@ console.log(configuration);
 if (configuration == "default") {
   store.commit("setQuestions", questionsJson);
   questions.value = questionsJson;
-  isActive = true;
+  isActive.value = true;
 } else {
   axios
     .get(`${config.apiBaseUrl}/questions/` + configuration)
     .then((response) => {
       questions.value = response.data;
       store.commit("setQuestions", questions);
-      isActive = true;
+      isActive.value = true;
     })
     .catch((error) => {
       if (error.response) {
