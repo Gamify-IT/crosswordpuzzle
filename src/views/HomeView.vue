@@ -1,35 +1,58 @@
 <script setup lang="ts">
 import type { Question } from "@/types/index";
-import questionsJson from "@/assets/questions.json";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import config from "@/config";
 import { ref } from "vue";
+import { store } from "@/store/index";
+import questionsJson from "@/assets/questions.json";
 
 let questions = ref(Array<Question>());
 
+let errorText = ref("");
+
+let isActive = ref(false);
+
 const route = useRoute();
+
 const configuration = route.params.id;
 console.log(configuration);
 if (configuration == "default") {
+  store.commit("setQuestions", questionsJson);
   questions.value = questionsJson;
-  localStorage.setItem("questions", JSON.stringify(questions.value));
+  isActive.value = true;
 } else {
   axios
     .get(`${config.apiBaseUrl}/questions/` + configuration)
     .then((response) => {
       questions.value = response.data;
+      store.commit("setQuestions", questions);
+      isActive.value = true;
     })
-    .then(() => {
-      localStorage.setItem("questions", JSON.stringify(questions.value));
-      console.log(questions.value);
+    .catch((error) => {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        isActive.value = false;
+        if (error.response.status == 404) {
+          errorText.value = "the selected configuration was not found";
+        } else {
+          errorText.value = error;
+        }
+      }
     });
 }
 </script>
 
 <template>
   <main>
-    <div class="crosswordpuzzle container">
+    <div class="alert alert-danger" v-if="errorText">
+      A fatal error occured: <br />
+      {{ errorText }} <br />
+      please report the error to an admin.
+    </div>
+    <div class="crosswordpuzzle container" v-if="isActive">
       <div class="row">
         <div class="col-8">
           <ol class="list-group list-group-flush list-group-numbered">
@@ -44,7 +67,6 @@ if (configuration == "default") {
             </li>
           </ol>
         </div>
-
         <div class="col-4 position-relative">
           <router-link
             id="start-button"

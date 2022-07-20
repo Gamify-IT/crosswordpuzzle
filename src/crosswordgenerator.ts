@@ -1,4 +1,4 @@
-import type { Question, TileCrossWord, Position, Answer } from "./types/index";
+import type { Question, TileCrossWord, Position, Answer } from "@/types";
 let rows = 10;
 let columns = 10;
 const startpoints: TileCrossWord[] = [];
@@ -230,7 +230,6 @@ function checkIntersection(
       word.answer[i - pos.x + pos.positionInWord] == crossword[i][pos.y].answer
     ) {
       return false;
-      break;
     }
   }
   for (
@@ -242,7 +241,6 @@ function checkIntersection(
       word.answer[i - pos.y + pos.positionInWord] == crossword[pos.x][i].answer
     ) {
       return false;
-      break;
     }
   }
   return true;
@@ -378,8 +376,7 @@ function getScore(crossword: TileCrossWord[][]): number {
       }
     });
   });
-  const result = intersections * valueOfIntersect - rows - columns;
-  return result;
+  return intersections * valueOfIntersect - rows - columns;
 }
 
 function checkIfIntersection(

@@ -4,12 +4,12 @@ import { ref } from "vue";
 import { Modal } from "bootstrap";
 import InputField from "@/components/InputField.vue";
 import type { Question } from "@/types";
+import { store } from "@/store/index";
 
 const evaluationModal = ref(null);
 
-let questions: Question[] = JSON.parse(
-  localStorage.getItem("questions") || "[]"
-);
+let questions: Question[] = store.state.questions;
+console.log(questions);
 
 questions.forEach((question) => {
   //workaround cause script is case-sensitive
