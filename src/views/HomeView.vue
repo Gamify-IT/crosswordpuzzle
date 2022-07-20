@@ -11,6 +11,8 @@ let questions = ref(Array<Question>());
 
 let errorText = ref("");
 
+let isActive = false;
+
 const route = useRoute();
 
 const configuration = route.params.id;
@@ -18,14 +20,16 @@ console.log(configuration);
 if (configuration == "default") {
   store.commit("setQuestions", questionsJson);
   questions.value = questionsJson;
+  isActive = true;
 } else {
   axios
     .get(`${config.apiBaseUrl}/questions/` + configuration)
     .then((response) => {
       questions.value = response.data;
       store.commit("setQuestions", questions);
+      isActive = true;
     })
-    .catch(function (error) {
+    .catch((error) => {
       if (error.response) {
         console.log(error.response.data);
         console.log(error.response.status);
@@ -45,7 +49,7 @@ if (configuration == "default") {
     <div class="alert alert-danger" v-if="errorText">
       {{ errorText }}
     </div>
-    <div class="crosswordpuzzle container">
+    <div class="crosswordpuzzle container" v-if="isActive">
       <div class="row">
         <div class="col-8">
           <ol class="list-group list-group-flush list-group-numbered">
@@ -60,7 +64,6 @@ if (configuration == "default") {
             </li>
           </ol>
         </div>
-
         <div class="col-4 position-relative">
           <router-link
             id="start-button"
