@@ -5,32 +5,46 @@ import { useRoute } from "vue-router";
 import config from "@/config";
 import { ref } from "vue";
 import { store } from "@/store/index";
+import questionsJson from "@/assets/questions.json";
 
 let questions = ref(Array<Question>());
+
+let errorText = ref("");
 
 const route = useRoute();
 
 const configuration = route.params.id;
 console.log(configuration);
 if (configuration == "default") {
-  questions.value = store.state.questions;
-  console.log(questions);
-  console.log("default");
+  store.commit("setQuestions", questionsJson);
+  questions.value = questionsJson;
 } else {
   axios
     .get(`${config.apiBaseUrl}/questions/` + configuration)
     .then((response) => {
       questions.value = response.data;
-    })
-    .then(() => {
       store.commit("setQuestions", questions);
-      console.log(questions.value);
+    })
+    .catch(function (error) {
+      if (error.response) {
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        if (error.response.status == 404) {
+          errorText.value = "configuration not found, please contact an admin";
+        } else {
+          errorText.value = error;
+        }
+      }
     });
 }
 </script>
 
 <template>
   <main>
+    <div class="alert alert-danger" v-if="errorText">
+      {{ errorText }}
+    </div>
     <div class="crosswordpuzzle container">
       <div class="row">
         <div class="col-8">
