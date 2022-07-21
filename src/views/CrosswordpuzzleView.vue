@@ -70,7 +70,7 @@ function evaluateSolution() {
             class="list-group-item"
             :key="question"
           >
-            {{ question.question }}
+            {{ question.questionText }}
           </li>
         </ol>
         <button class="btn btn-primary m-3" @click="evaluateSolution()">

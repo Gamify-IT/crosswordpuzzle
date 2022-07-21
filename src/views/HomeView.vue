@@ -62,7 +62,7 @@ if (configuration == "default") {
               class="list-group-item"
               :key="question"
             >
-              {{ question.question }}
+              {{ question.questionText }}
               <small>{{ question.answer }}</small>
             </li>
           </ol>
