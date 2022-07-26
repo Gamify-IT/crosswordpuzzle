@@ -73,7 +73,7 @@ function evaluateSolution() {
             {{ question.question }}
           </li>
         </ol>
-        <button class="btn btn-primary m-3" @click="evaluateSolution()">
+        <button id="evaluate-button" class="btn btn-primary m-3" @click="evaluateSolution()">
           Evaluate
         </button>
       </div>
