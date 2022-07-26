@@ -1,13 +1,12 @@
 import { mount, VueWrapper } from "@vue/test-utils";
 import CrosswordpuzzleView from "@/views/CrosswordpuzzleView.vue";
-import InputField from "@/components/InputField.vue";
 import router from "@/router/index";
 import { store } from "@/store/index";
 import questionsJson from "@/assets/questions.json";
 
 describe("GameView.vue", () => {
   let wrapper: VueWrapper;
-  let questions: {question: string, answer: string}[]
+  let questions: { question: string; answer: string }[];
   beforeEach(async () => {
     questions = questionsJson;
     store.commit("setQuestions", questions);
@@ -21,14 +20,12 @@ describe("GameView.vue", () => {
     });
   });
   it("Renders GameView with default questions", async () => {
-
     const startButton = wrapper.find("#evaluate-button");
     expect(startButton.exists()).toBe(true);
     expect(startButton.text()).toBe("Evaluate");
 
-    for (let question of questions) {
+    for (const question of questions) {
       expect(wrapper.html()).toContain(question.question);
     }
-    
   });
 });
