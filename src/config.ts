@@ -1,4 +1,4 @@
 export default {
   //URL of RESTful API
-  apiBaseUrl: "/minigames/crosswordpuzzle/api/v1",
+  apiBaseUrl: "api/minigames/crosswordpuzzle/v1",
 };
