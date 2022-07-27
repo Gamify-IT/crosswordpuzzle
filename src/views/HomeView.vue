@@ -23,9 +23,9 @@ if (configuration == "default") {
   isActive.value = true;
 } else {
   axios
-    .get(`${config.apiBaseUrl}/questions/` + configuration)
+    .get(`${config.apiBaseUrl}/configurations/` + configuration)
     .then((response) => {
-      questions.value = response.data;
+      questions.value = response.data.questions;
       store.commit("setQuestions", questions);
       isActive.value = true;
     })
@@ -62,7 +62,7 @@ if (configuration == "default") {
               class="list-group-item"
               :key="question"
             >
-              {{ question.question }}
+              {{ question.questionText }}
               <small>{{ question.answer }}</small>
             </li>
           </ol>

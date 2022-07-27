@@ -6,7 +6,7 @@ import questionsJson from "@/assets/questions.json";
 
 describe("GameView.vue", () => {
   let wrapper: VueWrapper;
-  let questions: { question: string; answer: string }[];
+  let questions: { questionText: string; answer: string }[];
   beforeEach(async () => {
     questions = questionsJson;
     store.commit("setQuestions", questions);
@@ -25,7 +25,7 @@ describe("GameView.vue", () => {
     expect(startButton.text()).toBe("Evaluate");
 
     for (const question of questions) {
-      expect(wrapper.html()).toContain(question.question);
+      expect(wrapper.html()).toContain(question.questionText);
     }
   });
 });
