@@ -16,7 +16,6 @@ let isActive = ref(false);
 const route = useRoute();
 
 const configuration = route.params.id;
-console.log(configuration);
 if (configuration == "default") {
   store.commit("setQuestions", questionsJson);
   questions.value = questionsJson;
