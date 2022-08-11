@@ -10,9 +10,7 @@ import { RouterView } from "vue-router";
       </div>
     </nav>
   </header>
-  <Suspense>
-    <RouterView />
-  </Suspense>
+  <RouterView />
 </template>
 
 <style></style>
