@@ -1,4 +1,5 @@
-import type { Question, TileCrossWord, Position, Answer } from "@/types";
+import type { Answer, Position, Question, TileCrossWord } from "@/types";
+
 let rows = 10;
 let columns = 10;
 const startpoints: TileCrossWord[] = [];
@@ -7,6 +8,8 @@ const emptyTile: TileCrossWord = {
   currentLetter: "empty",
   startPoint: false,
   startDirection: "empty",
+  positionX: -1,
+  positionY: -1,
 };
 const valueOfIntersect = 10;
 const maxTries = 50;
@@ -27,6 +30,12 @@ export function generateCrossword(questions: Question[]): TileCrossWord[][] {
       crossword,
       currentAnswers
     ));
+    for (let i = 0; i < crossword.length; i++) {
+      for (let j = 0; j < crossword[i].length; j++) {
+        crossword[i][j].positionX = i;
+        crossword[i][j].positionY = j;
+      }
+    }
   }
 
   while (currentAnswers.length > 0) {
@@ -316,17 +325,20 @@ function placeWordVertical(
     currentLetter: "",
     startPoint: true,
     startDirection: "down",
+    positionX: 0,
+    positionY: 0,
   };
   crossword[startX][startY - 1] = firstTile;
   startpoints.push(firstTile);
   for (let i = 0; i < characters.length; i++) {
-    const tile: TileCrossWord = {
+    crossword[startX][startY + i] = {
       answer: characters[i],
       currentLetter: "",
       startPoint: false,
       startDirection: "",
+      positionX: 0,
+      positionY: 0,
     };
-    crossword[startX][startY + i] = tile;
   }
 }
 
@@ -349,25 +361,27 @@ function placeWordHorizontal(
     currentLetter: "",
     startPoint: true,
     startDirection: "right",
+    positionX: startX - 1,
+    positionY: startY,
   };
   crossword[startX - 1][startY] = firstTile;
   startpoints.push(firstTile);
-  crossword[startX - 1][startY] = firstTile;
   for (let i = 0; i < characters.length; i++) {
-    const tile: TileCrossWord = {
+    crossword[startX + i][startY] = {
       answer: characters[i],
       currentLetter: "",
       startPoint: false,
       startDirection: "",
+      positionX: startX + i,
+      positionY: startY,
     };
-    crossword[startX + i][startY] = tile;
   }
 }
 
 function getScore(crossword: TileCrossWord[][]): number {
   let intersections = 0;
   crossword.forEach(async (column, x) => {
-    column.forEach(async (tile, y) => {
+    column.forEach((tile, y) => {
       if (tile.answer != "empty") {
         const intersect = checkIfIntersection(crossword, x, y);
         if (intersect) {
@@ -386,10 +400,7 @@ function checkIfIntersection(
 ): boolean {
   const horizontal = checkInterHorizontal(crossword, x, y);
   const vertical = checkInterVertical(crossword, x, y);
-  if (horizontal && vertical) {
-    return true;
-  }
-  return false;
+  return horizontal && vertical;
 }
 
 function checkInterHorizontal(

@@ -8,6 +8,8 @@ export interface TileCrossWord {
   currentLetter: string;
   startPoint: boolean;
   startDirection: string;
+  positionX: number;
+  positionY: number;
 }
 
 export interface Position {
