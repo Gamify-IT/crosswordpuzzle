@@ -45,74 +45,77 @@ watch(
 );
 
 async function keyDown(key: KeyboardEvent) {
-  console.log(key.key);
-  crosswordTile.value.currentLetter = key.key;
-  let elementRight = document.getElementById(
-    "inputField:x" +
-      (crosswordTile.value.positionX + 1) +
-      ",y" +
-      crosswordTile.value.positionY
-  );
-  let elementDown = document.getElementById(
-    "inputField:x" +
-      crosswordTile.value.positionX +
-      ",y" +
-      (crosswordTile.value.positionY + 1)
-  );
-  let tileRight = null;
-  if (crossword.value.length > crosswordTile.value.positionX + 1) {
-    tileRight =
-      crossword.value[crosswordTile.value.positionX + 1][
+  if (key.key.length == 1) {
+    crosswordTile.value.currentLetter = key.key;
+    let elementRight = document.getElementById(
+      "inputField:x" +
+        (crosswordTile.value.positionX + 1) +
+        ",y" +
         crosswordTile.value.positionY
-      ];
-  }
-  let tileDown = null;
-  if (crossword.value[0].length > crosswordTile.value.positionY + 1) {
-    tileDown =
-      crossword.value[crosswordTile.value.positionX][
-        crosswordTile.value.positionY + 1
-      ];
-  }
-  if (direction.value == "right") {
-    if (elementRight != null) {
-      elementRight.focus();
-    } else {
-      emit("direction", "");
+    );
+    let elementDown = document.getElementById(
+      "inputField:x" +
+        crosswordTile.value.positionX +
+        ",y" +
+        (crosswordTile.value.positionY + 1)
+    );
+    let tileRight = null;
+    if (crossword.value.length > crosswordTile.value.positionX + 1) {
+      tileRight =
+        crossword.value[crosswordTile.value.positionX + 1][
+          crosswordTile.value.positionY
+        ];
     }
-  }
-  if (direction.value == "down") {
-    if (elementDown != null) {
-      elementDown.focus();
-    } else {
-      emit("direction", "");
+    let tileDown = null;
+    if (crossword.value[0].length > crosswordTile.value.positionY + 1) {
+      tileDown =
+        crossword.value[crosswordTile.value.positionX][
+          crosswordTile.value.positionY + 1
+        ];
     }
-  }
-  if (direction.value == "") {
-    if (elementRight != null) {
-      console.log("right");
-      console.log(
-        crossword.value[crosswordTile.value.positionY][
-          crosswordTile.value.positionX + 1
-        ].currentLetter.length
-      );
-      if (
-        crossword.value[crosswordTile.value.positionY][
-          crosswordTile.value.positionX + 1
-        ].currentLetter.length == 0
-      ) {
-        console.log("right empty");
+    if (direction.value == "right") {
+      if (elementRight != null) {
         elementRight.focus();
-        emit("direction", "right");
       } else {
-        if (elementDown != null) {
-          elementDown.focus();
-          emit("direction", "down");
-        }
+        emit("direction", "");
       }
-    } else if (elementDown != null) {
-      elementDown.focus();
-      emit("direction", "down");
     }
+    if (direction.value == "down") {
+      if (elementDown != null) {
+        elementDown.focus();
+      } else {
+        emit("direction", "");
+      }
+    }
+    if (direction.value == "") {
+      if (elementRight != null) {
+        console.log("right");
+        console.log(
+          crossword.value[crosswordTile.value.positionY][
+            crosswordTile.value.positionX + 1
+          ].currentLetter.length
+        );
+        if (
+          crossword.value[crosswordTile.value.positionY][
+            crosswordTile.value.positionX + 1
+          ].currentLetter.length == 0
+        ) {
+          console.log("right empty");
+          elementRight.focus();
+          emit("direction", "right");
+        } else {
+          if (elementDown != null) {
+            elementDown.focus();
+            emit("direction", "down");
+          }
+        }
+      } else if (elementDown != null) {
+        elementDown.focus();
+        emit("direction", "down");
+      }
+    }
+  } else if (key.key == "Backspace") {
+    crosswordTile.value.currentLetter = "";
   }
 }
 </script>
