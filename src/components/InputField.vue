@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, watch } from "vue";
+import { defineProps, nextTick, ref, watch } from "vue";
 import type { TileCrossWord } from "@/types";
 
 const emptyTileString = "empty";
@@ -44,7 +44,9 @@ watch(
   { deep: true }
 );
 
-function keyUp() {
+async function keyDown(key: KeyboardEvent) {
+  console.log(key.key);
+  crosswordTile.value.currentLetter = key.key;
   let elementRight = document.getElementById(
     "inputField:x" +
       (crosswordTile.value.positionX + 1) +
@@ -144,7 +146,8 @@ function keyUp() {
       class="form-control text-center"
       type="text"
       maxlength="1"
-      @keyup="keyUp"
+      @keydown="keyDown"
+      @keydown.prevent
       :id="
         `inputField:x` +
         crosswordTile.positionX +
