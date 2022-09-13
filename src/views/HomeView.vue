@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { Question } from "@/types/index";
+import type { Question } from "@/types";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import config from "@/config";
 import { ref } from "vue";
-import { store } from "@/store/index";
+import { store } from "@/store";
 import questionsJson from "@/assets/questions.json";
 
 let questions = ref(Array<Question>());
@@ -62,7 +62,6 @@ if (configuration == "default") {
               :key="question"
             >
               {{ question.questionText }}
-              <small>{{ question.answer }}</small>
             </li>
           </ol>
         </div>
