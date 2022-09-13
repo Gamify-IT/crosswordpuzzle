@@ -62,7 +62,6 @@ if (configuration == "default") {
               :key="question"
             >
               {{ question.questionText }}
-              <small>{{ question.answer }}</small>
             </li>
           </ol>
         </div>
