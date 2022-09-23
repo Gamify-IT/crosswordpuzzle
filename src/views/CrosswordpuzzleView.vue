@@ -7,11 +7,15 @@ import { store } from "@/store";
 import type { GameResult, Question } from "@/types";
 import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
+import { useToast } from "vue-toastification";
 
 const evaluationModal = ref();
 const direction = ref("");
 
+let submitted = false;
+
 const route = useRoute();
+const toast = useToast();
 const configuration = route.params.id as string;
 
 let questions: Question[] = store.state.questions;
@@ -55,7 +59,15 @@ function evaluateSolution() {
     numberOfTiles: numberOfTiles,
     configuration: configuration,
   };
-  submitGameResult(gameResult);
+  if (!submitted) {
+    submitGameResult(gameResult).catch((error) => {
+      toast.error(
+        "Result could not be send to the overworld backend. Please try again later or contact an admin."
+      );
+      console.log(error);
+    });
+    submitted = true;
+  }
   const modal = new Modal(evaluationModal.value);
   modal.show();
 }
@@ -64,6 +76,10 @@ function setDirection(currentDirection: string) {
 }
 function closeGame() {
   window.parent.postMessage("CLOSE ME");
+}
+
+function reset() {
+  submitted = false;
 }
 </script>
 
@@ -129,6 +145,7 @@ function closeGame() {
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              @click="reset"
             >
               retry minigame
             </button>
