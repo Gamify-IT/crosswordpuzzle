@@ -25,8 +25,12 @@ if (configuration == "default") {
     .get(`${config.apiBaseUrl}/configurations/` + configuration)
     .then((response) => {
       questions.value = response.data.questions;
-      store.commit("setQuestions", questions);
-      isActive.value = true;
+      if (questions.value.length === 0) {
+        errorText.value = "There are no questions in the configuration.";
+      } else {
+        store.commit("setQuestions", questions);
+        isActive.value = true;
+      }
     })
     .catch((error) => {
       if (error.response) {
