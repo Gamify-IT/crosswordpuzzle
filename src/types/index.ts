@@ -22,3 +22,9 @@ export interface Answer {
   answer: string;
   questNumber: number;
 }
+
+export interface GameResult {
+  correctTiles: number;
+  numberOfTiles: number;
+  configuration: string;
+}

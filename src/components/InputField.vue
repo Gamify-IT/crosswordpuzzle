@@ -107,6 +107,9 @@ async function keyDown(key: KeyboardEvent) {
           if (elementDown != null) {
             elementDown.focus();
             emit("direction", "down");
+          } else {
+            elementRight.focus();
+            emit("direction", "right");
           }
         }
       } else if (elementDown != null) {

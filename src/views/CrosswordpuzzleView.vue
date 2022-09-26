@@ -3,11 +3,20 @@ import { generateCrossword } from "@/crosswordgenerator";
 import { ref } from "vue";
 import { Modal } from "bootstrap";
 import InputField from "@/components/InputField.vue";
-import type { Question } from "@/types";
 import { store } from "@/store";
+import type { GameResult, Question } from "@/types";
+import { useRoute } from "vue-router";
+import { submitGameResult } from "@/ts/restClient";
+import { useToast } from "vue-toastification";
 
 const evaluationModal = ref();
 const direction = ref("");
+
+let submitted = false;
+
+const route = useRoute();
+const toast = useToast();
+const configuration = route.params.id as string;
 
 let questions: Question[] = store.state.questions;
 console.log(questions);
@@ -23,12 +32,18 @@ const evaluationModalContext = ref({ title: "", text: "" });
 
 function evaluateSolution() {
   let isCorrect = true;
+  let wrongTiles = 0;
+  let numberOfTiles = 0;
   crosswordpuzzle.forEach((crosswordRow) => {
     crosswordRow.forEach((element) => {
+      if (element.currentLetter != "empty" && !element.startPoint) {
+        numberOfTiles++;
+      }
       const charsAreEqual =
         element.currentLetter.toUpperCase() != element.answer.toUpperCase();
       if (charsAreEqual && !element.startPoint) {
         isCorrect = false;
+        wrongTiles++;
       }
     });
   });
@@ -39,6 +54,20 @@ function evaluateSolution() {
     evaluationModalContext.value.title = "Not the correct answers";
     evaluationModalContext.value.text = "Maybe the next time";
   }
+  const gameResult: GameResult = {
+    correctTiles: numberOfTiles - wrongTiles,
+    numberOfTiles: numberOfTiles,
+    configuration: configuration,
+  };
+  if (!submitted) {
+    submitGameResult(gameResult).catch((error) => {
+      toast.error(
+        "Result could not be send to the overworld backend. Please try again later or contact an admin."
+      );
+      console.log(error);
+    });
+    submitted = true;
+  }
   const modal = new Modal(evaluationModal.value);
   modal.show();
 }
@@ -47,6 +76,10 @@ function setDirection(currentDirection: string) {
 }
 function closeGame() {
   window.parent.postMessage("CLOSE ME");
+}
+
+function reset() {
+  submitted = false;
 }
 </script>
 
@@ -112,6 +145,7 @@ function closeGame() {
               type="button"
               class="btn btn-secondary"
               data-bs-dismiss="modal"
+              @click="reset"
             >
               retry minigame
             </button>
@@ -120,7 +154,7 @@ function closeGame() {
             type="button"
             class="btn btn-primary"
             data-bs-dismiss="modal"
-            @ok="closeGame"
+            @click="closeGame"
           >
             Close minigame
           </button>
