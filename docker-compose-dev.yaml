@@ -82,7 +82,7 @@ services:
 
   crosswordpuzzle-backend:
     container_name: crosswordpuzzle-backend
-    image: ghcr.io/gamify-it/crosswordpuzzle-backend:feature-backend-to-backend-communication
+    image: ghcr.io/gamify-it/crosswordpuzzle-backend:main
     restart: always
     pull_policy: always
     expose:
