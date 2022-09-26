@@ -26,7 +26,7 @@ if (configuration == "default") {
     .then((response) => {
       questions.value = response.data.questions;
       if (questions.value.length === 0) {
-        errorText.value = "There are no questions in the configuration.";
+        errorText.value = "There are no questions in this game.";
       } else {
         store.commit("setQuestions", questions);
         isActive.value = true;
