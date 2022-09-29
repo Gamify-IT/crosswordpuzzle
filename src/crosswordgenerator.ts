@@ -30,10 +30,10 @@ export function generateCrossword(questions: Question[]): TileCrossWord[][] {
       crossword,
       currentAnswers
     ));
-    for (let i = 0; i < crossword.length; i++) {
-      for (let j = 0; j < crossword[i].length; j++) {
-        crossword[i][j].positionX = i;
-        crossword[i][j].positionY = j;
+    for (let j = 0; j < crossword.length; j++) {
+      for (let k = 0; k < crossword[j].length; k++) {
+        crossword[j][k].positionX = j;
+        crossword[j][k].positionY = k;
       }
     }
   }
