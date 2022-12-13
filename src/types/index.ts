@@ -27,4 +27,7 @@ export interface GameResult {
   correctTiles: number;
   numberOfTiles: number;
   configuration: string;
+  wrongQuestions: number[];
+  correctQuestions: number[];
+  duration: number;
 }

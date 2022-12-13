@@ -5,6 +5,7 @@ import { Modal } from "bootstrap";
 import InputField from "@/components/InputField.vue";
 import { store } from "@/store";
 import type { GameResult, Question } from "@/types";
+import { TileCrossWord } from "@/types";
 import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
 import { useToast } from "vue-toastification";
@@ -13,6 +14,7 @@ const evaluationModal = ref();
 const direction = ref("");
 
 let submitted = false;
+const time = Date.now();
 
 const route = useRoute();
 const toast = useToast();
@@ -30,10 +32,43 @@ console.log(crosswordpuzzle);
 
 const evaluationModalContext = ref({ title: "", text: "" });
 
+function getWrongQuestion(element: TileCrossWord): number[] {
+  return [
+    getWrongQuestionVertical(element),
+    getWrongQuestionHorizontal(element),
+  ];
+}
+
+function getWrongQuestionVertical(element: TileCrossWord): number {
+  for (let i = element.positionX; i >= 0; i--) {
+    if (
+      crosswordpuzzle[element.positionY][i].startPoint &&
+      crosswordpuzzle[element.positionY][i].startDirection === "right"
+    ) {
+      return Number(crosswordpuzzle[element.positionY][i].answer);
+    }
+  }
+  return -1;
+}
+
+function getWrongQuestionHorizontal(element: TileCrossWord): number {
+  for (let i = element.positionY; i >= 0; i--) {
+    if (
+      crosswordpuzzle[i][element.positionX].startPoint &&
+      crosswordpuzzle[i][element.positionX].startDirection === "down"
+    ) {
+      return Number(crosswordpuzzle[i][element.positionX].answer);
+    }
+  }
+  return -1;
+}
+
 function evaluateSolution() {
   let isCorrect = true;
   let wrongTiles = 0;
   let numberOfTiles = 0;
+  let wrongQuestions = new Set<number>();
+  let correctQuestions = new Set<number>();
   crosswordpuzzle.forEach((crosswordRow) => {
     crosswordRow.forEach((element) => {
       if (element.currentLetter != "empty" && !element.startPoint) {
@@ -42,6 +77,9 @@ function evaluateSolution() {
       const charsAreEqual =
         element.currentLetter.toUpperCase() != element.answer.toUpperCase();
       if (charsAreEqual && !element.startPoint) {
+        getWrongQuestion(element).forEach((wrongQuestion) => {
+          wrongQuestions.add(wrongQuestion);
+        });
         isCorrect = false;
         wrongTiles++;
       }
@@ -50,15 +88,36 @@ function evaluateSolution() {
   if (isCorrect) {
     evaluationModalContext.value.title = "Congratulations! 🥳";
     evaluationModalContext.value.text = "Everything right!";
+    if (wrongQuestions.has(-1)) {
+      wrongQuestions.delete(-1);
+    }
+    questions.forEach((question, index) => {
+      correctQuestions.add(index + 1);
+    });
   } else {
+    if (wrongQuestions.has(-1)) {
+      wrongQuestions.delete(-1);
+    }
+    questions.forEach((question, index) => {
+      if (!wrongQuestions.has(index + 1)) {
+        correctQuestions.add(index + 1);
+      }
+    });
     evaluationModalContext.value.title = "Not the correct answers";
     evaluationModalContext.value.text = "Maybe the next time";
   }
+
   const gameResult: GameResult = {
     correctTiles: numberOfTiles - wrongTiles,
     numberOfTiles: numberOfTiles,
     configuration: configuration,
+    wrongQuestions: [],
+    correctQuestions: [],
+    duration: Date.now() - time,
   };
+  gameResult.wrongQuestions = Array.from(wrongQuestions);
+  gameResult.correctQuestions = Array.from(correctQuestions);
+
   if (!submitted) {
     submitGameResult(gameResult).catch((error) => {
       toast.error(
