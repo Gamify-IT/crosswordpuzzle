@@ -39,7 +39,7 @@ function getWrongQuestion(element: TileCrossWord): number[] {
   ];
 }
 
-function getWrongQuestionVertical(element: TileCrossWord): number {
+function getWrongQuestionHorizontal(element: TileCrossWord): number {
   for (let i = element.positionX; i >= 0; i--) {
     if (
       crosswordpuzzle[element.positionY][i].startPoint &&
@@ -51,7 +51,7 @@ function getWrongQuestionVertical(element: TileCrossWord): number {
   return -1;
 }
 
-function getWrongQuestionHorizontal(element: TileCrossWord): number {
+function getWrongQuestionVertical(element: TileCrossWord): number {
   for (let i = element.positionY; i >= 0; i--) {
     if (
       crosswordpuzzle[i][element.positionX].startPoint &&
@@ -115,8 +115,12 @@ function evaluateSolution() {
     correctQuestions: [],
     duration: Date.now() - time,
   };
-  gameResult.wrongQuestions = Array.from(wrongQuestions);
-  gameResult.correctQuestions = Array.from(correctQuestions);
+  wrongQuestions.forEach((question) =>
+    gameResult.wrongQuestions.push(questions[question - 1])
+  );
+  correctQuestions.forEach((question) =>
+    gameResult.correctQuestions.push(questions[question - 1])
+  );
 
   if (!submitted) {
     submitGameResult(gameResult).catch((error) => {
