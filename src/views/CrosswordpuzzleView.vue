@@ -165,7 +165,7 @@ function evaluateSolution() {
     numberOfTiles: numberOfTiles,
     configuration: configuration,
     answers: [],
-    duration: Date.now() - time,
+    duration: (Date.now() - time) / 1000,
   };
 
   answers.forEach((answer) => {
