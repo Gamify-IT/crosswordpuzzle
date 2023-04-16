@@ -4,7 +4,7 @@ import { ref } from "vue";
 import { Modal } from "bootstrap";
 import InputField from "@/components/InputField.vue";
 import { store } from "@/store";
-import type { GameResult, Question, questionAnswer } from "@/types";
+import type { GameResult, Question, QuestionAnswer } from "@/types";
 import { GameAnswer, TileCrossWord } from "@/types";
 import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
@@ -32,14 +32,14 @@ console.log(crosswordpuzzle);
 
 const evaluationModalContext = ref({ title: "", text: "" });
 
-function getWrongQuestion(element: TileCrossWord): questionAnswer[] {
+function getWrongQuestion(element: TileCrossWord): QuestionAnswer[] {
   return [
     getWrongQuestionVertical(element),
     getWrongQuestionHorizontal(element),
   ];
 }
 
-function getWrongQuestionHorizontal(element: TileCrossWord): questionAnswer {
+function getWrongQuestionHorizontal(element: TileCrossWord): QuestionAnswer {
   for (let i = element.positionX; i >= 0; i--) {
     if (
       crosswordpuzzle[element.positionY][i].startPoint &&
@@ -70,7 +70,7 @@ function getWrongQuestionHorizontal(element: TileCrossWord): questionAnswer {
   };
 }
 
-function getWrongQuestionVertical(element: TileCrossWord): questionAnswer {
+function getWrongQuestionVertical(element: TileCrossWord): QuestionAnswer {
   for (let i = element.positionY; i >= 0; i--) {
     if (
       crosswordpuzzle[i][element.positionX].startPoint &&
@@ -101,7 +101,7 @@ function getWrongQuestionVertical(element: TileCrossWord): questionAnswer {
   };
 }
 
-function evaluateSolution() {
+function evaluateSolution() { //NOSONAR
   let isCorrect = true;
   let wrongTiles = 0;
   let numberOfTiles = 0;
