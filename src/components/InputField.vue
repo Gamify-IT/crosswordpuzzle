@@ -44,7 +44,8 @@ watch(
   { deep: true }
 );
 
-async function keyDown(key: KeyboardEvent) { //NOSONAR
+async function keyDown(key: KeyboardEvent) {
+  //NOSONAR
   if (key.key.length == 1) {
     crosswordTile.value.currentLetter = key.key;
     let elementRight = document.getElementById(

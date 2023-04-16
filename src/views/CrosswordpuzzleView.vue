@@ -101,7 +101,8 @@ function getWrongQuestionVertical(element: TileCrossWord): QuestionAnswer {
   };
 }
 
-function evaluateSolution() { //NOSONAR
+function evaluateSolution() {
+  //NOSONAR
   let isCorrect = true;
   let wrongTiles = 0;
   let numberOfTiles = 0;
