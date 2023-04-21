@@ -46,7 +46,7 @@ watch(
 
 async function keyDown(key: KeyboardEvent) {
   if (key.key.length == 1) {
-    crosswordTile.value.currentLetter = key.key;
+    crosswordTile.value.currentLetter = key.key.toUpperCase();
     let elementRight = document.getElementById(
       "inputField:x" +
         (crosswordTile.value.positionX + 1) +
@@ -59,20 +59,6 @@ async function keyDown(key: KeyboardEvent) {
         ",y" +
         (crosswordTile.value.positionY + 1)
     );
-    let tileRight = null;
-    if (crossword.value.length > crosswordTile.value.positionX + 1) {
-      tileRight =
-        crossword.value[crosswordTile.value.positionX + 1][
-          crosswordTile.value.positionY
-        ];
-    }
-    let tileDown = null;
-    if (crossword.value[0].length > crosswordTile.value.positionY + 1) {
-      tileDown =
-        crossword.value[crosswordTile.value.positionX][
-          crosswordTile.value.positionY + 1
-        ];
-    }
     if (direction.value == "right") {
       if (elementRight != null) {
         elementRight.focus();
@@ -117,8 +103,89 @@ async function keyDown(key: KeyboardEvent) {
         emit("direction", "down");
       }
     }
-  } else if (key.key == "Backspace") {
-    crosswordTile.value.currentLetter = "";
+  } else {
+    switch (key.key) {
+      case "ArrowRight": {
+        pressRightArrow();
+        break;
+      }
+      case "ArrowLeft": {
+        pressLeftArrow();
+        break;
+      }
+      case "ArrowDown": {
+        pressDownArrow();
+        break;
+      }
+      case "ArrowUp": {
+        pressUpArrow();
+        break;
+      }
+    }
+  }
+
+  function pressLeftArrow() {
+    let elementDown = null;
+    let currentX = crosswordTile.value.positionX - 1;
+    while (elementDown == null) {
+      elementDown = document.getElementById(
+        "inputField:x" + currentX + ",y" + crosswordTile.value.positionY
+      );
+      if (currentX > 0) {
+        currentX--;
+      } else {
+        currentX = crossword.value.length;
+      }
+    }
+    elementDown.focus();
+  }
+
+  function pressRightArrow() {
+    let elementDown = null;
+    let currentX = crosswordTile.value.positionX + 1;
+    while (elementDown == null) {
+      elementDown = document.getElementById(
+        "inputField:x" + currentX + ",y" + crosswordTile.value.positionY
+      );
+      if (currentX < crossword.value.length) {
+        currentX++;
+      } else {
+        currentX = 0;
+      }
+    }
+    elementDown.focus();
+  }
+
+  function pressUpArrow() {
+    let elementDown = null;
+    let currentY = crosswordTile.value.positionY - 1;
+    while (elementDown == null) {
+      elementDown = document.getElementById(
+        "inputField:x" + crosswordTile.value.positionX + ",y" + currentY
+      );
+      if (currentY > 0) {
+        currentY--;
+      } else {
+        currentY = crossword.value[0].length;
+      }
+    }
+    elementDown.focus();
+  }
+
+  function pressDownArrow() {
+    let elementDown = null;
+    let currentY = crosswordTile.value.positionY + 1;
+    while (elementDown == null) {
+      elementDown = document.getElementById(
+        "inputField:x" + crosswordTile.value.positionX + ",y" + currentY
+      );
+      if (currentY < crossword.value[0].length) {
+        currentY++;
+      } else {
+        currentY = 0;
+      }
+    }
+    elementDown.focus();
   }
 }
 </script>
@@ -150,6 +217,7 @@ async function keyDown(key: KeyboardEvent) {
     <input
       v-else-if="crosswordTile.currentLetter !== emptyTileString"
       class="form-control text-center"
+      autocomplete="off"
       type="text"
       maxlength="1"
       @keydown="keyDown"
