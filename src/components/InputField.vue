@@ -73,17 +73,13 @@ async function keyDown(key: KeyboardEvent) {
   if (key.key.length == 1) {
     crosswordTile.value.currentLetter = key.key.toUpperCase();
 
-    let elementRight = document.getElementById(
-      "inputField:x" +
-        (crosswordTile.value.positionX + 1) +
-        ",y" +
-        crosswordTile.value.positionY
+    let elementRight = getCrosswordElement(
+      crosswordTile.value.positionX + 1,
+      crosswordTile.value.positionY
     );
-    let elementDown = document.getElementById(
-      "inputField:x" +
-        crosswordTile.value.positionX +
-        ",y" +
-        (crosswordTile.value.positionY + 1)
+    let elementDown = getCrosswordElement(
+      crosswordTile.value.positionX,
+      crosswordTile.value.positionY + 1
     );
 
     let upStartPoint = isUpStartPoint();
@@ -140,6 +136,10 @@ async function keyDown(key: KeyboardEvent) {
       }
     }
   } else {
+    handleButtonPress();
+  }
+
+  function handleButtonPress() {
     switch (key.key) {
       case "ArrowRight": {
         pressRightArrow();
@@ -169,32 +169,24 @@ async function keyDown(key: KeyboardEvent) {
   }
 
   function pressTab() {
-    let elementRight = document.getElementById(
-      "inputField:x" +
-        (crosswordTile.value.positionX + 1) +
-        ",y" +
-        crosswordTile.value.positionY
+    let elementRight = getCrosswordElement(
+      crosswordTile.value.positionX + 1,
+      crosswordTile.value.positionY
     );
 
-    let elementLeft = document.getElementById(
-      "inputField:x" +
-        (crosswordTile.value.positionX - 1) +
-        ",y" +
-        crosswordTile.value.positionY
+    let elementLeft = getCrosswordElement(
+      crosswordTile.value.positionX - 1,
+      crosswordTile.value.positionY
     );
 
-    let elementDown = document.getElementById(
-      "inputField:x" +
-        crosswordTile.value.positionX +
-        ",y" +
-        (crosswordTile.value.positionY + 1)
+    let elementDown = getCrosswordElement(
+      crosswordTile.value.positionX,
+      crosswordTile.value.positionY + 1
     );
 
-    let elementUp = document.getElementById(
-      "inputField:x" +
-        crosswordTile.value.positionX +
-        ",y" +
-        (crosswordTile.value.positionY - 1)
+    let elementUp = getCrosswordElement(
+      crosswordTile.value.positionX,
+      crosswordTile.value.positionY - 1
     );
     if (key.shiftKey) {
       if (direction.value == "right") {
@@ -223,8 +215,9 @@ async function keyDown(key: KeyboardEvent) {
     let elementDown = null;
     let currentX = crosswordTile.value.positionX - 1;
     while (elementDown == null) {
-      elementDown = document.getElementById(
-        "inputField:x" + currentX + ",y" + crosswordTile.value.positionY
+      elementDown = getCrosswordElement(
+        currentX,
+        crosswordTile.value.positionY
       );
       if (currentX > 0) {
         currentX--;
@@ -239,8 +232,9 @@ async function keyDown(key: KeyboardEvent) {
     let elementDown = null;
     let currentX = crosswordTile.value.positionX + 1;
     while (elementDown == null) {
-      elementDown = document.getElementById(
-        "inputField:x" + currentX + ",y" + crosswordTile.value.positionY
+      elementDown = getCrosswordElement(
+        currentX,
+        crosswordTile.value.positionY
       );
       if (currentX < crossword.value.length) {
         currentX++;
@@ -255,8 +249,9 @@ async function keyDown(key: KeyboardEvent) {
     let elementDown = null;
     let currentY = crosswordTile.value.positionY - 1;
     while (elementDown == null) {
-      elementDown = document.getElementById(
-        "inputField:x" + crosswordTile.value.positionX + ",y" + currentY
+      elementDown = getCrosswordElement(
+        crosswordTile.value.positionX,
+        currentY
       );
       if (currentY > 0) {
         currentY--;
@@ -271,8 +266,9 @@ async function keyDown(key: KeyboardEvent) {
     let elementDown = null;
     let currentY = crosswordTile.value.positionY + 1;
     while (elementDown == null) {
-      elementDown = document.getElementById(
-        "inputField:x" + crosswordTile.value.positionX + ",y" + currentY
+      elementDown = getCrosswordElement(
+        crosswordTile.value.positionX,
+        currentY
       );
       if (currentY < crossword.value[0].length) {
         currentY++;
@@ -286,6 +282,10 @@ async function keyDown(key: KeyboardEvent) {
 
 function mouseDown() {
   emit("direction", "");
+}
+
+function getCrosswordElement(x: number, y: number): HTMLElement | null {
+  return document.getElementById(`inputField:x${x},y${y}`);
 }
 </script>
 
