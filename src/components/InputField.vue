@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, nextTick, ref, watch } from "vue";
+import { defineProps, ref, watch } from "vue";
 import type { TileCrossWord } from "@/types";
 
 const emptyTileString = "empty";

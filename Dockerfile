@@ -1,4 +1,4 @@
-FROM node:17-alpine as builder
+FROM node:17-alpine AS builder
 
 WORKDIR /vue-ui
 
@@ -12,7 +12,7 @@ COPY . .
 # Build the project
 RUN npm run build
 
-FROM nginx:alpine as production-build
+FROM nginx:alpine AS production-build
 COPY ./.nginx/nginx.conf /etc/nginx/nginx.conf
 
 ## Remove default nginx index page

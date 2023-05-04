@@ -38,7 +38,7 @@ export interface GameAnswer {
   correct: boolean;
 }
 
-export interface questionAnswer {
+export interface QuestionAnswer {
   question: number;
   answer: string;
 }
