@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { defineProps, ref, watch } from "vue";
 import type { TileCrossWord } from "@/types";
+import { left } from "@popperjs/core";
 
 const emptyTileString = "empty";
 
@@ -44,63 +45,80 @@ watch(
   { deep: true }
 );
 
+function isLeftStartPoint(): boolean {
+  let leftStartPoint = false;
+  if (
+    crossword.value[crosswordTile.value.positionY][
+      crosswordTile.value.positionX - 1
+    ].startPoint
+  ) {
+    leftStartPoint = true;
+  }
+  return leftStartPoint;
+}
+
+function isUpStartPoint(): boolean {
+  let upStartPoint = false;
+  if (
+    crossword.value[crosswordTile.value.positionY - 1][
+      crosswordTile.value.positionX
+    ].startPoint
+  ) {
+    upStartPoint = true;
+  }
+  return upStartPoint;
+}
+
 async function keyDown(key: KeyboardEvent) {
   if (key.key.length == 1) {
-    crosswordTile.value.currentLetter = key.key;
-    let elementRight = document.getElementById(
-      "inputField:x" +
-        (crosswordTile.value.positionX + 1) +
-        ",y" +
-        crosswordTile.value.positionY
+    crosswordTile.value.currentLetter = key.key.toUpperCase();
+
+    let elementRight = getCrosswordElement(
+      crosswordTile.value.positionX + 1,
+      crosswordTile.value.positionY
     );
-    let elementDown = document.getElementById(
-      "inputField:x" +
-        crosswordTile.value.positionX +
-        ",y" +
-        (crosswordTile.value.positionY + 1)
+    let elementDown = getCrosswordElement(
+      crosswordTile.value.positionX,
+      crosswordTile.value.positionY + 1
     );
-    let tileRight = null;
-    if (crossword.value.length > crosswordTile.value.positionX + 1) {
-      tileRight =
-        crossword.value[crosswordTile.value.positionX + 1][
-          crosswordTile.value.positionY
-        ];
-    }
-    let tileDown = null;
-    if (crossword.value[0].length > crosswordTile.value.positionY + 1) {
-      tileDown =
-        crossword.value[crosswordTile.value.positionX][
-          crosswordTile.value.positionY + 1
-        ];
-    }
-    if (direction.value == "right") {
+
+    let upStartPoint = isUpStartPoint();
+
+    let leftStartPoint = isLeftStartPoint();
+
+    if (upStartPoint && direction.value == "") {
+      if (elementDown != null) {
+        elementDown.focus();
+        emit("direction", "down");
+      } else {
+        emit("direction", "");
+      }
+    } else if (leftStartPoint && direction.value == "") {
+      if (elementRight != null) {
+        elementRight.focus();
+        emit("direction", "right");
+      } else {
+        emit("direction", "");
+      }
+    } else if (direction.value == "right") {
       if (elementRight != null) {
         elementRight.focus();
       } else {
         emit("direction", "");
       }
-    }
-    if (direction.value == "down") {
+    } else if (direction.value == "down") {
       if (elementDown != null) {
         elementDown.focus();
       } else {
         emit("direction", "");
       }
-    }
-    if (direction.value == "") {
+    } else if (direction.value == "") {
       if (elementRight != null) {
-        console.log("right");
-        console.log(
-          crossword.value[crosswordTile.value.positionY][
-            crosswordTile.value.positionX + 1
-          ].currentLetter.length
-        );
         if (
           crossword.value[crosswordTile.value.positionY][
             crosswordTile.value.positionX + 1
           ].currentLetter.length == 0
         ) {
-          console.log("right empty");
           elementRight.focus();
           emit("direction", "right");
         } else {
@@ -117,9 +135,157 @@ async function keyDown(key: KeyboardEvent) {
         emit("direction", "down");
       }
     }
-  } else if (key.key == "Backspace") {
-    crosswordTile.value.currentLetter = "";
+  } else {
+    handleButtonPress();
   }
+
+  function handleButtonPress() {
+    switch (key.key) {
+      case "ArrowRight": {
+        pressRightArrow();
+        emit("direction", "right");
+        break;
+      }
+      case "ArrowLeft": {
+        emit("direction", "right");
+        pressLeftArrow();
+        break;
+      }
+      case "ArrowDown": {
+        emit("direction", "down");
+        pressDownArrow();
+        break;
+      }
+      case "ArrowUp": {
+        emit("direction", "down");
+        pressUpArrow();
+        break;
+      }
+      case "Tab": {
+        pressTab();
+        break;
+      }
+    }
+  }
+
+  function pressTab() {
+    let elementRight = getCrosswordElement(
+      crosswordTile.value.positionX + 1,
+      crosswordTile.value.positionY
+    );
+
+    let elementLeft = getCrosswordElement(
+      crosswordTile.value.positionX - 1,
+      crosswordTile.value.positionY
+    );
+
+    let elementDown = getCrosswordElement(
+      crosswordTile.value.positionX,
+      crosswordTile.value.positionY + 1
+    );
+
+    let elementUp = getCrosswordElement(
+      crosswordTile.value.positionX,
+      crosswordTile.value.positionY - 1
+    );
+    if (key.shiftKey) {
+      if (direction.value == "right") {
+        if (elementLeft != null) {
+          elementLeft.focus();
+        }
+      } else if (direction.value == "down") {
+        if (elementUp != null) {
+          elementUp.focus();
+        }
+      }
+    } else {
+      if (direction.value == "right") {
+        if (elementRight != null) {
+          elementRight.focus();
+        }
+      } else if (direction.value == "down") {
+        if (elementDown != null) {
+          elementDown.focus();
+        }
+      }
+    }
+  }
+
+  function pressLeftArrow() {
+    let elementDown = null;
+    let currentX = crosswordTile.value.positionX - 1;
+    while (elementDown == null) {
+      elementDown = getCrosswordElement(
+        currentX,
+        crosswordTile.value.positionY
+      );
+      if (currentX > 0) {
+        currentX--;
+      } else {
+        currentX = crossword.value.length;
+      }
+    }
+    elementDown.focus();
+  }
+
+  function pressRightArrow() {
+    let elementDown = null;
+    let currentX = crosswordTile.value.positionX + 1;
+    while (elementDown == null) {
+      elementDown = getCrosswordElement(
+        currentX,
+        crosswordTile.value.positionY
+      );
+      if (currentX < crossword.value.length) {
+        currentX++;
+      } else {
+        currentX = 0;
+      }
+    }
+    elementDown.focus();
+  }
+
+  function pressUpArrow() {
+    let elementDown = null;
+    let currentY = crosswordTile.value.positionY - 1;
+    while (elementDown == null) {
+      elementDown = getCrosswordElement(
+        crosswordTile.value.positionX,
+        currentY
+      );
+      if (currentY > 0) {
+        currentY--;
+      } else {
+        currentY = crossword.value[0].length;
+      }
+    }
+    elementDown.focus();
+  }
+
+  function pressDownArrow() {
+    let elementDown = null;
+    let currentY = crosswordTile.value.positionY + 1;
+    while (elementDown == null) {
+      elementDown = getCrosswordElement(
+        crosswordTile.value.positionX,
+        currentY
+      );
+      if (currentY < crossword.value[0].length) {
+        currentY++;
+      } else {
+        currentY = 0;
+      }
+    }
+    elementDown.focus();
+  }
+}
+
+function mouseDown() {
+  emit("direction", "");
+}
+
+function getCrosswordElement(x: number, y: number): HTMLElement | null {
+  return document.getElementById(`inputField:x${x},y${y}`);
 }
 </script>
 
@@ -150,8 +316,10 @@ async function keyDown(key: KeyboardEvent) {
     <input
       v-else-if="crosswordTile.currentLetter !== emptyTileString"
       class="form-control text-center"
+      autocomplete="off"
       type="text"
       maxlength="1"
+      @mousedown="mouseDown"
       @keydown="keyDown"
       @keydown.prevent
       :id="
