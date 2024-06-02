@@ -21,6 +21,9 @@ npm install
 Start all dependencies with our docker-compose files.
 Check the [manual for docker-compose](https://github.com/Gamify-IT/docs/blob/main/dev-manuals/languages/docker/docker-compose.md).
 
+To run the main branch with minimal dependencies use the `docker-compose.yaml` file.\
+To run the latest changes on any other branch than `main` use the `docker-compose-dev.yaml` file.
+
 ### Compile and Hot-Reload for Development
 
 ```sh

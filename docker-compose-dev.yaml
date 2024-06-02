@@ -104,7 +104,7 @@ services:
   #frontends
   landing-page:
     container_name: landing-page
-    image: ghcr.io/gamify-it/landing-page:main
+    image: ghcr.io/gamify-it/landing-page:v1.6.0
     restart: always
     pull_policy: always
     expose:
@@ -112,7 +112,7 @@ services:
 
   overworld:
     container_name: overworld
-    image: ghcr.io/gamify-it/overworld:main
+    image: ghcr.io/gamify-it/overworld:v1.5.0
     restart: always
     pull_policy: always
     expose:
@@ -123,6 +123,13 @@ services:
     image: ghcr.io/gamify-it/lecturer-interface:main
     restart: always
     pull_policy: always
+    expose:
+      - "80"
+      
+  crosswordpuzzle:
+    container_name: crosswordpuzzle
+    image: ghcr.io/gamify-it/crosswordpuzzle:development
+    restart: always
     expose:
       - "80"
 
