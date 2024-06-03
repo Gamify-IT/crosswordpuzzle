@@ -122,6 +122,7 @@ services:
     container_name: crosswordpuzzle
     image: ghcr.io/gamify-it/crosswordpuzzle:main
     restart: always
+    pull_policy: always
     expose:
       - "80"
 
