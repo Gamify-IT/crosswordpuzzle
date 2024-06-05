@@ -107,6 +107,7 @@ function evaluateSolution() {
   let numberOfTiles = 0;
   let wrongQuestions = new Set<number>();
   let answers = new Set<GameAnswer>();
+  playSound("@/assets/music/click_sound.mp3");
   crosswordpuzzle.forEach((crosswordRow) => {
     crosswordRow.forEach((element) => {
       if (element.currentLetter != "empty" && !element.startPoint) {
@@ -135,6 +136,7 @@ function evaluateSolution() {
     });
   });
   if (isCorrect) {
+    playSound("@/assets/music/success_sound.mp3");
     evaluationModalContext.value.title = "Congratulations! 🥳";
     evaluationModalContext.value.text = "Everything right!";
     questions.forEach((question) => {
@@ -146,6 +148,7 @@ function evaluateSolution() {
       });
     });
   } else {
+    playSound("@/assets/music/error_sound.mp3");
     questions.forEach((question, index) => {
       if (!wrongQuestions.has(index + 1)) {
         answers.add({
@@ -188,11 +191,18 @@ function setDirection(currentDirection: string) {
   direction.value = currentDirection;
 }
 function closeGame() {
+  playSound("@/assets/music/click_sound.mp3");
   window.parent.postMessage("CLOSE ME");
 }
 
 function reset() {
+  playSound("@/assets/music/click_sound.mp3");
   submitted = false;
+}
+
+function playSound(pathToAudioFile: string){
+  const sound = new Audio(pathToAudioFile);
+  sound.play();
 }
 </script>
 

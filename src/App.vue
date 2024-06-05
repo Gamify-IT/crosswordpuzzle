@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 
 let closeModal = ref(false);
+const clickSound = new Audio("@/assets/music/click_sound.mp3");
+const backgroundMusic = new Audio("@/assets/music/background_music.mp3");
 
 function closeGame() {
   window.parent.postMessage("CLOSE ME");
 }
+
+function playClickSound(){
+  clickSound.play();
+}
+
+onMounted(() => {
+  backgroundMusic.play();
+  backgroundMusic.loop = true;
+});
+
+onUnmounted(() => {
+  backgroundMusic.pause();
+  backgroundMusic.currentTime = 0;
+});
 </script>
 
 <template>
@@ -19,7 +35,7 @@ function closeGame() {
         variant="danger"
         class="close-button"
         id="close-button"
-        @click="closeModal = true"
+        @click="closeModal = true; playClickSound()"
       >
         Close
       </b-button>
