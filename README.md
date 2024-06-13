@@ -1,10 +1,11 @@
-# crosswordpuzzle
+# Crosswordpuzzle
 
 This is a simple crosswordpuzzle. With given questions and answers it automatically generates a crosswordpuzzle.  
 
 ## Development
 
 ### Getting started
+> Beginning of additions (that work)
 
 Clone the repository  
 ```sh
@@ -16,48 +17,37 @@ Install the dependencies
 npm install
 ```
 
-#### Run with Docker-compose
-
-Start all dependencies with our docker-compose files.
-Check the [manual for docker-compose](https://github.com/Gamify-IT/docs/blob/main/dev-manuals/languages/docker/docker-compose.md).
-
-To run the main branch with minimal dependencies use the `docker-compose.yaml` file.\
-To run the latest changes on any other branch than `main` use the `docker-compose-dev.yaml` file.
-
 ### Compile and Hot-Reload for Development
-
+If you want to run the frontend with your IDE features, whilst having all dependencies running 
+via docker use the following:
+Start the frontend with:
 ```sh
 npm run serve
 ```
 
 To also run the backend and a database use:
-```
-docker-compose -f docker-compose-dev.yaml up
-```
-now you can access it at `[http://localhost:8000](http://localhost:8000)`
-
-
-### Build
-
-Build the Docker-Container
 ```sh
-docker build -t crosswordpuzzle-dev .
-```
-And run it at port 8000 with
-```sh
-docker run -d -p 8000:80 --name crosswordpuzzle-dev crosswordpuzzle-dev
+docker compose -f docker-compose-dev.yaml up
 ```
 
-To monitor, stop and remove the container you can use the following commands:
+To remove the containers use:
 ```sh
-docker ps -a -f name=crosswordpuzzle-dev
+docker compose -f docker-compose-dev.yaml down
 ```
+
+### Build your local changes as a docker container
+
+To build and run your local changes as a docker container use:
 ```sh
-docker stop crosswordpuzzle-dev
+docker compose up --build
 ```
+You can remove the container with:
+
 ```sh
-docker rm crosswordpuzzle-dev
+docker compose down
 ```
+
+> End of additions
 
 ## User manual
 
