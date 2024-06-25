@@ -6,7 +6,7 @@ import config from "@/config";
 import { ref } from "vue";
 import { store } from "@/store";
 import questionsJson from "@/assets/questions.json";
-
+import clickSoundSource from '/src/assets/music/click_sound.mp3';
 let questions = ref(Array<Question>());
 
 let errorText = ref("");
@@ -14,7 +14,7 @@ let errorText = ref("");
 let isActive = ref(false);
 
 const route = useRoute();
-const clickSound = new Audio("@/assets/music/click_sound.mp3");
+const clickSound = new Audio(clickSoundSource);
 
 const configuration = route.params.id;
 if (configuration == "default") {

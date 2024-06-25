@@ -9,7 +9,9 @@ import { GameAnswer, TileCrossWord } from "@/types";
 import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
 import { useToast } from "vue-toastification";
-
+import clickSoundSource from '/src/assets/music/click_sound.mp3';
+import successSoundSource from '/src/assets/music/success_sound.mp3';
+import errorSoundSource from '/src/assets/music/error_sound.mp3';
 const evaluationModal = ref();
 const direction = ref("");
 
@@ -107,7 +109,7 @@ function evaluateSolution() {
   let numberOfTiles = 0;
   let wrongQuestions = new Set<number>();
   let answers = new Set<GameAnswer>();
-  playSound("@/assets/music/click_sound.mp3");
+  playSound(clickSoundSource);
   crosswordpuzzle.forEach((crosswordRow) => {
     crosswordRow.forEach((element) => {
       if (element.currentLetter != "empty" && !element.startPoint) {
@@ -136,7 +138,7 @@ function evaluateSolution() {
     });
   });
   if (isCorrect) {
-    playSound("@/assets/music/success_sound.mp3");
+    playSound(successSoundSource);
     evaluationModalContext.value.title = "Congratulations! 🥳";
     evaluationModalContext.value.text = "Everything right!";
     questions.forEach((question) => {
@@ -148,7 +150,7 @@ function evaluateSolution() {
       });
     });
   } else {
-    playSound("@/assets/music/error_sound.mp3");
+    playSound(errorSoundSource);
     questions.forEach((question, index) => {
       if (!wrongQuestions.has(index + 1)) {
         answers.add({
@@ -191,18 +193,24 @@ function setDirection(currentDirection: string) {
   direction.value = currentDirection;
 }
 function closeGame() {
-  playSound("@/assets/music/click_sound.mp3");
   window.parent.postMessage("CLOSE ME");
 }
 
 function reset() {
-  playSound("@/assets/music/click_sound.mp3");
+  playSound(clickSoundSource);
   submitted = false;
 }
 
 function playSound(pathToAudioFile: string){
   const sound = new Audio(pathToAudioFile);
   sound.play();
+}
+
+async function handleCloseGame() {
+  await playSound(clickSoundSource);
+    setTimeout(() => {
+      closeGame();
+    }, 500);
 }
 </script>
 
@@ -277,7 +285,7 @@ function playSound(pathToAudioFile: string){
             type="button"
             class="btn btn-primary"
             data-bs-dismiss="modal"
-            @click="closeGame"
+            @click="handleCloseGame"
           >
             Close minigame
           </button>

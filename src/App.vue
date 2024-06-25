@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import { onMounted, onUnmounted, ref } from "vue";
-
+import backgroundMusicSource from '/src/assets/music/background_music.mp3';
+import clickSoundSource from '/src/assets/music/click_sound.mp3';
 let closeModal = ref(false);
-const clickSound = new Audio("@/assets/music/click_sound.mp3");
-const backgroundMusic = new Audio("@/assets/music/background_music.mp3");
+const clickSound = new Audio(clickSoundSource);
+const backgroundMusic = new Audio(backgroundMusicSource);
 
 function closeGame() {
   window.parent.postMessage("CLOSE ME");
@@ -23,6 +24,13 @@ onUnmounted(() => {
   backgroundMusic.pause();
   backgroundMusic.currentTime = 0;
 });
+
+async function handleCloseGame() {
+  await playClickSound();
+    setTimeout(() => {
+      closeGame();
+    }, 500);
+}
 </script>
 
 <template>
@@ -42,7 +50,7 @@ onUnmounted(() => {
     </nav>
   </header>
   <RouterView />
-  <b-modal v-model="closeModal" title="Close Minigame" @ok="closeGame">
+  <b-modal v-model="closeModal" title="Close Minigame" @ok="handleCloseGame" @cancel="playClickSound">
     <p class="my-4">The game will be closed without evaluation.</p>
   </b-modal>
 </template>
