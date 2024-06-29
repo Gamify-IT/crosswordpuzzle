@@ -136,8 +136,9 @@ function evaluateSolution() {
     });
   });
   if (isCorrect) {
+
     evaluationModalContext.value.title = "Congratulations! 🥳";
-    evaluationModalContext.value.text = "Everything right!";
+    evaluationModalContext.value.text = "Everything right! You've gained " + store.state.rewards + "!!";
     questions.forEach((question) => {
       answers.add({
         answer: question.answer,

@@ -30,6 +30,7 @@ export interface GameResult {
   answers: GameAnswer[];
   duration: number;
   score:number;
+  rewards:number;
 }
 
 export interface GameAnswer {
