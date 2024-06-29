@@ -1,10 +1,9 @@
 import axios from "axios";
 import config from "@/config";
 import { GameResult } from "@/types";
-import { useStore } from 'vuex';
+import { store } from '@/store';
 
 export async function submitGameResult(gameResult: GameResult) {
-  const store = useStore();
 
   try {
     const response = await axios.post(`${config.apiBaseUrl}/results`, gameResult);
