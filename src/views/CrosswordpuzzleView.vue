@@ -108,6 +108,7 @@ function evaluateSolution() {
   let wrongQuestions = new Set<number>();
   let answers = new Set<GameAnswer>();
   let score = 0;
+  let rewards = 0;
   crosswordpuzzle.forEach((crosswordRow) => {
     crosswordRow.forEach((element) => {
       if (element.currentLetter != "empty" && !element.startPoint) {
@@ -169,6 +170,7 @@ function evaluateSolution() {
     answers: [],
     duration: (Date.now() - time) / 1000,
     score: score,
+    rewards: rewards
   };
 
   answers.forEach((answer) => {
