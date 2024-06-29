@@ -107,6 +107,7 @@ function evaluateSolution() {
   let numberOfTiles = 0;
   let wrongQuestions = new Set<number>();
   let answers = new Set<GameAnswer>();
+  let score = 0;
   crosswordpuzzle.forEach((crosswordRow) => {
     crosswordRow.forEach((element) => {
       if (element.currentLetter != "empty" && !element.startPoint) {
@@ -166,6 +167,7 @@ function evaluateSolution() {
     configuration: configuration,
     answers: [],
     duration: (Date.now() - time) / 1000,
+    score: score,
   };
 
   answers.forEach((answer) => {

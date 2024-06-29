@@ -29,6 +29,7 @@ export interface GameResult {
   configuration: string;
   answers: GameAnswer[];
   duration: number;
+  score:number;
 }
 
 export interface GameAnswer {
