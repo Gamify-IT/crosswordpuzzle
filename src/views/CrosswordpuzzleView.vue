@@ -251,7 +251,8 @@ function reset() {
       </div>
     </div>
   </div>
-  <div ref="evaluationModal" class="modal" tabindex="-1">
+
+  <div ref="evaluationModal" class="modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
@@ -283,6 +284,7 @@ function reset() {
       </div>
     </div>
   </div>
+
 </template>
 
 <style scoped>
