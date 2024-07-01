@@ -23,12 +23,15 @@ export interface Answer {
   questNumber: number;
 }
 
-export interface GameResult {
-  correctTiles: number;
-  numberOfTiles: number;
-  configuration: string;
-  answers: GameAnswer[];
-  duration: number;
+export class GameResult {
+ public constructor(
+     public correctTiles: number,
+  public numberOfTiles: number,
+     public configuration: string,
+     public answers: GameAnswer[],
+     public duration: number,
+     public score: number,
+     public rewards: number){}
 }
 
 export interface GameAnswer {

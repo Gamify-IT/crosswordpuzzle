@@ -9,6 +9,7 @@ import { GameAnswer, TileCrossWord } from "@/types";
 import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
 import { useToast } from "vue-toastification";
+import storeTwo from "@/store/indexTwo";
 
 const evaluationModal = ref();
 const direction = ref("");
@@ -135,7 +136,7 @@ function evaluateSolution() {
     });
   });
   if (isCorrect) {
-    evaluationModalContext.value.title = "Congratulations! 🥳";
+    evaluationModalContext.value.title = "Congratulations! 🥳 You've gained" + storeTwo.state.rewards + "coins!";
     evaluationModalContext.value.text = "Everything right!";
     questions.forEach((question) => {
       answers.add({
@@ -166,6 +167,8 @@ function evaluateSolution() {
     configuration: configuration,
     answers: [],
     duration: (Date.now() - time) / 1000,
+    score:0,
+    rewards: 0
   };
 
   answers.forEach((answer) => {
