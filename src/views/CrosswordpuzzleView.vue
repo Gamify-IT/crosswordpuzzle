@@ -136,8 +136,8 @@ function evaluateSolution() {
     });
   });
   if (isCorrect) {
-    evaluationModalContext.value.title = "Congratulations! 🥳 You've gained" + storeTwo.state.rewards + "coins!";
-    evaluationModalContext.value.text = "Everything right!";
+    evaluationModalContext.value.title = "Congratulations! 🥳";
+    evaluationModalContext.value.text = "Everything right! You've gained ${storeTwo.state.rewards} coins! ";
     questions.forEach((question) => {
       answers.add({
         answer: question.answer,
@@ -158,7 +158,7 @@ function evaluateSolution() {
       }
     });
     evaluationModalContext.value.title = "Not the correct answers";
-    evaluationModalContext.value.text = "Maybe the next time";
+    evaluationModalContext.value.text = "Maybe the next time. You've gained ${storeTwo.state.rewards} coins!";
   }
 
   const gameResult: GameResult = {

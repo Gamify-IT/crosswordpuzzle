@@ -1,26 +1,25 @@
 import {GameAnswer, GameResult} from "@/types";
 import axios from "axios";
 import config from "@/config";
-import store from "@/store/indexTwo";
+import storeTwo from "@/store/indexTwo";
 
-export async function submitGameResult(gameResult: GameResult) {
-  return axios.post(`${config.apiBaseUrl}/results`, gameResult);
-}
 
-export async function postGameResult(
+export async function submitGameResult(
     gameResult: GameResult
 ): Promise<void> {
-  console.log("Sending GameResultDTO to backend:", gameResult); // Log the data being sent
+  console.log("Sending GameResultDTO to backend:", gameResult);
   try {
     const response = await axios.post(`${config.apiBaseUrl}/results`, gameResult);
-    console.log("Received response from backend:", response.data); // Log the response from backend
+    console.log("Received response from backend:", response.data);
     const returnedResult = fromDTO(response.data);
-    store.commit('setRewards', returnedResult.rewards)
-    store.commit('setScore', returnedResult.score)
+    storeTwo.commit('setRewards', returnedResult.rewards)
+    storeTwo.commit('setScore', returnedResult.score)
+    console.log("Store rewards:", storeTwo.state.rewards);
+
 
   } catch (error) {
-    console.error("Error sending GameResultDTO:", error); // Log any error
-    throw error; // Rethrow the error to be handled by the caller
+    console.error("Error sending GameResultDTO:", error);
+    throw error;
   }
 }
 
