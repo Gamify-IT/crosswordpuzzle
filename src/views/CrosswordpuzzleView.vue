@@ -11,6 +11,7 @@ import { submitGameResult } from "@/ts/restClient";
 import { useToast } from "vue-toastification";
 import storeTwo from "@/store/indexTwo";
 
+
 const evaluationModal = ref();
 const direction = ref("");
 
@@ -102,24 +103,25 @@ function getWrongQuestionVertical(element: TileCrossWord): QuestionAnswer {
   };
 }
 
-function evaluateSolution() {
+async function evaluateSolution() {
   let isCorrect = true;
   let wrongTiles = 0;
   let numberOfTiles = 0;
   let wrongQuestions = new Set<number>();
   let answers = new Set<GameAnswer>();
+
   crosswordpuzzle.forEach((crosswordRow) => {
     crosswordRow.forEach((element) => {
       if (element.currentLetter != "empty" && !element.startPoint) {
         numberOfTiles++;
       }
       const charsAreEqual =
-        element.currentLetter.toUpperCase() != element.answer.toUpperCase();
+          element.currentLetter.toUpperCase() != element.answer.toUpperCase();
       if (charsAreEqual && !element.startPoint) {
         getWrongQuestion(element).forEach((wrongQuestion) => {
           if (
-            wrongQuestion.question != 0 &&
-            !wrongQuestions.has(wrongQuestion.question)
+              wrongQuestion.question != 0 &&
+              !wrongQuestions.has(wrongQuestion.question)
           ) {
             answers.add({
               answer: "",
@@ -135,58 +137,61 @@ function evaluateSolution() {
       }
     });
   });
-  if (isCorrect) {
-    evaluationModalContext.value.title = "Congratulations! 🥳";
-    evaluationModalContext.value.text = "Everything right! You've gained ${storeTwo.state.rewards} coins! ";
-    questions.forEach((question) => {
-      answers.add({
-        answer: question.answer,
-        correctAnswer: question.answer,
-        question: question.questionText,
-        correct: true,
-      });
-    });
-  } else {
-    questions.forEach((question, index) => {
-      if (!wrongQuestions.has(index + 1)) {
-        answers.add({
-          answer: question.answer,
-          correctAnswer: question.answer,
-          question: question.questionText,
-          correct: true,
-        });
-      }
-    });
-    evaluationModalContext.value.title = "Not the correct answers";
-    evaluationModalContext.value.text = "Maybe the next time. You've gained ${storeTwo.state.rewards} coins!";
-  }
 
   const gameResult: GameResult = {
     correctTiles: numberOfTiles - wrongTiles,
     numberOfTiles: numberOfTiles,
     configuration: configuration,
-    answers: [],
+    answers: Array.from(answers),
     duration: (Date.now() - time) / 1000,
-    score:0,
+    score: 0,
     rewards: 0
   };
 
-  answers.forEach((answer) => {
-    gameResult.answers.push(answer);
-  });
-
   if (!submitted) {
-    submitGameResult(gameResult).catch((error) => {
+    try {
+      await submitGameResult(gameResult);
+      let rewards = storeTwo.state.rewards;
+
+      if (isCorrect) {
+        evaluationModalContext.value.title = "Congratulations! 🥳";
+        evaluationModalContext.value.text = "Everything right! You've gained " + rewards + " coins!";
+        questions.forEach((question) => {
+          answers.add({
+            answer: question.answer,
+            correctAnswer: question.answer,
+            question: question.questionText,
+            correct: true,
+          });
+        });
+      } else {
+        questions.forEach((question, index) => {
+          if (!wrongQuestions.has(index + 1)) {
+            answers.add({
+              answer: question.answer,
+              correctAnswer: question.answer,
+              question: question.questionText,
+              correct: true,
+            });
+          }
+        });
+        evaluationModalContext.value.title = "Not the correct answers";
+        evaluationModalContext.value.text = "Maybe the next time. You've gained " + rewards + " coins!";
+      }
+
+    } catch (error) {
       toast.error(
-        "Result could not be sent to the overworld backend. Please try again later or contact an admin."
+          "Result could not be sent to the overworld backend. Please try again later or contact an admin."
       );
       console.log(error);
-    });
+    }
     submitted = true;
   }
+
   const modal = new Modal(evaluationModal.value);
   modal.show();
 }
+
 function setDirection(currentDirection: string) {
   direction.value = currentDirection;
 }
