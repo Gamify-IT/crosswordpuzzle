@@ -40,7 +40,7 @@ if (configuration == "default") {
         console.log(error.response.headers);
         isActive.value = false;
         if (error.response.status == 404) {
-          errorText.value = "the selected configuration was not found";
+          errorText.value = "The selected configuration was not found";
         } else {
           errorText.value = error;
         }
@@ -56,9 +56,9 @@ function playClickSound(){
 <template>
   <main>
     <div class="alert alert-danger" v-if="errorText">
-      A fatal error occured: <br />
+      A fatal error occurred: <br />
       {{ errorText }} <br />
-      please report the error to an admin.
+      Please report the error to an admin.
     </div>
     <div class="crosswordpuzzle container" v-if="isActive">
       <div class="row">

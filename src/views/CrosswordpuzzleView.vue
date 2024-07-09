@@ -180,7 +180,7 @@ function evaluateSolution() {
   if (!submitted) {
     submitGameResult(gameResult).catch((error) => {
       toast.error(
-        "Result could not be send to the overworld backend. Please try again later or contact an admin."
+        "Result could not be sent to the overworld backend. Please try again later or contact an admin."
       );
       console.log(error);
     });
@@ -278,7 +278,7 @@ async function handleCloseGame() {
               data-bs-dismiss="modal"
               @click="reset"
             >
-              retry minigame
+              Retry minigame
             </button>
           </router-link>
           <button
