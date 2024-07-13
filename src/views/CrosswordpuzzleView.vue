@@ -155,11 +155,12 @@ async function evaluateSolution() {
     try {
       await submitGameResult(gameResult);
       let rewards = storeTwo.state.rewards;
+      let score = storeTwo.state.score;
 
       if (isCorrect) {
         playSound(triumphSound, 2000);
-        evaluationModalContext.value.title = "Congratulations! 🥳";
-        evaluationModalContext.value.text = "Everything right! You've gained " + rewards + " coins!";
+        evaluationModalContext.value.title = "Congratulations! Nice job 🥳";
+        evaluationModalContext.value.text = "Everything right! You've gained " + rewards + " coins and " + score + "scores!";
         questions.forEach((question) => {
           answers.add({
             answer: question.answer,
@@ -180,8 +181,8 @@ async function evaluateSolution() {
             });
           }
         });
-        evaluationModalContext.value.title = "Not the correct answers";
-        evaluationModalContext.value.text = "Maybe the next time. You've gained " + rewards + " coins!";
+        evaluationModalContext.value.title = "Not completely correct!";
+        evaluationModalContext.value.text = "Don't give up! You've gained " + rewards + " coins and " + score + " scores!";
       }
 
     } catch (error) {
