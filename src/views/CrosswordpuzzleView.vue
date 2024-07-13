@@ -10,6 +10,8 @@ import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
 import { useToast } from "vue-toastification";
 import storeTwo from "@/store/indexTwo";
+import triumphSound from '/src/assets/trumpets.mp3';
+import negativeSound from '/src/assets/negativeSound.mp3';
 
 
 const evaluationModal = ref();
@@ -149,11 +151,13 @@ async function evaluateSolution() {
   };
 
   if (!submitted) {
+
     try {
       await submitGameResult(gameResult);
       let rewards = storeTwo.state.rewards;
 
       if (isCorrect) {
+        playSound(triumphSound, 2000);
         evaluationModalContext.value.title = "Congratulations! 🥳";
         evaluationModalContext.value.text = "Everything right! You've gained " + rewards + " coins!";
         questions.forEach((question) => {
@@ -165,6 +169,7 @@ async function evaluateSolution() {
           });
         });
       } else {
+        playSound(negativeSound, 1000);
         questions.forEach((question, index) => {
           if (!wrongQuestions.has(index + 1)) {
             answers.add({
@@ -202,6 +207,13 @@ function closeGame() {
 function reset() {
   submitted = false;
 }
+
+function playSound(pathToAudioFile: string, duration: number){
+  const sound = new Audio(pathToAudioFile);
+  sound.play();
+  setTimeout(() => sound.pause(), duration);
+}
+
 </script>
 
 <template>
