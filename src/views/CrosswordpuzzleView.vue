@@ -46,15 +46,15 @@ function getWrongQuestion(element: TileCrossWord): QuestionAnswer[] {
 function getWrongQuestionHorizontal(element: TileCrossWord): QuestionAnswer {
   for (let i = element.positionX; i >= 0; i--) {
     if (
-      crosswordpuzzle[element.positionY][i].startPoint &&
-      crosswordpuzzle[element.positionY][i].startDirection === "right"
+        crosswordpuzzle[element.positionY][i].startPoint &&
+        crosswordpuzzle[element.positionY][i].startDirection === "right"
     ) {
       let answer = "";
       let questionNumber = Number(crosswordpuzzle[element.positionY][i].answer);
       for (
-        let j = i + 1;
-        j < i + questions[questionNumber - 1].answer.length;
-        j++
+          let j = i + 1;
+          j < i + questions[questionNumber - 1].answer.length;
+          j++
       ) {
         if (crosswordpuzzle[element.positionY][j].currentLetter != "empty") {
           answer += crosswordpuzzle[element.positionY][j].currentLetter;
@@ -77,15 +77,15 @@ function getWrongQuestionHorizontal(element: TileCrossWord): QuestionAnswer {
 function getWrongQuestionVertical(element: TileCrossWord): QuestionAnswer {
   for (let i = element.positionY; i >= 0; i--) {
     if (
-      crosswordpuzzle[i][element.positionX].startPoint &&
-      crosswordpuzzle[i][element.positionX].startDirection === "down"
+        crosswordpuzzle[i][element.positionX].startPoint &&
+        crosswordpuzzle[i][element.positionX].startDirection === "down"
     ) {
       let answer = "";
       let questionNumber = Number(crosswordpuzzle[i][element.positionX].answer);
       for (
-        let j = i + 1;
-        j < questions[questionNumber - 1].answer.length;
-        j++
+          let j = i + 1;
+          j < questions[questionNumber - 1].answer.length;
+          j++
       ) {
         if (crosswordpuzzle[j][element.positionX].currentLetter != "empty") {
           answer += crosswordpuzzle[j][element.positionX].currentLetter;
@@ -146,44 +146,40 @@ async function evaluateSolution() {
     configuration: configuration,
     answers: Array.from(answers),
     duration: (Date.now() - time) / 1000,
-    score: 0,
+    score: ((numberOfTiles - wrongTiles) / numberOfTiles) * 100,
     rewards: 0
   };
 
   if (!submitted) {
-
     try {
       await submitGameResult(gameResult);
       let rewards = storeTwo.state.rewards;
-      let score = storeTwo.state.score;
+      let score = gameResult.score;
+      let scoreText = `<span class="gold-text">${score} score</span>`;
+      let rewardsText = `<span class="gold-text">${rewards} coins</span>`;
 
-      if (isCorrect) {
-        playSound(triumphSound, 2000);
-        evaluationModalContext.value.title = "Congratulations! Nice job 🥳";
-        evaluationModalContext.value.text = "Everything right! You've gained " + rewards + " coins and " + score + "scores!";
-        questions.forEach((question) => {
-          answers.add({
-            answer: question.answer,
-            correctAnswer: question.answer,
-            question: question.questionText,
-            correct: true,
-          });
-        });
-      } else {
+      if (score < 50) {
         playSound(negativeSound, 1000);
-        questions.forEach((question, index) => {
-          if (!wrongQuestions.has(index + 1)) {
-            answers.add({
-              answer: question.answer,
-              correctAnswer: question.answer,
-              question: question.questionText,
-              correct: true,
-            });
-          }
-        });
-        evaluationModalContext.value.title = "Not completely correct!";
-        evaluationModalContext.value.text = "Don't give up! You've gained " + rewards + " coins and " + score + " scores!";
+        evaluationModalContext.value.title = "🙌 Don't give up! 🙌";
+        evaluationModalContext.value.text = `You've got this! You've gained ${rewardsText} and ${scoreText}.`;
+      } else if (score < 70) {
+        playSound(triumphSound, 2000);
+        evaluationModalContext.value.title = "🏆 Nice! 🏆";
+        evaluationModalContext.value.text = `Good job! You've gained ${rewardsText} and ${scoreText}.`;
+      } else {
+        playSound(triumphSound, 2000);
+        evaluationModalContext.value.title = "🏅 Wow, congratulations! 🏅";
+        evaluationModalContext.value.text = `Keep it up! You've gained ${rewardsText} and ${scoreText}.`;
       }
+
+      questions.forEach((question, index) => {
+        answers.add({
+          answer: question.answer,
+          correctAnswer: question.answer,
+          question: question.questionText,
+          correct: !wrongQuestions.has(index + 1),
+        });
+      });
 
     } catch (error) {
       toast.error(
@@ -223,20 +219,20 @@ function playSound(pathToAudioFile: string, duration: number){
       <div class="row">
         <div class="col-9">
           <div
-            class="m-0 p-0 crosswordRow"
-            v-for="crosswordRow in crosswordpuzzle"
-            :key="crosswordRow"
+              class="m-0 p-0 crosswordRow"
+              v-for="crosswordRow in crosswordpuzzle"
+              :key="crosswordRow"
           >
             <div
-              class="crosswordTile m-0 p-0"
-              v-for="crosswordTile in crosswordRow"
-              :key="crosswordTile"
+                class="crosswordTile m-0 p-0"
+                v-for="crosswordTile in crosswordRow"
+                :key="crosswordTile"
             >
               <InputField
-                :crossword="crosswordpuzzle"
-                :crosswordTile="crosswordTile"
-                :direction="direction"
-                @direction="setDirection"
+                  :crossword="crosswordpuzzle"
+                  :crosswordTile="crosswordTile"
+                  :direction="direction"
+                  @direction="setDirection"
               />
             </div>
           </div>
@@ -246,17 +242,17 @@ function playSound(pathToAudioFile: string, duration: number){
           <ol class="list-group list-group-flush list-group-numbered">
             <h1>Questions</h1>
             <li
-              v-for="question in questions"
-              class="list-group-item"
-              :key="question"
+                v-for="question in questions"
+                class="list-group-item"
+                :key="question"
             >
               {{ question.questionText }}
             </li>
           </ol>
           <button
-            id="evaluate-button"
-            class="btn btn-primary m-3"
-            @click="evaluateSolution()"
+              id="evaluate-button"
+              class="btn btn-primary m-3"
+              @click="evaluateSolution()"
           >
             Evaluate
           </button>
@@ -272,24 +268,24 @@ function playSound(pathToAudioFile: string, duration: number){
           <h5 class="modal-title">{{ evaluationModalContext.title }}</h5>
         </div>
         <div class="modal-body">
-          <p>{{ evaluationModalContext.text }}</p>
+          <p v-html="evaluationModalContext.text" class="nice-font"></p>
         </div>
         <div class="modal-footer">
           <router-link :to="{ name: 'home' }">
             <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-              @click="reset"
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+                @click="reset"
             >
               Retry minigame
             </button>
           </router-link>
           <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-dismiss="modal"
-            @click="closeGame"
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              @click="closeGame"
           >
             Close minigame
           </button>
@@ -309,4 +305,17 @@ function playSound(pathToAudioFile: string, duration: number){
 .crosswordRow {
   height: 45px;
 }
+
+
+ .gold-text {
+   color: gold;
+   font-weight: bold;
+ }
+
+.nice-font {
+  font-family: 'Arial', sans-serif;
+}
+
 </style>
+
+
