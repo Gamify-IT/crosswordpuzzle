@@ -10,8 +10,6 @@ import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
 import { useToast } from "vue-toastification";
 import storeTwo from "@/store/indexTwo";
-import triumphSound from '/src/assets/trumpets.mp3';
-import negativeSound from '/src/assets/negativeSound.mp3';
 
 
 const evaluationModal = ref();
@@ -159,15 +157,12 @@ async function evaluateSolution() {
       let rewardsText = `<span class="gold-text">${rewards} coins</span>`;
 
       if (score < 50) {
-        playSound(negativeSound, 1000);
         evaluationModalContext.value.title = "🙌 Don't give up! 🙌";
         evaluationModalContext.value.text = `You've got this! You've gained ${rewardsText} and ${scoreText}.`;
       } else if (score < 70) {
-        playSound(triumphSound, 2000);
         evaluationModalContext.value.title = "🏆 Nice! 🏆";
         evaluationModalContext.value.text = `Good job! You've gained ${rewardsText} and ${scoreText}.`;
       } else {
-        playSound(triumphSound, 2000);
         evaluationModalContext.value.title = "🏅 Wow, congratulations! 🏅";
         evaluationModalContext.value.text = `Keep it up! You've gained ${rewardsText} and ${scoreText}.`;
       }
@@ -205,11 +200,6 @@ function reset() {
   submitted = false;
 }
 
-function playSound(pathToAudioFile: string, duration: number){
-  const sound = new Audio(pathToAudioFile);
-  sound.play();
-  setTimeout(() => sound.pause(), duration);
-}
 
 </script>
 
