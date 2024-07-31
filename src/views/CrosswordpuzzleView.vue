@@ -10,7 +10,9 @@ import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
 import { useToast } from "vue-toastification";
 import storeTwo from "@/store/indexTwo";
-
+import clickSoundSource from '/src/assets/music/click_sound.mp3';
+import successSoundSource from '/src/assets/music/success_sound.mp3';
+import errorSoundSource from '/src/assets/music/error_sound.mp3';
 
 const evaluationModal = ref();
 const direction = ref("");
@@ -110,6 +112,8 @@ async function evaluateSolution() {
   let wrongQuestions = new Set<number>();
   let answers = new Set<GameAnswer>();
 
+  playSound(clickSoundSource);
+
   crosswordpuzzle.forEach((crosswordRow) => {
     crosswordRow.forEach((element) => {
       if (element.currentLetter != "empty" && !element.startPoint) {
@@ -137,6 +141,34 @@ async function evaluateSolution() {
       }
     });
   });
+
+  if (isCorrect) {
+    playSound(successSoundSource);
+    evaluationModalContext.value.title = "Congratulations! 🥳";
+    evaluationModalContext.value.text = "Everything right!";
+    questions.forEach((question) => {
+      answers.add({
+        answer: question.answer,
+        correctAnswer: question.answer,
+        question: question.questionText,
+        correct: true,
+      });
+    });
+  } else {
+    playSound(errorSoundSource);
+    questions.forEach((question, index) => {
+      if (!wrongQuestions.has(index + 1)) {
+        answers.add({
+          answer: question.answer,
+          correctAnswer: question.answer,
+          question: question.questionText,
+          correct: true,
+        });
+      }
+    });
+    evaluationModalContext.value.title = "Not the correct answers";
+    evaluationModalContext.value.text = "Maybe the next time";
+  }
 
   const gameResult: GameResult = {
     correctTiles: numberOfTiles - wrongTiles,
@@ -192,15 +224,27 @@ async function evaluateSolution() {
 function setDirection(currentDirection: string) {
   direction.value = currentDirection;
 }
+
 function closeGame() {
   window.parent.postMessage("CLOSE ME");
 }
 
 function reset() {
+  playSound(clickSoundSource);
   submitted = false;
 }
 
+function playSound(pathToAudioFile: string){
+  const sound = new Audio(pathToAudioFile);
+  sound.play();
+}
 
+async function handleCloseGame() {
+  await playSound(clickSoundSource);
+    setTimeout(() => {
+      closeGame();
+    }, 500);
+}
 </script>
 
 <template>
@@ -272,10 +316,10 @@ function reset() {
             </button>
           </router-link>
           <button
-              type="button"
-              class="btn btn-primary"
-              data-bs-dismiss="modal"
-              @click="closeGame"
+            type="button"
+            class="btn btn-primary"
+            data-bs-dismiss="modal"
+            @click="handleCloseGame"
           >
             Close minigame
           </button>
