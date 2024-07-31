@@ -85,7 +85,7 @@ services:
 
   crosswordpuzzle-backend:
     container_name: crosswordpuzzle-backend
-    image: ghcr.io/gamify-it/crosswordpuzzle-backend:main
+    build: ../crosswordpuzzle-backend
     restart: always
     pull_policy: always
     expose:
