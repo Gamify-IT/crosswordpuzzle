@@ -145,8 +145,6 @@ async function evaluateSolution() {
 
   if (isCorrect) {
     playSound(successSoundSource);
-    evaluationModalContext.value.title = "Congratulations! 🥳";
-    evaluationModalContext.value.text = "Everything right!";
     questions.forEach((question) => {
       answers.add({
         answer: question.answer,
@@ -167,8 +165,7 @@ async function evaluateSolution() {
         });
       }
     });
-    evaluationModalContext.value.title = "Not the correct answers";
-    evaluationModalContext.value.text = "Maybe the next time";
+   
   }
 
   const gameResult: GameResult = {
