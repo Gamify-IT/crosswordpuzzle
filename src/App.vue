@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
 import { onMounted, onUnmounted, ref } from "vue";
-import backgroundMusicSource from '/src/assets/music/background_music.mp3';
-import clickSoundSource from '/src/assets/music/click_sound.mp3';
+import backgroundMusicSource from '@/assets/music/background_music.mp3';
+import clickSoundSource from '@/assets/music/click_sound.mp3';
 let closeModal = ref(false);
 const clickSound = new Audio(clickSoundSource);
 const backgroundMusic = new Audio(backgroundMusicSource);
