@@ -4,7 +4,6 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import backgroundMusicSource from "@/assets/music/background_music.mp3";
 import clickSoundSource from "@/assets/music/click_sound.mp3";
-import {createAudioWithVolume} from "@/ts/volumeLevelChange"
 import { VolumeLevelDTO } from "./types/dtos";
 import axios from "axios";
 import config from "@/config";
@@ -36,10 +35,13 @@ const fetchVolumeLevel = async (configuration: string) => {
 watch(() => route.params.id, async (newId) => {
   if (newId && typeof newId === 'string') {
     await fetchVolumeLevel(newId);
+  } else {
+    console.log('Invalid configuration parameter');
   }
 }, { immediate: true });
 
 onMounted(() => {
+  backgroundMusic.volume = 0;
   backgroundMusic.play();
   backgroundMusic.loop = true;
 });
