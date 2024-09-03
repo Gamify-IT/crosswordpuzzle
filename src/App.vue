@@ -22,13 +22,11 @@ const fetchVolumeLevel = async (configuration: string) => {
       `${config.apiBaseUrl}/configurations/${configuration}/volume`
     );
     volumeLevel = response.data.volumeLevel;
-
-    console.log("Volume level in CP: " + volumeLevel);
- if (volumeLevel == 2 || volumeLevel == 3) {
-    volumeLevel = 1;
-  } else if (volumeLevel == 1) {
-    volumeLevel = 0.5;
-  }
+    if (volumeLevel == 2 || volumeLevel == 3) {
+      volumeLevel = 1;
+    } else if (volumeLevel == 1) {
+      volumeLevel = 0.5;
+    }
     clickSound.volume = volumeLevel !== null ? volumeLevel : 1;
     backgroundMusic.volume = volumeLevel !== null ? volumeLevel : 1;
   } catch (error) {
