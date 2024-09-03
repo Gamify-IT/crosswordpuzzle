@@ -19,7 +19,7 @@ const route = useRoute();
 const fetchVolumeLevel = async (configuration: string) => {
   try {
     const response = await axios.get<VolumeLevelDTO>(
-      `${config.apiBaseUrl}/configurations/${configuration}`
+      `${config.apiBaseUrl}/configurations/${configuration}/volume`
     );
     volumeLevel = response.data.volumeLevel;
 
@@ -38,8 +38,6 @@ const fetchVolumeLevel = async (configuration: string) => {
 watch(() => route.params.id, async (newId) => {
   if (newId && typeof newId === 'string') {
     await fetchVolumeLevel(newId);
-  } else {
-    console.error('Invalid configuration parameter');
   }
 }, { immediate: true });
 

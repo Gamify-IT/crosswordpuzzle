@@ -25,7 +25,7 @@ if (configuration == "default") {
   isActive.value = true;
 } else {
   axios
-    .get(`${config.apiBaseUrl}/configurations/` + configuration)
+    .get(`${config.apiBaseUrl}/configurations/` + configuration + '/volume')
     .then((response) => {
       fetchVolumeLevel(configuration);
       questions.value = response.data.questions;

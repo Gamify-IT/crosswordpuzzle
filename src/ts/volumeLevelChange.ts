@@ -5,7 +5,7 @@ let volumeLevel: number | null = 0;
 
 export async function fetchVolumeLevel(configuration: string): Promise<void> {
   const result = await axios.get<VolumeLevelDTO>(
-    `${config.apiBaseUrl}/configurations/` + configuration
+    `${config.apiBaseUrl}/configurations/` + configuration + '/volume'
   );
   volumeLevel = result.data.volumeLevel;
 }
