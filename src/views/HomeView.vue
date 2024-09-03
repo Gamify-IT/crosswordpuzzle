@@ -6,7 +6,9 @@ import config from "@/config";
 import { ref } from "vue";
 import { store } from "@/store";
 import questionsJson from "@/assets/questions.json";
-import clickSoundSource from '/src/assets/music/click_sound.mp3';
+import clickSoundSource from "@/assets/music/click_sound.mp3";
+import {fetchVolumeLevel, createAudioWithVolume} from "@/ts/volumeLevelChange"
+
 let questions = ref(Array<Question>());
 
 let errorText = ref("");
@@ -14,9 +16,9 @@ let errorText = ref("");
 let isActive = ref(false);
 
 const route = useRoute();
-const clickSound = new Audio(clickSoundSource);
+let clickSound: HTMLAudioElement;
 
-const configuration = route.params.id;
+const configuration = route.params.id as string;
 if (configuration == "default") {
   store.commit("setQuestions", questionsJson);
   questions.value = questionsJson;
@@ -25,6 +27,7 @@ if (configuration == "default") {
   axios
     .get(`${config.apiBaseUrl}/configurations/` + configuration)
     .then((response) => {
+      fetchVolumeLevel(configuration);
       questions.value = response.data.questions;
       if (questions.value.length === 0) {
         errorText.value = "There are no questions in this game.";
@@ -45,10 +48,11 @@ if (configuration == "default") {
           errorText.value = error;
         }
       }
-    });
+    }); 
 }
 
 function playClickSound(){
+  clickSound = createAudioWithVolume(clickSoundSource);
   clickSound.play();
 }
 </script>

@@ -10,9 +10,10 @@ import { useRoute } from "vue-router";
 import { submitGameResult } from "@/ts/restClient";
 import { useToast } from "vue-toastification";
 import storeTwo from "@/store/indexTwo";
-import clickSoundSource from '/src/assets/music/click_sound.mp3';
-import successSoundSource from '/src/assets/music/success_sound.mp3';
-import errorSoundSource from '/src/assets/music/error_sound.mp3';
+import clickSoundSource from "@/assets/music/click_sound.mp3";
+import successSoundSource from "@/assets/music/success_sound.mp3";
+import errorSoundSource from "@/assets/music/error_sound.mp3";
+import {createAudioWithVolume} from "@/ts/volumeLevelChange"
 
 const evaluationModal = ref();
 const direction = ref("");
@@ -236,7 +237,7 @@ function reset() {
 }
 
 function playSound(pathToAudioFile: string){
-  const sound = new Audio(pathToAudioFile);
+  const sound = createAudioWithVolume(pathToAudioFile);
   sound.play();
 }
 
