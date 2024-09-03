@@ -1,19 +1,47 @@
 <script setup lang="ts">
 import { RouterView } from "vue-router";
-import { onMounted, onUnmounted, ref } from "vue";
-import backgroundMusicSource from '/src/assets/music/background_music.mp3';
-import clickSoundSource from '/src/assets/music/click_sound.mp3';
+import { onMounted, onUnmounted, ref, watch } from "vue";
+import { useRoute } from "vue-router";
+import backgroundMusicSource from "@/assets/music/background_music.mp3";
+import clickSoundSource from "@/assets/music/click_sound.mp3";
+import {createAudioWithVolume} from "@/ts/volumeLevelChange"
+import { VolumeLevelDTO } from "./types/dtos";
+import axios from "axios";
+import config from "@/config";
+
 let closeModal = ref(false);
-const clickSound = new Audio(clickSoundSource);
-const backgroundMusic = new Audio(backgroundMusicSource);
+let clickSound =  new Audio(clickSoundSource);
+let backgroundMusic =  new Audio(backgroundMusicSource);
+let volumeLevel : number | null = 0;
 
-function closeGame() {
-  window.parent.postMessage("CLOSE ME");
-}
+const route = useRoute();
 
-function playClickSound(){
-  clickSound.play();
-}
+const fetchVolumeLevel = async (configuration: string) => {
+  try {
+    const response = await axios.get<VolumeLevelDTO>(
+      `${config.apiBaseUrl}/configurations/${configuration}`
+    );
+    volumeLevel = response.data.volumeLevel;
+
+    console.log("Volume level in CP: " + volumeLevel);
+ if (volumeLevel == 2 || volumeLevel == 3) {
+    volumeLevel = 1;
+  } else if (volumeLevel == 1) {
+    volumeLevel = 0.5;
+  }
+    clickSound.volume = volumeLevel !== null ? volumeLevel : 1;
+    backgroundMusic.volume = volumeLevel !== null ? volumeLevel : 1;
+  } catch (error) {
+    console.error('Error fetching volume level:', error);
+  }
+};
+watch(() => route.params.id, async (newId) => {
+  if (newId && typeof newId === 'string') {
+    await fetchVolumeLevel(newId);
+  } else {
+    console.error('Invalid configuration parameter');
+  }
+}, { immediate: true });
 
 onMounted(() => {
   backgroundMusic.play();
@@ -30,6 +58,14 @@ async function handleCloseGame() {
     setTimeout(() => {
       closeGame();
     }, 500);
+}
+
+function closeGame() {
+  window.parent.postMessage("CLOSE ME");
+}
+
+function playClickSound(){
+  clickSound.play();
 }
 </script>
 
