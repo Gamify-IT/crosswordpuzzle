@@ -4,7 +4,6 @@ import { onMounted, onUnmounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import backgroundMusicSource from "@/assets/music/background_music.mp3";
 import clickSoundSource from "@/assets/music/click_sound.mp3";
-import {createAudioWithVolume} from "@/ts/volumeLevelChange"
 import { VolumeLevelDTO } from "./types/dtos";
 import axios from "axios";
 import config from "@/config";
@@ -19,16 +18,14 @@ const route = useRoute();
 const fetchVolumeLevel = async (configuration: string) => {
   try {
     const response = await axios.get<VolumeLevelDTO>(
-      `${config.apiBaseUrl}/configurations/${configuration}`
+      `${config.apiBaseUrl}/configurations/${configuration}/volume`
     );
     volumeLevel = response.data.volumeLevel;
-
-    console.log("Volume level in CP: " + volumeLevel);
- if (volumeLevel == 2 || volumeLevel == 3) {
-    volumeLevel = 1;
-  } else if (volumeLevel == 1) {
-    volumeLevel = 0.5;
-  }
+    if (volumeLevel == 2 || volumeLevel == 3) {
+      volumeLevel = 1;
+    } else if (volumeLevel == 1) {
+      volumeLevel = 0.5;
+    }
     clickSound.volume = volumeLevel !== null ? volumeLevel : 1;
     backgroundMusic.volume = volumeLevel !== null ? volumeLevel : 1;
   } catch (error) {
@@ -39,11 +36,12 @@ watch(() => route.params.id, async (newId) => {
   if (newId && typeof newId === 'string') {
     await fetchVolumeLevel(newId);
   } else {
-    console.error('Invalid configuration parameter');
+    console.log('Invalid configuration parameter');
   }
 }, { immediate: true });
 
 onMounted(() => {
+  backgroundMusic.volume = 0;
   backgroundMusic.play();
   backgroundMusic.loop = true;
 });
