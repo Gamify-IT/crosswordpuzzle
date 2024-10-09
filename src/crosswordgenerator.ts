@@ -15,6 +15,16 @@ const valueOfIntersect = 10;
 const maxTries = 50;
 const interations = 10;
 
+/**
+ * Generates a crossword grid based on the provided questions.
+ *
+ * This function creates a crossword grid by placing the words from the questions in the grid
+ * and ensuring that the placement maximizes the score based on intersecting letters.
+ * It returns a rearranged grid with words positioned in the best possible way.
+ *
+ * @param questions - An array of questions that contain the answers to be placed in the crossword.
+ * @returns A 2D array representing the crossword grid.
+ */
 export function generateCrossword(questions: Question[]): TileCrossWord[][] {
   const wordCount = questions.length;
   let answers: Answer[] = [];
@@ -48,6 +58,20 @@ export function generateCrossword(questions: Question[]): TileCrossWord[][] {
   );
 }
 
+/**
+ * Creates the crossword grid by attempting to place words from the provided answers.
+ *
+ * This function iterates over the words and places them in the crossword grid.
+ * It tracks the best arrangement that gives the maximum score based on intersections.
+ *
+ * @param answers - An array of answers to be placed in the crossword grid.
+ * @param wordCount - The total number of words to place.
+ * @param questions - The original questions used to generate the answers.
+ * @param score - The current best score to beat.
+ * @param crossword - The current state of the crossword grid.
+ * @param currentAnswers - The answers that have already been placed in the crossword grid.
+ * @returns The updated answers, score, and crossword grid.
+ */
 function createCrossword(
   answers: Answer[],
   wordCount: number,
@@ -74,6 +98,15 @@ function createCrossword(
   return { answers, score, crossword };
 }
 
+/**
+ * Generates a simple crossword grid by placing words horizontally and vertically.
+ *
+ * This function iterates over the list of answers and places them on the crossword grid.
+ * It ensures that each word fits correctly, respecting intersections with other words.
+ *
+ * @param answers - The answers to be placed in the crossword grid.
+ * @returns A 2D array representing the crossword grid with placed words.
+ */
 function simpleCrossWord(answers: Answer[]): TileCrossWord[][] {
   const crossword: TileCrossWord[][] = new Array(rows)
     .fill(emptyTile)
@@ -99,6 +132,15 @@ function simpleCrossWord(answers: Answer[]): TileCrossWord[][] {
   return crossword;
 }
 
+/**
+ * Removes a word from the list of questions and updates the crossword grid.
+ *
+ * This function locates the word in the question list, removes it, and adjusts the question numbers
+ * accordingly. It also updates the startpoints of the crossword tiles.
+ *
+ * @param word - The answer to be removed.
+ * @param questions - The list of questions where the word resides.
+ */
 function removeWord(word: Answer, questions: Question[]): void {
   let questIndex = -1;
   questions.forEach((quest, i) => {
@@ -114,6 +156,16 @@ function removeWord(word: Answer, questions: Question[]): void {
   questions.splice(questIndex, 1);
 }
 
+/**
+ * Attempts to place a word on the crossword grid by checking intersections with other words.
+ *
+ * This function checks where the word intersects with other placed words and attempts to place it at those
+ * intersection points. It will try both vertical and horizontal placements.
+ *
+ * @param word - The word to be placed.
+ * @param crossword - The current crossword grid.
+ * @returns A boolean indicating whether the word was successfully placed.
+ */
 function tryPlaceWord(word: Answer, crossword: TileCrossWord[][]): boolean {
   const intersections: Position[] = [];
   getIntersections(word, crossword, intersections);
@@ -133,6 +185,17 @@ function tryPlaceWord(word: Answer, crossword: TileCrossWord[][]): boolean {
   return placed;
 }
 
+/**
+ * Attempts to place a word vertically on the crossword grid at a given intersection.
+ *
+ * This function checks if there is enough space to place the word vertically at the given intersection point.
+ * If the placement fits, the word is placed; otherwise, the function returns false.
+ *
+ * @param curInter - The intersection point where the word should be placed.
+ * @param word - The word to be placed.
+ * @param crossword - The current crossword grid.
+ * @returns A boolean indicating whether the word was successfully placed.
+ */
 function tryPlaceVertical(
   curInter: Position,
   word: Answer,
@@ -179,6 +242,17 @@ function tryPlaceVertical(
   return placed;
 }
 
+/**
+ * Attempts to place a word horizontally on the crossword grid at a given intersection.
+ *
+ * This function checks if there is enough space to place the word horizontally at the given intersection point.
+ * If the placement fits, the word is placed; otherwise, the function returns false.
+ *
+ * @param curInter - The intersection point where the word should be placed.
+ * @param word - The word to be placed.
+ * @param crossword - The current crossword grid.
+ * @returns A boolean indicating whether the word was successfully placed.
+ */
 function tryPlaceHorizontal(
   curInter: Position,
   word: Answer,
@@ -225,6 +299,17 @@ function tryPlaceHorizontal(
   return placed;
 }
 
+/**
+ * Checks if a word intersects correctly at a given position in the crossword grid.
+ *
+ * This function checks if the word at the given position intersects with other placed words.
+ * It ensures that the word doesn't overlap inappropriately with other letters.
+ *
+ * @param word - The word to be checked.
+ * @param pos - The position where the word should be placed.
+ * @param crossword - The current crossword grid.
+ * @returns A boolean indicating whether the intersection is valid.
+ */
 function checkIntersection(
   word: Answer,
   pos: Position,
@@ -255,6 +340,16 @@ function checkIntersection(
   return true;
 }
 
+/**
+ * Finds all the intersection points where a word can be placed in the crossword grid.
+ *
+ * This function looks for all possible intersection points where the word can intersect with
+ * already placed words. It stores these points for further evaluation.
+ *
+ * @param word - The word to be checked for intersections.
+ * @param crossword - The current crossword grid.
+ * @param intersections - An array to store valid intersection points.
+ */
 function getIntersections(
   word: Answer,
   crossword: TileCrossWord[][],
@@ -282,6 +377,16 @@ function getIntersections(
   });
 }
 
+/**
+ * Moves the crossword grid to accommodate placement of words.
+ *
+ * This function shifts the rows and columns of the crossword grid to ensure there's enough
+ * space for placing words. It adjusts the grid dynamically based on the placement.
+ *
+ * @param x - The number of rows to move.
+ * @param y - The number of columns to move.
+ * @param crossword - The current crossword grid.
+ */
 function moveGrid(x: number, y: number, crossword: TileCrossWord[][]): void {
   for (let i = 0; i < x; i++) {
     const emptyRow: TileCrossWord[] = new Array(columns).fill(emptyTile);
@@ -306,6 +411,17 @@ function moveGrid(x: number, y: number, crossword: TileCrossWord[][]): void {
   }
 }
 
+/**
+ * Places a word vertically on the crossword grid starting from the specified position.
+ *
+ * This function places each character of the word on the grid, starting from the given (x, y) position,
+ * and marks the start point of the word.
+ *
+ * @param word - The word to be placed.
+ * @param startX - The starting row for the word.
+ * @param startY - The starting column for the word.
+ * @param crossword - The current crossword grid.
+ */
 function placeWordVertical(
   word: Answer,
   startX: number,
@@ -342,6 +458,17 @@ function placeWordVertical(
   }
 }
 
+/**
+ * Places a word horizontally on the crossword grid starting from the specified position.
+ *
+ * This function places each character of the word on the grid, starting from the given (x, y) position,
+ * and marks the start point of the word.
+ *
+ * @param word - The word to be placed.
+ * @param startX - The starting row for the word.
+ * @param startY - The starting column for the word.
+ * @param crossword - The current crossword grid.
+ */
 function placeWordHorizontal(
   word: Answer,
   startX: number,
@@ -378,6 +505,15 @@ function placeWordHorizontal(
   }
 }
 
+/**
+ * Calculates the score for the current crossword grid based on word intersections.
+ *
+ * This function calculates the score by counting how many times words intersect with each other
+ * in the grid. Each intersection adds to the score, and the score is also reduced based on the grid size.
+ *
+ * @param crossword - The current crossword grid.
+ * @returns The calculated score.
+ */
 function getScore(crossword: TileCrossWord[][]): number {
   let intersections = 0;
   crossword.forEach(async (column, x) => {
@@ -393,6 +529,17 @@ function getScore(crossword: TileCrossWord[][]): number {
   return intersections * valueOfIntersect - rows - columns;
 }
 
+/**
+ * Checks if a specific tile in the crossword grid is part of an intersection.
+ *
+ * This function checks if the tile at the given coordinates intersects with both horizontal
+ * and vertical words in the crossword grid.
+ *
+ * @param crossword - The current crossword grid.
+ * @param x - The row index of the tile.
+ * @param y - The column index of the tile.
+ * @returns A boolean indicating whether the tile is part of an intersection.
+ */
 function checkIfIntersection(
   crossword: TileCrossWord[][],
   x: number,
@@ -403,6 +550,16 @@ function checkIfIntersection(
   return horizontal && vertical;
 }
 
+/**
+ * Checks if there is a horizontal intersection at the given coordinates.
+ *
+ * This function checks if the tile at the given coordinates is part of a horizontal word in the grid.
+ *
+ * @param crossword - The current crossword grid.
+ * @param x - The row index of the tile.
+ * @param y - The column index of the tile.
+ * @returns A boolean indicating whether the tile is part of a horizontal intersection.
+ */
 function checkInterHorizontal(
   crossword: TileCrossWord[][],
   x: number,
@@ -425,6 +582,16 @@ function checkInterHorizontal(
   return horizontal;
 }
 
+/**
+ * Checks if there is a vertical intersection at the given coordinates.
+ *
+ * This function checks if the tile at the given coordinates is part of a vertical word in the grid.
+ *
+ * @param crossword - The current crossword grid.
+ * @param x - The row index of the tile.
+ * @param y - The column index of the tile.
+ * @returns A boolean indicating whether the tile is part of a vertical intersection.
+ */
 function checkInterVertical(
   crossword: TileCrossWord[][],
   x: number,

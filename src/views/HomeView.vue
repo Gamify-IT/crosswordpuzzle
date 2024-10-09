@@ -51,6 +51,9 @@ if (configuration == "default") {
     }); 
 }
 
+/**
+ * Function to play a click sound when a button is clicked
+ */
 function playClickSound(){
   clickSound = createAudioWithVolume(clickSoundSource);
   clickSound.play();
@@ -59,13 +62,16 @@ function playClickSound(){
 
 <template>
   <main>
+    <!-- Display an error message if errorText is not empty -->
     <div class="alert alert-danger" v-if="errorText">
       A fatal error occurred: <br />
       {{ errorText }} <br />
       Please report the error to an admin.
     </div>
+    <!-- Display crossword puzzle questions if isActive is true -->
     <div class="crosswordpuzzle container" v-if="isActive">
       <div class="row">
+        <!-- Column displaying the list of questions -->
         <div class="col-8">
           <ol class="list-group list-group-flush list-group-numbered">
             <h1>Questions</h1>
@@ -78,6 +84,7 @@ function playClickSound(){
             </li>
           </ol>
         </div>
+        <!-- Column with a button to start the crossword puzzle -->
         <div class="col-4 position-relative">
           <router-link
             id="start-button"

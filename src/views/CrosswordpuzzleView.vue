@@ -21,7 +21,7 @@ const direction = ref("");
 let submitted = false;
 const time = Date.now();
 
-//Test
+
 const route = useRoute();
 const toast = useToast();
 const configuration = route.params.id as string;
@@ -38,6 +38,12 @@ console.log(crosswordpuzzle);
 
 const evaluationModalContext = ref({ title: "", text: "" });
 
+/**
+ * Retrieves both vertical and horizontal incorrect answers for a given crossword tile.
+ *
+ * @param element The crossword tile element that was filled incorrectly.
+ * @returns An array containing the incorrect answers for both vertical and horizontal directions.
+ */
 function getWrongQuestion(element: TileCrossWord): QuestionAnswer[] {
   return [
     getWrongQuestionVertical(element),
@@ -45,6 +51,14 @@ function getWrongQuestion(element: TileCrossWord): QuestionAnswer[] {
   ];
 }
 
+/**
+ * Retrieves the incorrect horizontal answer for a given crossword tile.
+ *
+ * The method traverses the crossword row to find the horizontal answer that starts from the given tile.
+ *
+ * @param element The crossword tile element.
+ * @returns An object containing the question number and the incorrect answer.
+ */
 function getWrongQuestionHorizontal(element: TileCrossWord): QuestionAnswer {
   for (let i = element.positionX; i >= 0; i--) {
     if (
@@ -76,6 +90,14 @@ function getWrongQuestionHorizontal(element: TileCrossWord): QuestionAnswer {
   };
 }
 
+/**
+ * Retrieves the incorrect vertical answer for a given crossword tile.
+ *
+ * The method traverses the crossword column to find the vertical answer that starts from the given tile.
+ *
+ * @param element The crossword tile element.
+ * @returns An object containing the question number and the incorrect answer.
+ */
 function getWrongQuestionVertical(element: TileCrossWord): QuestionAnswer {
   for (let i = element.positionY; i >= 0; i--) {
     if (
@@ -107,6 +129,13 @@ function getWrongQuestionVertical(element: TileCrossWord): QuestionAnswer {
   };
 }
 
+/**
+ * Evaluates the player's crossword puzzle solution.
+ *
+ * This function checks each tile of the crossword puzzle and compares it to the correct answer.
+ * If the answer is correct, it is added to the correct answers set, otherwise it is added to the incorrect answers set.
+ * It also calculates the score, rewards, and shows the result in a modal at the end.
+ */
 async function evaluateSolution() {
   let isCorrect = true;
   let wrongTiles = 0;
@@ -250,6 +279,7 @@ async function handleCloseGame() {
 </script>
 
 <template>
+  <!-- Main container for the crossword puzzle and questions. -->
   <div class="container">
     <div>
       <div class="row">
@@ -259,6 +289,7 @@ async function handleCloseGame() {
               v-for="crosswordRow in crosswordpuzzle"
               :key="crosswordRow"
           >
+            <!-- Loop through tiles in each row and render InputField component. -->
             <div
                 class="crosswordTile m-0 p-0"
                 v-for="crosswordTile in crosswordRow"
@@ -273,10 +304,12 @@ async function handleCloseGame() {
             </div>
           </div>
         </div>
-
+        <!-- Column displaying questions (3 parts wide). -->
         <div class="col-3">
+          <!-- Ordered list of questions in the crossword puzzle. -->
           <ol class="list-group list-group-flush list-group-numbered">
             <h1>Questions</h1>
+            <!-- Loop through each question and display it in the list. -->
             <li
                 v-for="question in questions"
                 class="list-group-item"
@@ -285,6 +318,7 @@ async function handleCloseGame() {
               {{ question.questionText }}
             </li>
           </ol>
+          <!-- Button to evaluate the puzzle solution. -->
           <button
               id="evaluate-button"
               class="btn btn-primary m-3"
@@ -297,16 +331,21 @@ async function handleCloseGame() {
     </div>
   </div>
 
+  <!-- Modal that shows the evaluation result of the game. -->
   <div ref="evaluationModal" class="modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
       <div class="modal-content">
+        <!-- Modal header with the evaluation title. -->
         <div class="modal-header">
           <h5 class="modal-title">{{ evaluationModalContext.title }}</h5>
         </div>
+        <!-- Modal body with the evaluation result text. -->
         <div class="modal-body">
           <p v-html="evaluationModalContext.text" class="nice-font"></p>
         </div>
+        <!-- Modal footer with action buttons. -->
         <div class="modal-footer">
+          <!-- Button to retry the minigame (navigate to home). -->
           <router-link :to="{ name: 'home' }">
             <button
                 type="button"
@@ -317,6 +356,7 @@ async function handleCloseGame() {
               Retry minigame
             </button>
           </router-link>
+          <!-- Button to close the game. -->
           <button
             type="button"
             class="btn btn-primary"
@@ -333,21 +373,21 @@ async function handleCloseGame() {
 </template>
 
 <style scoped>
+/* .crosswordTile: Ensures tiles are inline-block and prevents text from wrapping. */
 .crosswordTile {
   white-space: nowrap;
   display: inline-block;
 }
-
+/* .crosswordRow: Sets a fixed height for each row of the crossword puzzle. */
 .crosswordRow {
   height: 45px;
 }
-
-
+/* .gold-text: Styles text in gold color and bold for emphasis. */
  .gold-text {
    color: gold;
    font-weight: bold;
  }
-
+/* .nice-font: Applies a clean and simple font (Arial) for text in the modal. */
 .nice-font {
   font-family: 'Arial', sans-serif;
 }
