@@ -45,6 +45,10 @@ watch(
   { deep: true }
 );
 
+/**
+ * Function to check if the current tile has a left start point.
+ * @returns boolean: True if the current tile is a left start point.
+ */
 function isLeftStartPoint(): boolean {
   let leftStartPoint = false;
   if (
@@ -57,6 +61,10 @@ function isLeftStartPoint(): boolean {
   return leftStartPoint;
 }
 
+/**
+ * Function to check if the current tile has an up start point.
+ * @returns boolean: True if the current tile is an up start point.
+ */
 function isUpStartPoint(): boolean {
   let upStartPoint = false;
   if (
@@ -69,6 +77,10 @@ function isUpStartPoint(): boolean {
   return upStartPoint;
 }
 
+/**
+ * Handles keydown events for character input and movement within the crossword.
+ * @param key: The keyboard event triggered by the user.
+ */
 async function keyDown(key: KeyboardEvent) {
   if (key.key.length == 1) {
     crosswordTile.value.currentLetter = key.key.toUpperCase();
@@ -139,6 +151,10 @@ async function keyDown(key: KeyboardEvent) {
     handleButtonPress();
   }
 
+  /**
+   * Handles arrow key and tab key presses for movement within the crossword.
+   * @param key: The keyboard event triggered by the user.
+   */
   function handleButtonPress() {
     switch (key.key) {
       case "ArrowRight": {
@@ -168,6 +184,10 @@ async function keyDown(key: KeyboardEvent) {
     }
   }
 
+  /**
+   * Handles the tab key press for movement in the crossword puzzle.
+   * Moves focus based on current direction.
+   */
   function pressTab() {
     let elementRight = getCrosswordElement(
       crosswordTile.value.positionX + 1,
@@ -211,6 +231,9 @@ async function keyDown(key: KeyboardEvent) {
     }
   }
 
+  /**
+   * Handles left arrow key press for moving to the previous tile in the crossword.
+   */
   function pressLeftArrow() {
     let elementDown = null;
     let currentX = crosswordTile.value.positionX - 1;
@@ -228,6 +251,9 @@ async function keyDown(key: KeyboardEvent) {
     elementDown.focus();
   }
 
+  /**
+   * Handles right arrow key press for moving to the next tile in the crossword.
+   */
   function pressRightArrow() {
     let elementDown = null;
     let currentX = crosswordTile.value.positionX + 1;
@@ -245,6 +271,9 @@ async function keyDown(key: KeyboardEvent) {
     elementDown.focus();
   }
 
+  /**
+   * Handles up arrow key press for moving to the previous tile in the crossword.
+   */
   function pressUpArrow() {
     let elementDown = null;
     let currentY = crosswordTile.value.positionY - 1;
@@ -262,6 +291,9 @@ async function keyDown(key: KeyboardEvent) {
     elementDown.focus();
   }
 
+  /**
+   * Handles down arrow key press for moving to the next tile in the crossword.
+   */
   function pressDownArrow() {
     let elementDown = null;
     let currentY = crosswordTile.value.positionY + 1;
@@ -280,24 +312,35 @@ async function keyDown(key: KeyboardEvent) {
   }
 }
 
+/***
+ * Mouse click event to reset direction when the user clicks on the crossword.
+ */
 function mouseDown() {
   emit("direction", "");
 }
 
+/**
+ * Helper function to get a crossword element (input field) by position.
+ * @param x: The x-coordinate (column) of the crossword tile.
+ * @param y: The y-coordinate (row) of the crossword tile.
+ * @returns The crossword element if it exists, or null if not.
+ */
 function getCrosswordElement(x: number, y: number): HTMLElement | null {
   return document.getElementById(`inputField:x${x},y${y}`);
 }
 </script>
 
 <template>
+  <!-- Main crossword tile container. -->
   <div class="field p-0 m-0">
+    <!-- Display start point (answer) if it's a starting tile. -->
     <div v-if="crosswordTile.startPoint" class="p-0 m-0">
       <span
         class="badge rounded-pill bg-dark position-absolute top-50 start-50 translate-middle"
       >
         {{ crosswordTile.answer }}
       </span>
-
+      <!-- Arrows for the direction of the crossword puzzle. -->
       <img
         v-if="crosswordTile.startDirection === 'right'"
         src="@/assets/caret-right.svg"
@@ -312,7 +355,7 @@ function getCrosswordElement(x: number, y: number): HTMLElement | null {
         alt="down arrow"
       />
     </div>
-
+    <!-- Input field for the crossword tile if not empty. -->
     <input
       v-else-if="crosswordTile.currentLetter !== emptyTileString"
       class="form-control text-center"
@@ -335,19 +378,21 @@ function getCrosswordElement(x: number, y: number): HTMLElement | null {
 </template>
 
 <style scoped>
+/* Style for the crossword tile container */
 .field {
   width: 45px;
   height: 45px;
   position: relative;
 }
 
+/* Style for the right arrow indicating a start point */
 .arrowRight {
   translate: 0 -50%;
   position: absolute;
   top: 50%;
   left: 70%;
 }
-
+/* Style for the down arrow indicating a start point */
 .arrowDown {
   translate: -50% 0;
   transform: rotate(90deg);
@@ -355,7 +400,7 @@ function getCrosswordElement(x: number, y: number): HTMLElement | null {
   top: 70%;
   left: 50%;
 }
-
+/* Style for the input field within the crossword tile */
 input {
   width: 100%;
   height: 100%;

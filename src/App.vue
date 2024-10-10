@@ -51,6 +51,9 @@ onUnmounted(() => {
   backgroundMusic.currentTime = 0;
 });
 
+/**
+ * Function to handle closing the game
+ */
 async function handleCloseGame() {
   await playClickSound();
     setTimeout(() => {
@@ -58,6 +61,9 @@ async function handleCloseGame() {
     }, 500);
 }
 
+/**
+ * Function to send a message to the parent window to close the game
+ */
 function closeGame() {
   window.parent.postMessage("CLOSE ME");
 }
@@ -69,10 +75,12 @@ function playClickSound(){
 
 <template>
   <header>
+    <!-- Navigation bar with the game title -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
         <span class="navbar-brand mb-0 h1">Crosswordpuzzle</span>
       </div>
+      <!-- Close button that triggers a modal when clicked -->
       <b-button
         variant="danger"
         class="close-button"
@@ -83,7 +91,9 @@ function playClickSound(){
       </b-button>
     </nav>
   </header>
+  <!-- Router view for rendering nested views -->
   <RouterView />
+  <!-- Modal dialog that asks the user to confirm before closing the game -->
   <b-modal v-model="closeModal" title="Close Minigame" @ok="handleCloseGame" @cancel="playClickSound">
     <p class="my-4">The game will be closed without evaluation.</p>
   </b-modal>
