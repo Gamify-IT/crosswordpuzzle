@@ -1,3 +1,8 @@
+/**
+ * Represents the outcome of a game session, including performance metrics like correct tiles,
+ * total tiles, answers, duration, and score.
+ */
+
 export interface Question {
   questionText: string;
   answer: string;

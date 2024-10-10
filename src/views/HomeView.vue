@@ -1,4 +1,9 @@
 <script setup lang="ts">
+/**
+ * Fetches crossword puzzle questions based on the configuration, handles errors,
+ * and manages sound effects for user interaction.
+ */
+
 import type { Question } from "@/types";
 import axios from "axios";
 import { useRoute } from "vue-router";
