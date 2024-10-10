@@ -45,7 +45,7 @@ watch(
   { deep: true }
 );
 
-/***
+/**
  * Function to check if the current tile has a left start point.
  * @returns boolean: True if the current tile is a left start point.
  */
@@ -61,7 +61,7 @@ function isLeftStartPoint(): boolean {
   return leftStartPoint;
 }
 
-/***
+/**
  * Function to check if the current tile has an up start point.
  * @returns boolean: True if the current tile is an up start point.
  */
@@ -77,7 +77,7 @@ function isUpStartPoint(): boolean {
   return upStartPoint;
 }
 
-/***
+/**
  * Handles keydown events for character input and movement within the crossword.
  * @param key: The keyboard event triggered by the user.
  */
@@ -151,7 +151,7 @@ async function keyDown(key: KeyboardEvent) {
     handleButtonPress();
   }
 
-  /***
+  /**
    * Handles arrow key and tab key presses for movement within the crossword.
    * @param key: The keyboard event triggered by the user.
    */
@@ -184,7 +184,7 @@ async function keyDown(key: KeyboardEvent) {
     }
   }
 
-  /***
+  /**
    * Handles the tab key press for movement in the crossword puzzle.
    * Moves focus based on current direction.
    */
@@ -231,7 +231,7 @@ async function keyDown(key: KeyboardEvent) {
     }
   }
 
-  /***
+  /**
    * Handles left arrow key press for moving to the previous tile in the crossword.
    */
   function pressLeftArrow() {
@@ -251,7 +251,7 @@ async function keyDown(key: KeyboardEvent) {
     elementDown.focus();
   }
 
-  /***
+  /**
    * Handles right arrow key press for moving to the next tile in the crossword.
    */
   function pressRightArrow() {
@@ -271,7 +271,7 @@ async function keyDown(key: KeyboardEvent) {
     elementDown.focus();
   }
 
-  /***
+  /**
    * Handles up arrow key press for moving to the previous tile in the crossword.
    */
   function pressUpArrow() {
@@ -291,7 +291,7 @@ async function keyDown(key: KeyboardEvent) {
     elementDown.focus();
   }
 
-  /***
+  /**
    * Handles down arrow key press for moving to the next tile in the crossword.
    */
   function pressDownArrow() {
@@ -319,7 +319,7 @@ function mouseDown() {
   emit("direction", "");
 }
 
-/***
+/**
  * Helper function to get a crossword element (input field) by position.
  * @param x: The x-coordinate (column) of the crossword tile.
  * @param y: The y-coordinate (row) of the crossword tile.
