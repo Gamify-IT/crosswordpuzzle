@@ -16,22 +16,25 @@ let volumeLevel : number | null = 0;
 const route = useRoute();
 
 const fetchVolumeLevel = async (configuration: string) => {
-  try {
-    const response = await axios.get<VolumeLevelDTO>(
-      `${config.apiBaseUrl}/configurations/${configuration}/volume`
-    );
-    volumeLevel = response.data.volumeLevel;
-    if (volumeLevel == 2 || volumeLevel == 3) {
-      volumeLevel = 1;
-    } else if (volumeLevel == 1) {
-      volumeLevel = 0.5;
+  if (configuration != "tutorial") {
+    try {
+      const response = await axios.get<VolumeLevelDTO>(
+        `${config.apiBaseUrl}/configurations/${configuration}/volume`
+      );
+      volumeLevel = response.data.volumeLevel;
+      if (volumeLevel == 2 || volumeLevel == 3) {
+        volumeLevel = 1;
+      } else if (volumeLevel == 1) {
+        volumeLevel = 0.5;
+      }
+      clickSound.volume = volumeLevel !== null ? volumeLevel : 1;
+      backgroundMusic.volume = volumeLevel !== null ? volumeLevel : 1;
+    } catch (error) {
+      console.error('Error fetching volume level:', error);
     }
-    clickSound.volume = volumeLevel !== null ? volumeLevel : 1;
-    backgroundMusic.volume = volumeLevel !== null ? volumeLevel : 1;
-  } catch (error) {
-    console.error('Error fetching volume level:', error);
   }
 };
+
 watch(() => route.params.id, async (newId) => {
   if (newId && typeof newId === 'string') {
     await fetchVolumeLevel(newId);

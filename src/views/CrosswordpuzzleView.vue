@@ -211,7 +211,7 @@ async function evaluateSolution() {
     rewards: 0
   };
 
-  if (!submitted) {
+  if (!submitted && configuration != "tutorial") {
     try {
       await submitGameResult(gameResult);
       let rewards = storeTwo.state.rewards;
