@@ -3,6 +3,8 @@ import axios from "axios";
 import config from "@/config";
 import storeTwo from "@/store/indexTwo";
 
+const tutorialConfiguration = "4f3af39f-1a0c-44f1-8a07-460786ab4fb1";
+
 /**
  * Sends the game result to the backend via an API request and processes the response.
  *
@@ -17,18 +19,20 @@ export async function submitGameResult(
     gameResult: GameResult
 ): Promise<void> {
   console.log("Sending GameResultDTO to backend:", gameResult);
-  try {
-    const response = await axios.post(`${config.apiBaseUrl}/results`, gameResult);
-    console.log("Received response from backend:", response.data);
-    const returnedResult = fromDTO(response.data);
-    storeTwo.commit('setRewards', returnedResult.rewards)
-    storeTwo.commit('setScore', returnedResult.score)
-    console.log("Store rewards:", storeTwo.state.rewards);
-
-
-  } catch (error) {
-    console.error("Error sending GameResultDTO:", error);
-    throw error;
+  if (gameResult.configuration != tutorialConfiguration) {
+    try {
+      const response = await axios.post(`${config.apiBaseUrl}/results`, gameResult);
+      console.log("Received response from backend:", response.data);
+      const returnedResult = fromDTO(response.data);
+      storeTwo.commit('setRewards', returnedResult.rewards)
+      storeTwo.commit('setScore', returnedResult.score)
+      console.log("Store rewards:", storeTwo.state.rewards);
+  
+  
+    } catch (error) {
+      console.error("Error sending GameResultDTO:", error);
+      throw error;
+    }
   }
 }
 
