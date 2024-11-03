@@ -32,6 +32,7 @@ const fetchVolumeLevel = async (configuration: string) => {
     console.error('Error fetching volume level:', error);
   }
 };
+
 watch(() => route.params.id, async (newId) => {
   if (newId && typeof newId === 'string') {
     await fetchVolumeLevel(newId);
