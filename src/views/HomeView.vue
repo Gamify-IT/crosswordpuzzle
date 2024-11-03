@@ -11,7 +11,6 @@ import config from "@/config";
 import { ref } from "vue";
 import { store } from "@/store";
 import questionsJson from "@/assets/questions.json";
-import tutorialQuestions from "@/assets/tutorialQuestions.json"
 import clickSoundSource from "@/assets/music/click_sound.mp3";
 import {fetchVolumeLevel, createAudioWithVolume} from "@/ts/volumeLevelChange"
 
@@ -28,10 +27,6 @@ const configuration = route.params.id as string;
 if (configuration == "default") {
   store.commit("setQuestions", questionsJson);
   questions.value = questionsJson;
-  isActive.value = true;
-} else if(configuration == "tutorial") {
-  store.commit("setQuestions", tutorialQuestions);
-  questions.value = tutorialQuestions;
   isActive.value = true;
 } else {
   axios
