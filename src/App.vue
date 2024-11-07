@@ -7,6 +7,7 @@ import clickSoundSource from "@/assets/music/click_sound.mp3";
 import { VolumeLevelDTO } from "./types/dtos";
 import axios from "axios";
 import config from "@/config";
+import { tutorialConfiguration} from "@/ts/restClient";
 
 let closeModal = ref(false);
 let clickSound =  new Audio(clickSoundSource);
@@ -34,7 +35,7 @@ const fetchVolumeLevel = async (configuration: string) => {
 };
 
 watch(() => route.params.id, async (newId) => {
-  if (newId && typeof newId === 'string') {
+  if (newId && typeof newId === 'string' && newId != tutorialConfiguration) {
     await fetchVolumeLevel(newId);
   } else {
     console.log('Invalid configuration parameter');

@@ -11,8 +11,10 @@ import config from "@/config";
 import { ref } from "vue";
 import { store } from "@/store";
 import questionsJson from "@/assets/questions.json";
+import tutorialQuestions from "@/assets/tutorialQuestions.json";
 import clickSoundSource from "@/assets/music/click_sound.mp3";
 import {fetchVolumeLevel, createAudioWithVolume} from "@/ts/volumeLevelChange"
+import { tutorialConfiguration} from "@/ts/restClient";
 
 let questions = ref(Array<Question>());
 
@@ -28,7 +30,13 @@ if (configuration == "default") {
   store.commit("setQuestions", questionsJson);
   questions.value = questionsJson;
   isActive.value = true;
-} else {
+} else if(configuration === tutorialConfiguration) {
+  console.log("Loading tutorial minigame");
+  store.commit("setQuestions", tutorialQuestions);
+  questions.value = tutorialQuestions;
+  isActive.value = true;
+}
+else {
   axios
     .get(`${config.apiBaseUrl}/configurations/` + configuration + '/volume')
     .then((response) => {
