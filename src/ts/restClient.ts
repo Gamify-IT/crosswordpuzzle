@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "@/config";
 import storeTwo from "@/store/indexTwo";
 
-export const tutorialConfiguration = "4f3af39f-1a0c-44f1-8a07-460786ab4fb1";
+export const tutorialConfiguration = "tutorial";
 
 /**
  * Sends the game result to the backend via an API request and processes the response.
@@ -19,6 +19,7 @@ export async function submitGameResult(
     gameResult: GameResult
 ): Promise<void> {
   console.log("Sending GameResultDTO to backend:", gameResult);
+  console.log("submit config: " + gameResult.configuration);
   if (gameResult.configuration != tutorialConfiguration) {
     try {
       const response = await axios.post(`${config.apiBaseUrl}/results`, gameResult);

@@ -35,10 +35,11 @@ const fetchVolumeLevel = async (configuration: string) => {
 };
 
 watch(() => route.params.id, async (newId) => {
+  console.log("warch id:" + newId);
   if (newId && typeof newId === 'string' && newId != tutorialConfiguration) {
     await fetchVolumeLevel(newId);
   } else {
-    console.log('Invalid configuration parameter');
+    console.log('Invalid or tutorial configuration parameter');
   }
 }, { immediate: true });
 
