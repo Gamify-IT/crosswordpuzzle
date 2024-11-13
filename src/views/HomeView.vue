@@ -14,7 +14,6 @@ import questionsJson from "@/assets/questions.json";
 import tutorialQuestions from "@/assets/tutorialQuestions.json";
 import clickSoundSource from "@/assets/music/click_sound.mp3";
 import {fetchVolumeLevel, createAudioWithVolume} from "@/ts/volumeLevelChange"
-import { tutorialConfiguration} from "@/ts/restClient";
 
 let questions = ref(Array<Question>());
 
@@ -26,11 +25,12 @@ const route = useRoute();
 let clickSound: HTMLAudioElement;
 
 const configuration = route.params.id as string;
+console.log("configuration id: " + configuration);
 if (configuration == "default") {
   store.commit("setQuestions", questionsJson);
   questions.value = questionsJson;
   isActive.value = true;
-} else if(configuration === tutorialConfiguration) {
+} else if(configuration == "tutorial") {
   console.log("Loading tutorial minigame");
   store.commit("setQuestions", tutorialQuestions);
   questions.value = tutorialQuestions;
