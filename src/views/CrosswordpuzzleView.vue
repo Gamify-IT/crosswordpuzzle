@@ -209,7 +209,7 @@ async function evaluateSolution() {
     configuration: configuration,
     answers: Array.from(answers),
     duration: (Date.now() - time) / 1000,
-    score: ((numberOfTiles - wrongTiles) / numberOfTiles) * 100,
+    score: parseFloat((((numberOfTiles - wrongTiles) / numberOfTiles) * 100).toFixed(2)),
     rewards: 0
   };
 
@@ -410,7 +410,6 @@ async function handleCloseGame() {
             <thead>
             <tr>
               <th>QUESTION:</th>
-              <th>YOUR ANSWER:</th>
               <th>RESULT:</th>
             </tr>
             </thead>
@@ -418,7 +417,6 @@ async function handleCloseGame() {
             <!-- Loop through the results array and display each result in the table. -->
             <tr v-for="(result, index) in results" :key="index">
               <td>{{ result.question }}</td>
-              <td>{{ result.yourAnswer }}</td>
               <td :class="result.correct === 'Correct' ? 'text-success fw-bold' : 'text-danger fw-bold'">
                 <!-- Display whether the answer is correct or incorrect. -->
                 {{ result.correct }}
