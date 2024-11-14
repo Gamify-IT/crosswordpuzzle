@@ -17,6 +17,7 @@ import {createAudioWithVolume} from "@/ts/volumeLevelChange"
 
 const evaluationModal = ref();
 const direction = ref("");
+
 const showResultsModal = ref(false);
 let submitted = false;
 const time = Date.now();
@@ -37,6 +38,7 @@ const crosswordpuzzle = generateCrossword(questions);
 console.log(crosswordpuzzle);
 
 const evaluationModalContext = ref({ title: "", text: "" });
+
 const results = ref<any[]>([]);
 const answersResultTable = ref<GameAnswer[]>([]);
 /**
@@ -160,6 +162,7 @@ async function evaluateSolution() {
               !wrongQuestions.has(wrongQuestion.question)
           ) {
             answers.add({
+              answer: "",
               answer: wrongQuestion.answer,
               correctAnswer: questions[wrongQuestion.question - 1].answer,
               question: questions[wrongQuestion.question - 1].questionText,
@@ -294,9 +297,9 @@ function playSound(pathToAudioFile: string){
 
 async function handleCloseGame() {
   await playSound(clickSoundSource);
-    setTimeout(() => {
-      closeGame();
-    }, 500);
+  setTimeout(() => {
+    closeGame();
+  }, 500);
 }
 </script>
 
@@ -380,10 +383,10 @@ async function handleCloseGame() {
           </router-link>
           <!-- Button to close the game. -->
           <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-dismiss="modal"
-            @click="handleCloseGame"
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              @click="handleCloseGame"
           >
             Close minigame
           </button>
@@ -448,10 +451,10 @@ async function handleCloseGame() {
   height: 45px;
 }
 /* .gold-text: Styles text in gold color and bold for emphasis. */
- .gold-text {
-   color: gold;
-   font-weight: bold;
- }
+.gold-text {
+  color: gold;
+  font-weight: bold;
+}
 /* .nice-font: Applies a clean and simple font (Arial) for text in the modal. */
 .nice-font {
   font-family: 'Arial', sans-serif;
@@ -459,80 +462,79 @@ async function handleCloseGame() {
 
 /* Table Styles */
 .table {
-  border: 2px solid #dee2e6;
-  border-radius: 5px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-top: 20px;
 }
 
 /* Table Header */
 .table thead {
-  background-color: #f8f9fa;
+  background-color: #007bff;
+  color: white;
+  text-align: center;
   font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.1rem;
 }
 
 /* Table Body */
 .table tbody tr {
-  border-bottom: 1px solid #dee2e6;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
 }
 
-.table tbody tr:last-child {
-  border-bottom: none;
+.table tbody tr:nth-child(even) {
+  background-color: #e9ecef;
 }
 
 .table td {
-  padding: 10px;
+  padding: 15px 20px;
+  text-align: center;
+  font-size: 1rem;
+  vertical-align: middle;
 }
 
-/* Modal Styles: Adding border and shadow */
-.modal-content {
-  border: 2px solid #dee2e6;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-}
-
-/* Header of the Modal */
-.modal-header {
-  background-color: #f8f9fa;
-  border-bottom: 1px solid #dee2e6;
-}
-
-/* Footer of the Modal */
-.modal-footer {
-  border-top: 1px solid #dee2e6;
-}
-
-/* Modal Button Styles: Adds some separation and hover effect */
-.btn {
-  margin: 5px;
-}
-
-.btn-secondary {
-  border: 1px solid #dee2e6;
-}
-
-.btn-primary {
-  background-color: #007bff;
-  border: 1px solid #007bff;
-}
-
-.btn-info {
-  background-color: #17a2b8;
-  border: 1px solid #17a2b8;
-}
-
-/* Success/Failure Result Styling */
 .text-success {
-  color: green;
-}
-
-.text-danger {
-  color: red;
-}
-
-.fw-bold {
+  color: #28a745;
   font-weight: bold;
 }
 
-</style>
+.text-danger {
+  color: #dc3545;
+  font-weight: bold;
+}
 
+.table tbody tr:hover td {
+  color: #495057;
+}
+
+.text-success:before {
+  content: "✔️";
+  margin-right: 10px;
+}
+
+.text-danger:before {
+  content: "❌";
+  margin-right: 10px;
+}
+
+/* Table Footer Button Styles */
+.modal-footer .btn {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 8px 16px;
+  border: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.modal-footer .btn:hover {
+  background-color: #0056b3;
+}
+
+
+</style>
 
