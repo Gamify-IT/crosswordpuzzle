@@ -17,7 +17,6 @@ import {createAudioWithVolume} from "@/ts/volumeLevelChange"
 
 const evaluationModal = ref();
 const direction = ref("");
-
 const showResultsModal = ref(false);
 let submitted = false;
 const time = Date.now();
@@ -38,7 +37,6 @@ const crosswordpuzzle = generateCrossword(questions);
 console.log(crosswordpuzzle);
 
 const evaluationModalContext = ref({ title: "", text: "" });
-
 const results = ref<any[]>([]);
 const answersResultTable = ref<GameAnswer[]>([]);
 /**
@@ -162,7 +160,6 @@ async function evaluateSolution() {
               !wrongQuestions.has(wrongQuestion.question)
           ) {
             answers.add({
-              answer: "",
               answer: wrongQuestion.answer,
               correctAnswer: questions[wrongQuestion.question - 1].answer,
               question: questions[wrongQuestion.question - 1].questionText,
@@ -537,4 +534,3 @@ async function handleCloseGame() {
 
 
 </style>
-
