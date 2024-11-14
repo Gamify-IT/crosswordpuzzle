@@ -17,7 +17,7 @@ import {createAudioWithVolume} from "@/ts/volumeLevelChange"
 
 const evaluationModal = ref();
 const direction = ref("");
-
+const showResultsModal = ref(false);
 let submitted = false;
 const time = Date.now();
 
@@ -37,7 +37,8 @@ const crosswordpuzzle = generateCrossword(questions);
 console.log(crosswordpuzzle);
 
 const evaluationModalContext = ref({ title: "", text: "" });
-
+const results = ref<any[]>([]);
+const answersResultTable = ref<GameAnswer[]>([]);
 /**
  * Retrieves both vertical and horizontal incorrect answers for a given crossword tile.
  *
@@ -159,7 +160,7 @@ async function evaluateSolution() {
               !wrongQuestions.has(wrongQuestion.question)
           ) {
             answers.add({
-              answer: "",
+              answer: wrongQuestion.answer,
               correctAnswer: questions[wrongQuestion.question - 1].answer,
               question: questions[wrongQuestion.question - 1].questionText,
               correct: false,
@@ -200,6 +201,7 @@ async function evaluateSolution() {
     evaluationModalContext.value.title = "Not the correct answers";
     evaluationModalContext.value.text = "Maybe the next time";
   }
+  answersResultTable.value = Array.from(answers);
 
   const gameResult: GameResult = {
     correctTiles: numberOfTiles - wrongTiles,
@@ -207,7 +209,7 @@ async function evaluateSolution() {
     configuration: configuration,
     answers: Array.from(answers),
     duration: (Date.now() - time) / 1000,
-    score: ((numberOfTiles - wrongTiles) / numberOfTiles) * 100,
+    score: parseFloat((((numberOfTiles - wrongTiles) / numberOfTiles) * 100).toFixed(2)),
     rewards: 0
   };
 
@@ -216,7 +218,7 @@ async function evaluateSolution() {
       await submitGameResult(gameResult);
       let rewards = storeTwo.state.rewards;
       let score = gameResult.score;
-      let scoreText = `<span class="gold-text">${score} score</span>`;
+      let scoreText = `<span class="gold-text">${score} scores</span>`;
       let rewardsText = `<span class="gold-text">${rewards} coins</span>`;
 
       if (score < 50) {
@@ -252,6 +254,26 @@ async function evaluateSolution() {
   modal.show();
 }
 
+/**
+ * Displays the results of the crossword game in a modal.
+ *
+ * This function processes the answers stored in the `answersResultTable`,
+ * formats them into a readable structure, and then displays them in a modal.
+ */
+function showResults() {
+  results.value = [];
+
+  answersResultTable.value.forEach((answer) => {
+    results.value.push({
+      question: answer.question,
+      yourAnswer: answer.answer,
+      correct: answer.correct ? "Correct" : "Incorrect",
+    });
+  });
+
+  showResultsModal.value = true;
+}
+
 function setDirection(currentDirection: string) {
   direction.value = currentDirection;
 }
@@ -272,9 +294,9 @@ function playSound(pathToAudioFile: string){
 
 async function handleCloseGame() {
   await playSound(clickSoundSource);
-    setTimeout(() => {
-      closeGame();
-    }, 500);
+  setTimeout(() => {
+    closeGame();
+  }, 500);
 }
 </script>
 
@@ -358,13 +380,54 @@ async function handleCloseGame() {
           </router-link>
           <!-- Button to close the game. -->
           <button
-            type="button"
-            class="btn btn-primary"
-            data-bs-dismiss="modal"
-            @click="handleCloseGame"
+              type="button"
+              class="btn btn-primary"
+              data-bs-dismiss="modal"
+              @click="handleCloseGame"
           >
             Close minigame
           </button>
+          <button
+              type="button"
+              class="btn btn-info"
+              @click="showResults">See results</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Results Modal: Display the results in a table -->
+  <div v-if="showResultsModal" class="modal fade show" tabindex="-1" style="display: block;">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Let's see how you did!</h5>
+        </div>
+        <div class="modal-body">
+          <!-- Table displaying the results of the puzzle. -->
+          <table class="table">
+            <thead>
+            <tr>
+              <th>QUESTION:</th>
+              <th>RESULT:</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Loop through the results array and display each result in the table. -->
+            <tr v-for="(result, index) in results" :key="index">
+              <td>{{ result.question }}</td>
+              <td :class="result.correct === 'Correct' ? 'text-success fw-bold' : 'text-danger fw-bold'">
+                <!-- Display whether the answer is correct or incorrect. -->
+                {{ result.correct }}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- Modal footer with a button to close the results modal. -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="showResultsModal = false">Close</button>
         </div>
       </div>
     </div>
@@ -383,15 +446,86 @@ async function handleCloseGame() {
   height: 45px;
 }
 /* .gold-text: Styles text in gold color and bold for emphasis. */
- .gold-text {
-   color: gold;
-   font-weight: bold;
- }
+.gold-text {
+  color: gold;
+  font-weight: bold;
+}
 /* .nice-font: Applies a clean and simple font (Arial) for text in the modal. */
 .nice-font {
   font-family: 'Arial', sans-serif;
 }
 
+/* Table Styles */
+.table {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  margin-top: 20px;
+}
+
+/* Table Header */
+.table thead {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+}
+
+/* Table Body */
+.table tbody tr {
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
+}
+
+.table tbody tr:nth-child(even) {
+  background-color: #e9ecef;
+}
+
+.table td {
+  padding: 15px 20px;
+  text-align: center;
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.text-success {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.text-danger {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.table tbody tr:hover td {
+  color: #495057;
+}
+
+.text-success:before {
+  content: "✅️";
+  margin-right: 10px;
+}
+
+.text-danger:before {
+  content: "❌";
+  margin-right: 10px;
+}
+
+/* Table Footer Button Styles */
+.modal-footer .btn {
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 8px 16px;
+  border: none;
+  transition: background-color 0.2s ease-in-out;
+}
+
+
+
 </style>
-
-
