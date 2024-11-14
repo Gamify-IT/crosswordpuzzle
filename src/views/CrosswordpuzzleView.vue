@@ -218,7 +218,7 @@ async function evaluateSolution() {
       await submitGameResult(gameResult);
       let rewards = storeTwo.state.rewards;
       let score = gameResult.score;
-      let scoreText = `<span class="gold-text">${score} score points</span>`;
+      let scoreText = `<span class="gold-text">${score} scores</span>`;
       let rewardsText = `<span class="gold-text">${rewards} coins</span>`;
 
       if (score < 50) {
