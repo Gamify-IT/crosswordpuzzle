@@ -218,7 +218,7 @@ async function evaluateSolution() {
       await submitGameResult(gameResult);
       let rewards = storeTwo.state.rewards;
       let score = gameResult.score;
-      let scoreText = `<span class="gold-text">${score} score</span>`;
+      let scoreText = `<span class="gold-text">${score} score points</span>`;
       let rewardsText = `<span class="gold-text">${rewards} coins</span>`;
 
       if (score < 50) {
@@ -402,7 +402,7 @@ async function handleCloseGame() {
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">LET'S SEE HOW YOU DID!</h5>
+          <h5 class="modal-title">Let's see how you did!</h5>
         </div>
         <div class="modal-body">
           <!-- Table displaying the results of the puzzle. -->
@@ -506,7 +506,7 @@ async function handleCloseGame() {
 }
 
 .text-success:before {
-  content: "✔️";
+  content: "✅️";
   margin-right: 10px;
 }
 
@@ -526,9 +526,6 @@ async function handleCloseGame() {
   transition: background-color 0.2s ease-in-out;
 }
 
-.modal-footer .btn:hover {
-  background-color: #0056b3;
-}
 
 
 </style>
