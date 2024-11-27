@@ -305,26 +305,24 @@ async function handleCloseGame() {
   <div class="container">
     <div class="row">
       <div class="col-9 crossword-horizontal-content">
-          <div class="scrollable-content content" >
-            <div class="m-0 p-0 crosswordRow" v-for="crosswordRow in crosswordpuzzle" :key="crosswordRow">
+        <div class="scrollable-content content">
+            <div class="m-0 p-0  crosswordRow" v-for="crosswordRow in crosswordpuzzle" :key="crosswordRow">
               <!-- Loop through tiles in each row and render InputField component. -->
+              <div class="px-3">
               <div class="crosswordTile m-0 p-0" v-for="crosswordTile in crosswordRow" :key="crosswordTile">
-                <InputField
-                    :crossword="crosswordpuzzle"
-                    :crosswordTile="crosswordTile"
-                    :direction="direction"
-                    @direction="setDirection"
-                />
+                <InputField :crossword="crosswordpuzzle" :crosswordTile="crosswordTile" :direction="direction" @direction="setDirection"/>
               </div>
+              <div class="crosswordTile p-1"/>
             </div>
           </div>
+        </div>
       </div>
 
       <!-- Column displaying questions (3 parts wide). -->
       <div class="col-3">
         <h1>Questions</h1>
         <!-- Button to evaluate the puzzle solution. -->
-        <button id="evaluate-button" class="btn btn-primary m-3" @click="evaluateSolution()">
+        <button id="evaluate-button" class="btn btn-primary m-0" @click="evaluateSolution()">
           Evaluate
         </button>
         <div class="scrollable-content content question-content">
@@ -539,9 +537,5 @@ async function handleCloseGame() {
 
 .crossword-horizontal-content {
   overflow-x: auto;
-}
-
-#box {
-
 }
 </style>
