@@ -270,7 +270,6 @@ function showResults() {
       correct: answer.correct ? "Correct" : "Incorrect",
     });
   });
-
   showResultsModal.value = true;
 }
 
@@ -298,57 +297,49 @@ async function handleCloseGame() {
     closeGame();
   }, 500);
 }
+
 </script>
 
 <template>
   <!-- Main container for the crossword puzzle and questions. -->
   <div class="container">
-    <div>
-      <div class="row">
-        <div class="col-9">
-          <div
-              class="m-0 p-0 crosswordRow"
-              v-for="crosswordRow in crosswordpuzzle"
-              :key="crosswordRow"
-          >
-            <!-- Loop through tiles in each row and render InputField component. -->
-            <div
-                class="crosswordTile m-0 p-0"
-                v-for="crosswordTile in crosswordRow"
-                :key="crosswordTile"
-            >
-              <InputField
-                  :crossword="crosswordpuzzle"
-                  :crosswordTile="crosswordTile"
-                  :direction="direction"
-                  @direction="setDirection"
-              />
+    <div class="row">
+      <div class="col-9 crossword-horizontal-content">
+          <div class="scrollable-content content" >
+            <div class="m-0 p-0 crosswordRow" v-for="crosswordRow in crosswordpuzzle" :key="crosswordRow">
+              <!-- Loop through tiles in each row and render InputField component. -->
+              <div class="crosswordTile m-0 p-0" v-for="crosswordTile in crosswordRow" :key="crosswordTile">
+                <InputField
+                    :crossword="crosswordpuzzle"
+                    :crosswordTile="crosswordTile"
+                    :direction="direction"
+                    @direction="setDirection"
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <!-- Column displaying questions (3 parts wide). -->
-        <div class="col-3">
-          <!-- Ordered list of questions in the crossword puzzle. -->
-          <ol class="list-group list-group-flush list-group-numbered">
-            <h1>Questions</h1>
-            <!-- Loop through each question and display it in the list. -->
-            <li
-                v-for="question in questions"
-                class="list-group-item"
-                :key="question"
-            >
-              {{ question.questionText }}
-            </li>
-          </ol>
-          <!-- Button to evaluate the puzzle solution. -->
-          <button
-              id="evaluate-button"
-              class="btn btn-primary m-3"
-              @click="evaluateSolution()"
+      </div>
+
+      <!-- Column displaying questions (3 parts wide). -->
+      <div class="col-3">
+        <h1>Questions</h1>
+        <!-- Button to evaluate the puzzle solution. -->
+        <button id="evaluate-button" class="btn btn-primary m-3" @click="evaluateSolution()">
+          Evaluate
+        </button>
+        <div class="scrollable-content content question-content">
+        <!-- Ordered list of questions in the crossword puzzle. -->
+        <ol class="list-group list-group-flush list-group-numbered">
+          <!-- Loop through each question and display it in the list. -->
+          <li
+              v-for="question in questions"
+              class="list-group-item"
+              :key="question"
           >
-            Evaluate
-          </button>
-        </div>
+            {{ question.questionText }}
+          </li>
+        </ol>
+      </div>
       </div>
     </div>
   </div>
@@ -444,6 +435,7 @@ async function handleCloseGame() {
 /* .crosswordRow: Sets a fixed height for each row of the crossword puzzle. */
 .crosswordRow {
   height: 45px;
+  white-space: nowrap;
 }
 /* .gold-text: Styles text in gold color and bold for emphasis. */
 .gold-text {
@@ -527,5 +519,29 @@ async function handleCloseGame() {
 }
 
 
+.content {
+  margin: 10px;
+}
 
+.scrollable-content {
+  background: #ffffff;
+  flex-grow: 1;
+  height: 90vh;
+  overflow-y: auto;
+
+  /* for Firefox */
+  min-height: 0;
+}
+
+.question-content {
+  height: 77vh;
+}
+
+.crossword-horizontal-content {
+  overflow-x: auto;
+}
+
+#box {
+
+}
 </style>
