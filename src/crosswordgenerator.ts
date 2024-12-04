@@ -26,6 +26,9 @@ const interations = 10;
  * @returns A 2D array representing the crossword grid.
  */
 export function generateCrossword(questions: Question[]): TileCrossWord[][] {
+  rows = 10;
+  columns = 10;
+  startpoints.length = 0;
   const wordCount = questions.length;
   let answers: Answer[] = [];
   const currentAnswers: Answer[] = [];
