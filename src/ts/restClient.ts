@@ -3,7 +3,7 @@ import axios from "axios";
 import config from "@/config";
 import storeTwo from "@/store/indexTwo";
 
-export const tutorialConfiguration = "tutorial";
+export const tutorialConfiguration = "00000000-0000-0000-0000-000000000000";
 
 /**
  * Sends the game result to the backend via an API request and processes the response.
