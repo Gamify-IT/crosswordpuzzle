@@ -86,7 +86,7 @@ function playClickSound(){
       <!-- Close button that triggers a modal when clicked -->
       <b-button
         variant="danger"
-        class="close-button"
+        class="mx-3"
         id="close-button"
         @click="closeModal = true; playClickSound()"
       >
